@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from line.views import TestView, WebForm
+from line.views import TestView, WebForm, LineHookView
 
 urlpatterns = [
     path('form/', WebForm.as_view()),
-    path('test/', TestView.as_view())
+    path('test/', TestView.as_view()),
+    path('webhook/', LineHookView.as_view())
 ]

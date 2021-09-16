@@ -9,7 +9,8 @@ class HttpRequest():
 
     def __init__(self, *args, **kwargs):
         # self.line = Line()
-        self.access_token = settings.access_token
+        # self.access_token = settings.access_token
+        self.access_token = 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i'
         return
 
     def request(self, method, url, data=None, headers=None, max_retires=3):
@@ -17,7 +18,7 @@ class HttpRequest():
         res = self.check_response(res)
         if max_retires <= 0:
             data = {
-                'message': json.dump(res)
+                'message': json.dumps(res)
             }
             # self.line.notify(data, settings.access_token)
             return res
