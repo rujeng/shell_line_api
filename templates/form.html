@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content%}
+<div class="container-sm">
+    <!-- Content here -->
+    <form method="post" class="form-format">
+      {% csrf_token %}
+      <div class="mb-3 form-box">
+        <label for="fullname" class="form-label">ชื่อ-นามสกุล </label> 
+        <label for="require" class="form-label require">*</label>
+        <input type="text" class="form-control form-input" name="fullname" placeholder='คำตอบของคุณ' onfocusout='validateNull(this)'>
+        <div class='d-none' id='name'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+          <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+        </div>
+      </div>
+      <div class="mb-3 form-box">
+        <label  class="form-label">เบอร์โทรศัพท์</label>
+        <label for="require" class="form-label require">*</label>
+        <input type="number" class="form-control form-input" name="mobileno" placeholder='คำตอบของคุณ' onfocusout='validateMobile(this)'>
+        <div class='d-none' id='mobile'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+          <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+        </div>
+      </div>
+      <div class="mb-3 form-box">
+        <label for="mobileno" class="form-label">สาขาที่ต้องการเข้าใช้บริการ</label>
+        <label for="require" class="form-label require">*</label>
+        <div class="custom-control custom-radio">
+          <input type="radio" id="locationRadio1" name="locationRadio" class="custom-control-input" value="1">
+          <label class="custom-control-label" for="locationRadio1">เชลล์พลูตาหลวง (ตรงข้ามโรงพยาบาล กม.10)</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input type="radio" id="locationRadio2" name="locationRadio" class="custom-control-input" value="2">
+          <label class="custom-control-label" for="locationRadio2">เชลล์อู่ตะเภา (หน้าโรงเรียนพลูตาหลวง)</label>
+        </div>
+      </div>
+      <div class="mb-3 form-box">
+        <label for="datingtime" class="form-label">วันที่ต้องการนัดหมาย</label>
+        <label for="require" class="form-label require">*</label>
+        <div>
+        <label class="form-label">*กรุณาตรวจสอบวันที่ mm/dd/yyyy และ เปิดเวลา 08:00 น. - 17:00 น.</label>
+          </div>
+      <div class="d-flex">
+        <div>
+          <label for="datingtime" class="form-label">วันที่</label>
+          <input type="date" class="form-control form-input" name="date" placeholder='คำตอบของคุณ'>
+        <div class='d-none' id='date'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+          <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+        </div>
+        </div>
+        <div class="form-input-time">
+          <label for="datingtime" class="form-label">เวลา</label>
+          <input type="time" class="form-control form-input" name="time" placeholder='คำตอบของคุณ'>
+          <div class='d-none' id='time'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+          <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-box">
+      <div class="form-group">
+        <label >ยี่ห้อรถยนต์</label>
+        <label for="require" class="form-label require">*</label>
+        <select class="form-control" id="bandcar">
+          <option value="0">กรุณาเลือก</option>
+          <option value="1">izuzu</option>
+          <option value="2">bmw</option>
+          <option value="3">นางพญา</option>
+        </select>
+      </div>
+        </div>
+        <div class="mb-3 form-box">
+          <label for="versioncar" class="form-label">รุ่นรถยนต์</label> 
+          <input type="text" class="form-control form-input" name="versioncar" placeholder='คำตอบของคุณ'>
+        </div>
+        <div class="mb-3 form-box">
+          <label class="form-label">บริการที่เลือกใช้</label>
+          <label for="require" class="form-label require">*</label> 
+          <div class="form-check">
+            <input class="form-check-input position-static" type="checkbox" name="docheckbox1" id="docheckbox1" value="1">
+          <label for="versioncar" class="form-label">เปลี่ยนถ่ายนํ้ามันเครื่อง</label> 
+          </div>
+          <div class="form-check">
+            <input class="form-check-input position-static" type="checkbox" name="docheckbox2" id="docheckbox2" value="2">
+          <label for="versioncar" class="form-label">เปลี่ยนถ่ายนํ้ามันเครื่อง2</label> 
+          </div>         
+           <div class="form-check">
+            <input class="form-check-input position-static" type="checkbox" name="docheckbox3" id="docheckbox3" value="3">
+            <label for="versioncar" class="form-label">เปลี่ยนถ่ายนํ้ามันเครื่อง3</label> 
+          </div>
+        </div>
+      <button type='submit' class="btn btn-primary mr-4" >ส่ง</button>
+    </form>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function(){
+      const url = window.location.search
+      $('#url').val(url);
+    })
+    function validateMobile(e){
+      //- if(!e.value.match(/^0\d{9}/g))
+      //- {
+      //-   document.getElementById("mobile").className = ''
+      //- }
+      //- else
+      //- {
+      //-   document.getElementById("mobile").className = 'd-none'
+      //- }
+    }
+
+    function validateNull(e){
+      //- if(e.value.length <= 0)
+      //- {
+      //-   document.getElementById("name").className = ''
+      //- }
+      //- else
+      //- {
+      //-   document.getElementById("name").className = 'd-none'
+      //- }
+    }
+</script>
+{% endblock %}

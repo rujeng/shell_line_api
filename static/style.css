@@ -1,0 +1,35 @@
+.form-box {
+    padding : 25px;
+    border : 0.8px solid #DADCE0;
+    border-radius : 5px;
+    background: white;
+}
+
+.form-input {
+    border: none;
+    border-bottom: solid #a8a8a8b4;
+    
+}
+span {
+    color: red;
+}
+
+.form-format{
+ padding: 50px 0px 0px 0px;
+}
+
+.require{
+    color:red;
+}
+
+div.image {
+    content:url(http://placehold.it/350x150);
+}
+
+body{
+    background: #FBE0DF;
+}
+
+.form-input-time{
+    margin-left: 15px;
+}
