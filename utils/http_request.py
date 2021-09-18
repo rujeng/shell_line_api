@@ -1,29 +1,30 @@
+import time
 import requests
 import json
 from django.conf import settings
 
-from line.tests import Test
-from line.test_service import TestLine
+from line import line_service
 
 class HttpRequest():
 
     def __init__(self, *args, **kwargs):
-        # self.line = Line()
-        # self.access_token = settings.access_token
-        self.access_token = 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i'
+        self.access_token = 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i' #settings.access_token
         return
 
     def request(self, method, url, data=None, headers=None, max_retires=3):
         res = requests.request(method, data=data, headers=headers, url=url)
         res = self.check_response(res)
         if max_retires <= 0:
+            return res
+        if res['ok'] == False:
+            time.sleep(5)
+            max_retires = max_retires - 1
+            line = line_service.Line()
             data = {
                 'message': json.dumps(res)
             }
-            # self.line.notify(data, settings.access_token)
-            return res
-        if res['ok'] == False:
-            max_retires = max_retires - 1
+            line.notify(data, 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i')
+            #print('access ' , self.access_token)
             return self.request(method, url, data=None, headers=None, max_retires=max_retires)
         return res
 
