@@ -11,4 +11,4 @@ try:
 except ImportError:
     pass
 
-access_token = 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i'
+ACCESS_TOKEN = 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i'

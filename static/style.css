@@ -27,8 +27,26 @@ div.image {
 }
 
 body{
+    
     background: #FBE0DF;
     padding-bottom: 10px;
+    font-family: "Mitr", serif;
+    
+}
+
+#main-container {
+    overflow-x: hidden;
+    height: 90vh;
+}
+
+#spinner {
+    display: none;
+    position: absolute;
+    height: 90vh;
+    width: 100vw;
+    background: lightgray;
+    opacity: 0.6;
+    align-items: center;
 }
 
 .form-input-time{

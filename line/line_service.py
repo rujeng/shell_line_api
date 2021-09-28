@@ -11,7 +11,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'https://7d6a-2405-9800-b600-a8ab-3412-f796-80a7-d051.ngrok.io/line/webhook?branch_id={branch_id}',
+            'redirect_uri': f'https://507e-2405-9800-b600-cbe-29dd-f2f4-900-9241.ngrok.io/line/webhook?branch_id={branch_id}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
@@ -28,26 +28,24 @@ class Line(HttpRequest):
         url = "https://api.line.me/v2/profile"
         return super().request('GET', url, None, headers)
     
-    def notify(self, meta_dat, access_token):
+    def notify(self, message, access_token):
         url = 'https://notify-api.line.me/api/notify'
         headers = {
             "Authorization": "Bearer "+ access_token,
             'Content-type':  "application/x-www-form-urlencoded"
         }
-        data = meta_dat
+        data = {
+                # 'message': json.dumps(message , ensure_ascii=False)
+                'message': message
+                # 'text': json.dumps(message , ensure_ascii=False)
+        }
         return super().request('POST', url ,data, headers)
     
-    def push_message(self,user_id, meta_dat=None,channel_access_token = None):
-        url = 'https://api.line.me/v2/bot/message/multicast'
+    def push_message(self, meta_dat=None,channel_access_token = None,message_data = None):
+        url = 'https://api.line.me/v2/bot/message/push'
         headers = {
             "Authorization": "Bearer "+ channel_access_token,
              'Content-Type':  "application/json"
         }
-        data = { 
-            "to": [user_id],
-            "messages":[{
-                "type":"text",
-                "text": json.dumps(meta_dat , ensure_ascii= False)
-            }]
-        }
+        data = message_data
         return super().request('POST', url ,json.dumps(data), headers)
