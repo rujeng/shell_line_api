@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="mt-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" aria-label="Previous" onclick="prvPage()">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" aria-label="Next" onclick="nextPage()">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            {% endif %}
+            
+          </ul>
+        </nav>
+      </div>
+
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    const next = "{{next}}"
+    const prv = "{{prv}}"
+    console.log(next)
+    console.log(prv)
+    function nextPage(){
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      var path = window.location.pathname
+      const next = "{{page_obj.next_page_number}}"
+      console.log(next)
+      window.location.replace(`${path}?user_id=${params['user_id']}&page=${next||1}&car_id=${params['car_id']}`)
+    }
+
+    function prvPage(){
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      var path = window.location.pathname
+      window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv||1}&car_id=${params['car_id']}`)
+    }
+</script>
+{% endblock %}

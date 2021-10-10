@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-box mt-4">
+    <div class="">
+      <h1>คุณ {{fullname}}</h1>
+      <!-- <div class="mb-1"></div> -->
+      <div class="mb-1">เบอโทรศัพท์: {{mobile}}</div>
+      <div class="d-flex justify-content-between car-plat-option">
+        <div>ทะเบียนรถ</div>
+        <select onchange="changeRegister(this)" id='selectCar' class="custom-select"> 
+          <option value="" default>ทั้งหมด</option>
+          {% for car in cars_dropdown %}
+            <option value="{{car.id}}" >{{car.car_register}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex mt-4 mb-4">
+    <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
+    <button class="btn btn-warning" style="margin-right: 8px;">ประวัติ</button>
+    <button class="btn btn-warning" style="margin-right: 8px;">โปรโมชั่น</button>
+  </div>
+  {% if car %}
+    <div class="form-box mt-4 mb-4">
+      {% for item in car %}
+        <div class="mb-1">ทะเบียนรถยนต์: {{item.car_register}}</div>
+        <div class="mb-1">ยี่ห้อรถยนต์: {{item.brand}}</div>
+        <div class="mb-1">รุ่น: {{item.model}}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% for key, value in result.items %}
+  {% if show_all %}
+  <div class="form-box mt-4 mb-4">
+      <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
+      <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
+      <div class="mb-1">รุ่น: {{value.model}}</div> 
+  </div>
+  {% endif %}
+          {% for item in value.data %}
+      <div class="form-box mt-4">
+        <div class="d-flex justify-content-between">
+          <h5>บริการ</h5>
+          <h5>{{item.created_at}}</h5>
+        </div>
+        <div>ศูนย์บริการสาขา: {{item.branch|default:'ไม่ระบุ'}}</div>
+        {% for detail in item.details %}
+          <div class="mt-2">
+            <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
+            <div>
+              <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
+              <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="mt-4">รวมจำนวนเงิน {{item.total_price}} บาท</div>
+          <div class="text-end mt-4">บริการครั้งต่อไป {{item.next_service}}</div>
+      </div>
+      {% endfor %}
+        </div>
+
+  {% endfor %}
+    <div class="float-end mt-2">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" aria-label="Previous" onclick="prvPage()">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% endif %}
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" aria-label="Next" onclick="nextPage()">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          {% endif %}
+          
+        </ul>
+      </nav>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+  function changeRegister(e){
+      const carId = e.value
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      var path = window.location.pathname
+      window.location.replace(`${path}?user_id=${params['user_id']}&page=${params['page']}&car_id=${carId}`)
+  }
+  
+  function nextPage(){
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      var path = window.location.pathname
+      window.location.replace(`${path}?user_id=${params['user_id']}&page=${next||1}&car_id=${params['car_id']}`)
+    }
+
+    function prvPage(){
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      var path = window.location.pathname
+      window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv||1}&car_id=${params['car_id']}`)
+    }
+  $(document).ready(function(){
+    function initial(){
+      const carId = "{{car.0.id}}";
+      $('#selectCar').val(carId)
+    }
+    
+    initial();
+    
+  }())
+</script>
+{% endblock %}

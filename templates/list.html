@@ -1,43 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-<!-- <div class="list-group mt-4">
-    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">นาง กมหด ไดไดแด</h5>
-        <small>3 days ago</small>
-      </div>
-      <p class="mb-1">ทะเบียน กจ-1231</p>
-      <p class="mb-1">รถยนต์: toyota</p>
-      <p class="mb-1">เปลี่ยนน้ำมันเครื่อง</p>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">นาง กมหด ไดไดแด</h5>
-        <small>3 days ago</small>
-      </div>
-      <p class="mb-1">ทะเบียน กจ-1231</p>
-      <p class="mb-1">รถยนต์: toyota</p>
-      <p class="mb-1">เปลี่ยนยาง</p>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">นาง กมหด ไดไดแด</h5>
-        <small>3 days ago</small>
-      </div>
-      <p class="mb-1">ทะเบียน กจ-12222</p>
-      <p class="mb-1">รถยนต์: honda</p>
-      <p class="mb-1">ล้างรถ</p>
-    </a>
-  </div> -->
-<form method="POST">
-  {% csrf_token %}
-  <label>ชื่อโปรโมชั่น</label>
-  {{form.geeks_field}}
-  <!-- {{form.docheckbox2}} -->
-  <input type="submit"/>
-</form>
-<label>รูปแบนเนอ</label>
-  <input type='file'/>
+<div class="container-sm">
+    {% for item in form %}
+    <div class="mb-2">
+        <div>owner: {{item.user_id}}</div>
+        <div>username: {{item.user_name}}</div>
+        <div>mobile: {{item.user_mobile}}</div>
+        <div>car: {{item.car}}</div>
+        <div>transactionform id: {{item.sale_id}}</div>
+        
+        <!-- <div>regis: {{item.regis}}</div> -->
+        <div>transactiondetai id:
+            {% for item in item.result %}
+                <span>{{item.id}}</span>
+                <!-- <span>{{item.name}}</span> -->
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
 </div>
 {% endblock %}

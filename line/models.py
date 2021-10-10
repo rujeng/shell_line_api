@@ -4,15 +4,14 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class CustomeUser(models.Model):
-    line_id = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
+class CustomUser(models.Model):
+    line_id = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    full_name = models.CharField(max_length=50)
     mobile_no = models.CharField(max_length=10)
-    ref_friend = models.ForeignKey('CustomeUser', related_name='ref', on_delete=models.SET_NULL, blank=True, null=True)
+    ref_friend = models.ForeignKey('CustomUser', related_name='ref', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}' if self.first_name else '---'
+        return str(self.id)
 
 class LineOfficial(models.Model):
     name = models.CharField(max_length=100)
@@ -45,54 +44,35 @@ class LineMessage(models.Model):
     def __str__(self):
         return self.name        
 
-class TransactionForm(models.Model):
-    INITIAL = '1'
-    PROCESSING = '2'
-    DONE = '3'
-    FAILED = '4'
-    STATUS_CHOICES = [
-        (INITIAL, 'INITIAL'),
-        (PROCESSING, 'PROCESSING'),
-        (DONE, 'DONE'),
-        (FAILED, 'FAILED'),
-    ]
-    branch_id = models.IntegerField()
-    description = models.TextField(blank=True, null=True)
-    user_id = models.ForeignKey(CustomeUser, on_delete=models.CASCADE, blank=True,null=True)
-    car = models.ForeignKey('Car', on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
-    appointed_date = models.DateTimeField()
-    price = models.IntegerField()
-    comment = models.TextField(blank=True, null=True)
+class CarBrand(models.Model):
+    name = models.CharField(max_length=20)
+    status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user_id.first_name} {self.user_id.last_name}' if self.user_id.first_name else '---' 
+        return str(self.name)
 
 class  Car(models.Model):
-    CARS = [
-        {'id': 1, 'brand': 'isuzu'},
-        {'id': 2, 'brand': 'hyundai'},
-        {'id': 3, 'brand': 'mazda'},
-        {'id': 4, 'brand': 'nissan'},
-        {'id': 5, 'brand': 'suzuki'},
-        {'id': 6, 'brand': 'subaru'},
-        {'id': 7, 'brand': 'toyota'},
-    ]
-    user_id = models.ForeignKey(CustomeUser, on_delete=models.CASCADE,blank=True,null=True )
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE,blank=True,null=True )
     brand = models.CharField(max_length=20)
     model = models.CharField(max_length=20)
     car_register = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def map_object_to_list(objects):
+        cars = []
+        for car in objects:
+            cars.append({
+                    'brand': car.brand,
+                    'model': car.model,
+                    'car_register': car.car_register,
+                    'id': car.id
+                })
+        return cars
+
+    def __str__(self):
+        return str(self.id)
 
 
-# class User(models.Model):
-#       phone = models.CharField(max_length=20)
-#       line_id = models.CharField(max_length=20)
-#       ref_friend = models.CharField(max_length=20)
-#       updated_by = models.CharField(max_length=20)
-#       updated_date = models.CharField(max_length=20)
-#       created_date = models.CharField(max_length=20)

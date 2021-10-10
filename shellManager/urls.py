@@ -19,7 +19,9 @@ from django.urls.conf import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('line/', include('line.urls'))
+    path('line/', include('line.urls')),
+    path('item/', include('item.urls')),
+    path('otp/', include('otp.urls')),
 ]
 
 from django.conf import settings
@@ -30,10 +32,3 @@ if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
 
-from django.conf import settings
-from django.urls import include
-if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
-    import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns

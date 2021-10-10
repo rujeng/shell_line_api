@@ -1,8 +1,9 @@
 .form-box {
     padding : 25px;
     border : 0.8px solid #DADCE0;
-    border-radius : 5px;
+    border-radius : 20px;
     background: white;
+    box-shadow: 8px 8px 6px lightgray;
 }
 
 .form-input {
@@ -15,7 +16,7 @@ span {
 }
 
 .form-format{
- padding: 50px 0px 0px 0px;
+ padding: 20px 0px 0px 0px;
 }
 
 .require{
@@ -28,10 +29,14 @@ div.image {
 
 body{
     
-    background: #FBE0DF;
+    background: #F1F1F1;
     padding-bottom: 10px;
     font-family: "Mitr", serif;
     
+}
+
+.button-shadow {
+    box-shadow: 6px 6px 8px lightgray;
 }
 
 #main-container {
@@ -51,4 +56,18 @@ body{
 
 .form-input-time{
     margin-left: 15px;
+}
+
+.otp-box{
+   border: solid black;
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+}
+
+.car-plat-option {
+    justify-content: space-between;
+    width: 60%;
+    height: 40px;
+    align-items: center;
 }

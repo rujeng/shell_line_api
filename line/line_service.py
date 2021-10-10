@@ -1,5 +1,32 @@
 import json
-from utils.http_request import HttpRequest
+import time
+import requests
+import json
+from django.conf import settings
+
+
+
+
+class HttpRequest():
+
+    def request(self, method, url, data=None, headers=None, max_retires=1):
+        res = requests.request(method, data=data, headers=headers, url=url)
+        res = self.check_response(res)
+        if max_retires <= 0:
+            line = Line()
+            message = json.dumps(res)
+            line.notify(message, 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i')
+            return res
+        if res['ok'] == False:
+            time.sleep(5)
+            max_retires = max_retires - 1
+            return self.request(method, url, data=None, headers=None, max_retires=max_retires)
+        return res
+
+    def check_response(self, response):
+        if response.status_code >= 200 and response.status_code <= 302:
+            return {'ok': True, 'result': response.json()}
+        return {'ok': False, 'result': response.json()}
 
 class Line(HttpRequest):
 
@@ -11,14 +38,13 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'https://507e-2405-9800-b600-cbe-29dd-f2f4-900-9241.ngrok.io/line/webhook?branch_id={branch_id}',
+            'redirect_uri': f'https://0810-2405-9800-b620-744b-ccb9-9203-e4bd-9e65.ngrok.io/line/webhook?branch_id={branch_id}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
         headers = {
             'Content-type':  "application/x-www-form-urlencoded"
         }
-        print('data',data)
         return super().request('POST', url, data, headers)
 
     def get_profile(self, access_token):
@@ -49,3 +75,17 @@ class Line(HttpRequest):
         }
         data = message_data
         return super().request('POST', url ,json.dumps(data), headers)
+
+    def get_token_history(self,code, channel_id ,channel_secret):
+        url = "https://api.line.me/oauth2/v2.1/token"
+        data = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': f'https://75fe-2405-9800-b600-1bca-a5be-304a-85ae-e5c9.ngrok.io/line/webhistory',
+            'client_id': channel_id,
+            'client_secret': channel_secret,
+        }
+        headers = {
+            'Content-type':  "application/x-www-form-urlencoded"
+        }
+        return super().request('POST', url, data, headers)

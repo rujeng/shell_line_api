@@ -1,5 +1,5 @@
 from datetime import date
-
+from line.form import WebForm
 class Message():
         
     def __init__(self, *args, **kwargs):
@@ -208,34 +208,24 @@ class Message():
             }]
         }
 
-        data_notify = f"จองสำเร็จแล้ว\n\nผู้จอง: {fullname}\nติดต่อ: {mobileno}\n**สาขาที่จอง: {branch_name}\nวัน, เวลาที่จอง: {date} , {time}\n\nยี่ห้อรถ: xxx\nรุ่น-ปี: xxxx\nเข้ารับบริการ: {service_detail}"
+        data_notify = f"จองสำเร็จแล้ว\n\nผู้จอง: {fullname}\nติดต่อ: {mobileno}\n**สาขาที่จอง: {branch_name}\nวัน, เวลาที่จอง: {date} , {time}\n\nยี่ห้อรถ: {brand}\nรุ่น-ปี: {model}\nเข้ารับบริการ: {service_detail}"
         
         return data_push_noti,data_notify
 
     def makeservice_detail(self, request):
-        docheckbox1 = int(request.POST.get('docheckbox1', 0))
-        docheckbox2 = int(request.POST.get('docheckbox2', 0))
-        docheckbox3 = int(request.POST.get('docheckbox3', 0))
-        docheckbox4 = int(request.POST.get('docheckbox4', 0))
-        docheckbox5 = int(request.POST.get('docheckbox5', 0))
-        docheckbox6 = int(request.POST.get('docheckbox6', 0))
-        docheckbox7 = int(request.POST.get('docheckbox7', 0))
-        docheckbox8 = int(request.POST.get('docheckbox8', 0))
-        docheckbox9 = int(request.POST.get('docheckbox9', 0))
-        service_detail = ''
-        lst_chkbox = [docheckbox1,docheckbox2,docheckbox3,docheckbox4,docheckbox5,docheckbox6,docheckbox7,docheckbox8,docheckbox9]
-        lst_filt_chkbox = list(filter(lambda x: (x != 0), lst_chkbox))
-        # subset_of_A = set([0]) # the subset of A
-        # lst_filt_chkbox = [a for a in lst_chkbox if a not in subset_of_A] 
-
-        count_ser = 0
-        for ser_id in lst_filt_chkbox:
-          if count_ser > 0:
-              service_detail = service_detail + ',' 
-          service_detail = service_detail + self.__getservicename(ser_id)
-          count_ser = count_ser + 1
-
-        return service_detail
+        form = WebForm(request.POST)
+        if form.is_valid():
+            lst_filt_chkbox = [form.cleaned_data[key] for key in form.cleaned_data]
+            service_detail = ''
+            count_ser = 1
+            # TODO debug ,
+            for ser_fact in lst_filt_chkbox:
+                if ser_fact:
+                    if count_ser > 1:
+                        service_detail = service_detail + ',' 
+                    service_detail = service_detail + self.__getservicename(count_ser)
+                count_ser = count_ser + 1
+            return service_detail
 
     def __getservicename(self, i):
          switcher={

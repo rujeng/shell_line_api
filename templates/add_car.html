@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
+                <button type="button" class="btn-close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>ยี่ห้อรถยนต์</label>
+                    <label for="require" class="form-label require">*</label>
+                    <select class="form-control mb-2" id='car-brand'>
+                        <option default value=''>กรุณาเลือก</option>
+                        {% for car in cars_dropdown %}
+                        <option value='{{car.name}}'>{{car.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <label>รุ่นรถยนต์</label>
+                    <input type='text' id='model' class="form-control form-input" />
+                    <label>ทะเบียนรถ</label>
+                    <input type='text' id='car_register' class="form-control form-input" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addCar()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- spinner -->
+<div class="justify-content-center" id='spinner'>
+    <div class="spinner-grow" role="status">
+    </div>
+</div>
+<div class="container-sm" id='main-container'>
+    <!-- container -->
+    <div class="container-sm">
+        <form method="post" class="form-format" onsubmit="return validateSubmit(this)" id='formSubmit'>
+            {% csrf_token %}
+            
+            <div class="mb-3 form-box">
+                <label>รถยนต์</label>
+                <label for="require" class="form-label require">*</label>
+                <select class="form-control mb-2" name="car_id" id='brand'>
+                    <option default value=''>กรุณาเลือก</option>
+                    {% for car in cars %}
+                    <option value={{car.id}}>{{car.car_register}} ({{car.brand}}) </option>
+                    {% endfor %}
+                </select>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary button-shadow" data-toggle="modal"
+                        data-target="#exampleModal">เพิ่มรถยนต์</button>
+                </div>
+            </div>
+            {% if official|length > 0 %}
+            <div class="mb-3 form-box">
+              <label class="form-label">สาขา</label>
+              <!-- {{form_services.branch}} -->
+                <select class="form-control mb-2" name="branch_id" id='branch_id'>
+                  <option default value=''>กรุณาเลือก</option>
+                  {% for i in official %}
+                    <option value={{i.id}}>{{i.name}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <div class="mb-3 form-box">
+                <label for="datingtime" class="form-label">วันที่ต้องการนัดหมาย</label>
+                <label for="require" class="form-label require">*</label>
+                <div>
+                    <label class="form-label">*กรุณาตรวจสอบวันที่ mm/dd/yyyy และ เปิดเวลา 08:00 น. - 17:00 น.</label>
+                </div>
+                <div class="">
+                    <div>
+                        <label for="datingtime" class="form-label">วันที่</label>
+                        <input type="date" class="form-control form-input" id='target-date' name="date"
+                            placeholder='คำตอบของคุณ'>
+                        <div class='d-none' id='date'>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                <path fill-rule="evenodd"
+                                    d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z">
+                                </path>
+                            </svg>
+                            <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="datingtime" class="form-label">เวลา</label>
+                        <input type="time" class="form-control form-input" name="time" placeholder='คำตอบของคุณ'
+                            id='target-time'>
+                        <div class='d-none' id='date'>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                <path fill-rule="evenodd"
+                                    d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z">
+                                </path>
+                            </svg>
+                            <span class="required">จำเป็นต้องตอบคำถามนี้</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 form-box" id='services'>
+                <label class="form-label">บริการที่เลือกใช้</label>
+                <label for="require" class="form-label require">*</label>
+                <div class="form-check">
+                    {{form_services.docheckbox1}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox1" id="docheckbox1" value="1"> -->
+                    <label class="form-label">เปลี่ยนถ่ายนํ้ามันเครื่อง พร้อมไส้กรอง</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox2}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox2" id="docheckbox2" value="2"> -->
+                    <label class="form-label">ฟลัชชิ่ง ออยล์ ล้างตะกอนตกค้างภายในเครื่องยนต์</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox3}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox4" id="docheckbox4" value="4"> -->
+                    <label class="form-label">เปลี่ยนน้ำมันเฟืองท้าย</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox4}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox5" id="docheckbox5" value="5"> -->
+                    <label class="form-label">เปลี่ยนน้ำมันพวงมาลัยพาวเวอร์</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox5}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox6" id="docheckbox6" value="6"> -->
+                    <label class="form-label">เปลี่ยนน้ำยาหม้อน้ำ (คูลแลนท์)</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox6}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox7" id="docheckbox7" value="7"> -->
+                    <label class="form-label">เปลี่ยนไส้กรองอากาศ</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox7}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox8" id="docheckbox8" value="8"> -->
+                    <label class="form-label">เปลี่ยนน้ำมันเบรค</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox8}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox9" id="docheckbox9" value="9"> -->
+                    <label class="form-label">เปลี่ยนก้านปัดน้ำฝน</label>
+                </div>
+                <div class="form-check">
+                    {{form_services.docheckbox9}}
+                    <!-- <input class="form-check-input position-static" type="checkbox" name="docheckbox3" id="docheckbox3" value="3"> -->
+                    <label class="form-label">เปลี่ยนน้ำมันเกียร์</label>
+                </div>
+            </div>
+            <button type='submit' class="btn btn-primary btn-lg button-shadow">ส่งแบบฟอร์ม</button>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        function validate(targetId) {
+            const name = document.getElementById(targetId).value
+            if (name) {
+                return true
+            }
+            return false;
+        }
+    })
+</script>
+
+<script>
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+</script>
+<script>
+    async function addCar() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const user_id = urlParams.get('user_id');
+        const data = {
+            car_register: $('#car_register').val(),
+            model: $('#model').val(),
+            brand: $('#car-brand').val(),
+            line_id: user_id
+        }
+        const response = await fetch('/line/addcar/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(data)
+        });
+        const res = await response.json();
+        window.location.reload()
+        if (res.ok) {
+        } else {
+            alert('error')
+        }
+    }
+</script>
+<script>
+    $(document).ready(
+        function(){
+        setMinDate()
+        function setMinDate(){
+            var today = new Date()
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#target-date').attr('min', today)
+        }
+        
+        } 
+    ())
+  function validateDate(){
+    const date = $('#target-date').val();
+    if(!date){
+      return false
+    }else{
+      return true
+    }
+  }
+  function validateTime(){
+    const date = $('#target-time').val();
+    if(!date){
+      return false
+    }else{
+      return true
+    }
+  }
+    function validateSubmit(e) {
+        debugger
+        var state = false
+        document.getElementById('spinner').style.display = 'flex'
+        const vCar = validate('brand');
+        const vDate = validateDate();
+        const vTime = validateTime();
+        const vServices = validateService();
+        const vBranch = validatebranch();
+        if (vCar && vServices && vDate && vTime && vBranch) {
+            state = true
+        } else {
+            state = false
+        }
+        document.getElementById('formSubmit').scrollIntoView();
+        document.getElementById('spinner').style.display = 'none'
+        return state
+    }
+
+    function validateService() {
+        var services = document.getElementById('services').children
+        for (let i = 2; i < services.length; i++) {
+            if (services[i].children[0].checked) {
+                return true
+            }
+        }
+        return false
+    }
+
+    function validatebranch(){
+      debugger
+      const urlParams = new URLSearchParams(window.location.search);
+      const branch_id_br = urlParams.get('branch_id');
+      if(branch_id_br == 1 || branch_id_br == 2 )
+      {
+        if(validate('branch_id'))
+        {
+          return true
+        }
+        else
+        {
+          return false
+        }
+      }
+      return true
+    }
+    function validate(targetId) {
+    const name = document.getElementById(targetId).value
+    if(name){
+      return true
+    }
+    return false;
+  }
+</script>
+{% endblock %}
