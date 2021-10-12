@@ -8,6 +8,18 @@ from line.models import CustomUser
 
 class OTPVerify(View):
 
+    def get(self, request):
+        line_id = request.GET.get("user_id", None)
+        branch_id = request.GET.get("branch_id", None)
+        full_name = request.GET.get('fullname', None)
+        mobileno = request.GET.get('mobileno', None)
+        otp = Otp()
+        state,ref_code = otp.register_get_otp(line_id,mobileno,full_name)
+        if state:
+            context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id}
+            return render(request, 'otp.html', context=context)
+        return render(request, 'error.html')
+
     def post(self, request):
         line_id = request.POST.get('line_id',None)
         ref_code = request.POST.get('ref_code', None)

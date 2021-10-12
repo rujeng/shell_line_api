@@ -17,5 +17,5 @@ from django.urls import path
 from otp.views import OTPVerify
 
 urlpatterns = [
-    path('verify/', OTPVerify.as_view()),
+    path('verify/', OTPVerify.as_view(), name='otp'),
 ]

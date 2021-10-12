@@ -1,12 +1,15 @@
 from django.db import models
 from django.shortcuts import render
 from django.views.generic import View
-# Create your views here.
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+
 from item.models import TransactionDetail, TransactionForm , CalculatePrice
 from line.form import BranchForm
 from line.models import CustomUser , CarBrand, Car
-from django.core.paginator import Paginator
 
 class TestTransactionview(View):
     
@@ -37,6 +40,7 @@ class TestTransactionview(View):
         return render(request, 'list.html', context={'form': result})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CalItemPrice(View):
 
     def get(self, request):
@@ -50,8 +54,10 @@ class CalItemPrice(View):
             carbrand = CarBrand.objects.filter(name = car.brand).first()
             option = CalculatePrice.objects.filter(brand = carbrand,series = car.model).first()
         context = {'cars_dropdown': cars, 'user': user,'option':option}
-        print('con' , context)
         return render(request, 'calculate-price.html', context=context)
+    
+    def post(self, request):
+        return JsonResponse({'status': 'www'})
 
 
 class CalcalatePriceview(View):
@@ -63,15 +69,19 @@ class CalcalatePriceview(View):
         for car in cars:
             if car.brand not in brand:
                 brand.append(car.brand)
-        print('br' , brand)
+        # print('br' , brand)
         list_brand = CarBrand.objects.filter(name__in = brand)
-        print('lb' , list_brand)
+        # print('lb' , list_brand)
         list_calculate_price = CalculatePrice.objects.filter(brand__in = list_brand)
-        print('lc' , list_calculate_price)
+        # print('lc' , list_calculate_price)
         context = {'list_calculate_price': list_calculate_price}
         for cp in list_calculate_price:
             pass
         return render(request, 'calculate-price.html' , context = context)
+    
+    def post(self, request):
+        # import pdb ;pdb.set_trace()
+        return JsonResponse({'ok': True})
         
         
             

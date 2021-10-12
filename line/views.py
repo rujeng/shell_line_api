@@ -21,6 +21,7 @@ from line.message import Message
 from line.models import CarBrand, LineOfficial, LineLogin, LineMessage, CustomUser, Car
 from item.models import Item, TransactionForm
 from line.form import WebForm
+from utils.functions import get_paginator
 
 # Create your views here.
 
@@ -32,7 +33,6 @@ class WebFormView(View):
     def post(self, request):
         line_id = request.GET.get("user_id", None)
         branch_id = request.GET.get("branch_id", None)
-        form = WebForm(request.POST)
         full_name = request.POST.get('fullname', None)
         mobileno = request.POST.get('mobileno', None)
         meta_data = {'full_name': full_name, 'mobile': mobileno, 'line_id': line_id}
@@ -40,7 +40,7 @@ class WebFormView(View):
         state,ref_code = otp.register_get_otp(line_id,mobileno,full_name)
         if state:
             context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id}
-            return render(request, 'otp.html', context=context)
+            return redirect(f'/otp/verify?user_id={line_id}&branch_id={branch_id}&full_name={full_name}&mobileno={mobileno}')
         return render(request, 'error.html')
 
 
@@ -196,33 +196,65 @@ class MyCar(View):
 
 class MyHistory(View):
 
-    show_list = 3
+    show_list = 2
 
+    def get_transaction_detail(self, transaction):
+        total_price = 0
+        result = []
+        tran_details = transaction.sale_detail.all()
+        for detail in tran_details:
+            total_price += detail.quantity * detail.item.sell_price
+            result.append({
+                'item': detail.item.name,
+                'quantity': detail.quantity,
+                'price': detail.sell_price,
+            })
+        return result, total_price
+            
+
+    def get_first_transaction_by_car(self, line_id):
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        cars = Car.objects.filter(user_id=user)
+        result = []
+        for car in cars:
+            tran = TransactionForm.objects.filter(user=user, car=car).order_by('-created_at').first()
+            details, total_price = self.get_transaction_detail(transaction=tran)
+            branch = LineOfficial.objects.filter(id=tran.branch_id).first()
+            transaction_by_car = {
+                'details': details,
+                'branch': branch.name if branch else 'None',
+                'car_register': tran.car.car_register,
+                'brand': tran.car.brand,
+                'created_at': self.__get_day(tran.created_at),
+                'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
+                'appointed_date': tran.appointed_date,
+                'status': tran.status,
+                'total_price': total_price,
+                'next_service': self.__next_service(tran.created_at)
+            }
+            result.append(transaction_by_car)
+        return result, cars
+        
     def get(self, request):
         page = request.GET.get('page', 1)
         car_id = request.GET.get('car_id', None)
         line_id = request.GET.get('user_id', None)
+        car = []
         if not line_id:
             return render(request, 'error.html')
-        show_all = True
         if car_id:
-            show_all = None
+            car = Car.get_car_by_id(car_id)
         user = CustomUser.objects.filter(line_id=line_id).first()
-        cars = user.car_set.all()
-        # import pdb ; pdb.set_trace()
-        transactions, car = self.get_transaction_by_car(car_id, user)
+        cars = Car.objects.filter(user_id=user)
+        trans = TransactionForm.objects.filter(user=user).order_by('-created_at')
+        paginator = get_paginator(trans, self.show_list, page)
         start_page = self.show_list * (int(page)-1)
         end_page = start_page + self.show_list
-        result = self.get_slice_transaction(transactions, start_page, end_page)
-        paginator = Paginator(transactions, self.show_list)
-        page_obj = paginator.get_page(page)
-        next_page = page_obj.next_page_number
-        prv_page = page_obj.previous_page_number
+        result = self.get_slice_transaction(trans, start_page, end_page)
         context = {'result': result, 'fullname': user.full_name, 'mobile': user.mobile_no, 
-        'page_obj': page_obj, 'cars_dropdown': cars, 'car': car, 'show_all':show_all,
-        'next_page': next_page, 'prv_page': prv_page
+        'page_obj': paginator['page_obj'], 'cars_dropdown': cars, 'car': car,
+        'next_page': paginator['next_page'], 'prv_page': paginator['prv_page']
         }
-        #print('result' , result)
         return render(request, 'transaction-list.html', context=context)
 
     def get_transaction_by_car(self, car_id, user):
@@ -236,7 +268,7 @@ class MyHistory(View):
         return transactions.filter(status=TransactionForm.DONE), car
 
     def get_slice_transaction(self, transactions, start_page, end_page):
-        result = {}
+        result = []
         for tran in transactions[start_page:end_page]:
             details = []
             total_price = 0
@@ -256,16 +288,18 @@ class MyHistory(View):
                 'car_register': tran.car.car_register,
                 'brand': tran.car.brand,
                 'created_at': self.__get_day(tran.created_at),
+                'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
                 'appointed_date': tran.appointed_date,
                 'status': tran.status,
                 'total_price': total_price,
                 'next_service': self.__next_service(tran.created_at)
             }
+            result.append(transaction_by_car)
             # group transaction by car
-            if result.get(car_register):
-                result[car_register]['data'].append(transaction_by_car)
-            else:
-                result.update({car_register: {'car_register': tran.car.car_register,'brand':tran.car.brand,'model':tran.car.model, 'data': [transaction_by_car]}})
+            # if result.get(car_register):
+            #     result[car_register]['data'].append(transaction_by_car)
+            # else:
+            #     result.update({car_register: {'car_register': tran.car.car_register,'brand':tran.car.brand,'model':tran.car.model, 'data': [transaction_by_car]}})
         return result
 
     def __get_day(self, datetime):
@@ -276,8 +310,8 @@ class MyHistory(View):
         return f'{day} วันที่แล้ว'
 
     def __next_service(self, datetime):
-        next_service = datetime + relativedelta(months=6)
-        return next_service.strftime('%m/%d/%Y')
+        next_service = datetime + relativedelta(months=4)
+        return next_service.strftime('%d/%m/%Y')
 
 
 
@@ -328,7 +362,7 @@ class Testview(View):
         
         context = {'page_obj': page_obj, 'prv': prv, 'next': next_page}
 
-        return render(request, 'test.html', context=context)
+        return render(request, 'otp.html', context=context)
     
     def post(self, request):
         form = WebForm(request.POST)

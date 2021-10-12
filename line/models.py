@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.base import Model
+from django.db.models.base import Model, ModelState
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -12,6 +12,9 @@ class CustomUser(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def get_user_by_line_id(line_id):
+        return CustomUser.objects.filter(line_id=line_id).first()
 
 class LineOfficial(models.Model):
     name = models.CharField(max_length=100)
@@ -53,6 +56,16 @@ class CarBrand(models.Model):
     def __str__(self):
         return str(self.name)
 
+class CarModel(models.Model):
+    brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE, related_name='model')
+    name = models.CharField(max_length=50)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
+
 class  Car(models.Model):
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE,blank=True,null=True )
     brand = models.CharField(max_length=20)
@@ -61,6 +74,9 @@ class  Car(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_car_by_id(car_id):
+        return Car.objects.filter(id=car_id)
+    
     def map_object_to_list(objects):
         cars = []
         for car in objects:

@@ -177,6 +177,7 @@
 </script>
 <script>
     async function addCar() {
+        document.getElementById('spinner').style.display = 'flex'
         const urlParams = new URLSearchParams(window.location.search);
         const user_id = urlParams.get('user_id');
         const data = {
@@ -196,6 +197,7 @@
         const res = await response.json();
         window.location.reload()
         if (res.ok) {
+            document.getElementById('spinner').style.display = 'none'
         } else {
             alert('error')
         }

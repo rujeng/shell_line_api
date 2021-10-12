@@ -31,25 +31,25 @@
               </div>
         {% else %}
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                <label class="form-check-label" for="exampleRadios1">
+                <input class="form-check-input" type="radio" name="typeOil" id="typeOil1" value="1" checked>
+                <label class="form-check-label">
                     กึ่งสังเคราะห์แท้
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                <label class="form-check-label" for="exampleRadios2">
+                <input class="form-check-input" type="radio" name="typeOil" id="typeOil2" value="2">
+                <label class="form-check-label" >
                     สังเคราะห์แท้
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
-                <label class="form-check-label" for="exampleRadios3">
+                <input class="form-check-input" type="radio" name="typeOil" id="typeOil3" value="3">
+                <label class="form-check-label" >
                     สังเคราะห์แท้พรีเมียม
                 </label>
               </div>
               <div class="d-flex mt-4 mb-4">
-                <button class="btn btn-warning" style="margin-right: 8px;">คำนวณราคา</button>
+                <button class="btn btn-warning" style="margin-right: 8px;" onclick="calculatePriceForNormalCar()">คำนวณราคา</button>
               </div>
         {% endif %}
     {% endif %}
@@ -65,19 +65,52 @@
         window.location.replace(`${path}?user_id=${params['user_id']}&car_id=${carId}`)
       }
     
-      function refreshItemPricePage(){
+    function refreshItemPricePage(){
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         var path = window.location.pathname
         window.location.replace(`${path}?user_id=${params['user_id']}`)
       }
+
     $(document).ready(function(){
       function initial(){
         const carId = "{{car.0.id}}";
         $('#selectCar').val(carId)
-        
       }
+
+      async function calculatePriceForNormalCar(){
+        var typeOil = GetvalueRadio();
+        var body = { 'type_oil' : typeOil }
+        const res = await postData(url="/item/price/", data=body)
+        // debugger
+        console.log(res)
+
+      }
+      calculatePriceForNormalCar()
       initial();
     }())
+
+  async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json();
+  }
+
+    
+
+    function GetvalueRadio(){
+      var radioOil = document.getElementsByName("typeOil");
+      for (var i = 0, length = radioOil.length; i < length; i++) {
+         if (radioOil[i].checked) {
+         // do whatever you want with the checked radio
+         return radioOil[i].value;
+          }
+        }
+    }
 </script>
 {% endblock %}
