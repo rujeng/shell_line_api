@@ -1,15 +1,16 @@
 from django.contrib import admin
-from line.models import LineLogin , LineMessage, CustomUser, Car, LineOfficial , CarBrand
+from line.models import CarModel, LineLogin , LineMessage, CustomUser, Car, LineOfficial , CarBrand
 # Register your models here.
 
 admin.site.register(LineLogin)
 admin.site.register(LineMessage)
 admin.site.register(LineOfficial)
 admin.site.register(CarBrand)
+admin.site.register(CarModel)
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'model', 'user_id', 'car_register')
+    list_display = ('model', 'user_id', 'car_register')
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):

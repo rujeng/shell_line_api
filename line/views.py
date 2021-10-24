@@ -18,7 +18,7 @@ from django.core.exceptions import SuspiciousOperation
 from otp.otp_service import Otp
 from line.line_service import Line
 from line.message import Message
-from line.models import CarBrand, LineOfficial, LineLogin, LineMessage, CustomUser, Car
+from line.models import CarBrand, LineOfficial, LineLogin, LineMessage, CustomUser, Car , CarModel
 from item.models import Item, TransactionForm
 from line.form import WebForm
 from utils.functions import get_paginator
@@ -113,12 +113,11 @@ class CreateCarAPIView(View):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         line_id = body['line_id']
-        brand = body['brand']
-        model = body['model']
+        model_id = body['model']
         car_register = body['car_register']
+        model = CarModel.objects.filter(id=model_id).first()
         user = CustomUser.objects.filter(line_id=line_id).first()
-        Car.objects.create(user_id=user, brand=brand,
-                           model=model, car_register=car_register)
+        Car.objects.create(user_id=user, model=model, car_register=car_register)
         return JsonResponse({'ok': True})
 
 
@@ -160,8 +159,7 @@ class MyCar(View):
             branch_name = LineOfficial.objects.filter(id=branch_id).first()
             car = Car.objects.filter(id=car_id).first()
             meta_dat = {'fullname' : user.full_name,'mobileno': user.mobile_no, 'car_id': car_id,
-                        'brand' : car.brand, 'model' : car.model,
-                        'line_id': line_id,'branch_id': branch_id,'branch_name' : branch_name,
+                         'model' : car.model, 'line_id': line_id,'branch_id': branch_id,'branch_name' : branch_name,
                         'date': date,'time': time ,'service_detail' : service_detail}
             if self.businesslogic(meta_dat):
                   return render(request, 'success.html')
@@ -194,6 +192,15 @@ class MyCar(View):
             return False
 
 
+class CarSeries(View):
+
+    def get(self, request):
+        seriesId = request.GET.get('seriesId', None)
+        series = CarModel.objects.filter(brand__id=seriesId, status=True)
+        car_series = CarModel.map_object_to_json(series)
+        return JsonResponse({'series': car_series})
+
+
 class MyHistory(View):
 
     show_list = 2
@@ -224,7 +231,7 @@ class MyHistory(View):
                 'details': details,
                 'branch': branch.name if branch else 'None',
                 'car_register': tran.car.car_register,
-                'brand': tran.car.brand,
+                'brand': tran.car.model.brand.name,
                 'created_at': self.__get_day(tran.created_at),
                 'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
                 'appointed_date': tran.appointed_date,
@@ -286,7 +293,8 @@ class MyHistory(View):
                 'details': details,
                 'branch': branch.name if branch else 'None',
                 'car_register': tran.car.car_register,
-                'brand': tran.car.brand,
+                'brand': tran.car.model.brand.name,
+                'model': tran.car.model.name,
                 'created_at': self.__get_day(tran.created_at),
                 'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
                 'appointed_date': tran.appointed_date,
@@ -345,33 +353,58 @@ class ListItem(View):
         context = {'result' : result,'page_obj': page_obj, 'path': path}
         return render(request, 'item-list.html', context=context)
 
+# import requests
+@method_decorator(csrf_exempt, name='dispatch')
 class Testview(View):
 
-    def get(self, request):
-        contact_list = TransactionForm.objects.all()
-        page_number = int(request.GET.get('page', 1))
-        paginator = Paginator(contact_list, 5) # Show 25 contacts per page.
+    def post(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        reply_token = body['events'][0]['replyToken']
 
-        page_obj = paginator.get_page(page_number)
-        prv = page_obj.previous_page_number
-        next_page = page_obj.next_page_number
-        if page_number <= 1:
-            prv = 1
-        if page_number >= paginator.count:
-            next_page = paginator.count
+        return JsonResponse({},status=200)
+
+    def get(self, request):
+        import pdb ; pdb.set_trace()
+        url='https://api.line.me/v2/bot/message/reply'
+        data = {
+            "replyToken":"nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+            "messages":[
+                {
+                    "type":"text",
+                    "text":"Hello, user"
+                },
+                {
+                    "type":"text",
+                    "text":"May I help you?"
+                }
+            ]
+        }
+        res = requests.post(url, data=data)
+        # contact_list = TransactionForm.objects.all()
+        # page_number = int(request.GET.get('page', 1))
+        # paginator = Paginator(contact_list, 5) # Show 25 contacts per page.
+
+        # page_obj = paginator.get_page(page_number)
+        # prv = page_obj.previous_page_number
+        # next_page = page_obj.next_page_number
+        # if page_number <= 1:
+        #     prv = 1
+        # if page_number >= paginator.count:
+        #     next_page = paginator.count
         
-        context = {'page_obj': page_obj, 'prv': prv, 'next': next_page}
+        # context = {'page_obj': page_obj, 'prv': prv, 'next': next_page}
 
         return render(request, 'otp.html', context=context)
     
-    def post(self, request):
-        form = WebForm(request.POST)
-        print('---------', form.is_valid())
-        if form.is_valid():
+    # def post(self, request):
+    #     form = WebForm(request.POST)
+    #     print('---------', form.is_valid())
+    #     if form.is_valid():
 
-            print(form.cleaned_data)
-        print(form.errors)
-        return render(request, 'list.html', context={'form': form})
-        if form.is_valid():
-            return
+    #         print(form.cleaned_data)
+    #     print(form.errors)
+    #     return render(request, 'list.html', context={'form': form})
+    #     if form.is_valid():
+    #         return
 

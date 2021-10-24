@@ -57,6 +57,24 @@ class CalItemPrice(View):
         return render(request, 'calculate-price.html', context=context)
     
     def post(self, request):
+        type_oil = request.GET.get("type_oil", None)
+        line_id = request.GET.get('user_id', 'test1')
+        car_id = request.GET.get('car_id', None)
+        cars = Car.objects.filter(user_id__line_id=line_id)
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        option = None
+        if car_id:
+            car = Car.objects.filter(id = car_id , user_id__line_id=line_id).filter().first()
+            carbrand = CarBrand.objects.filter(name = car.brand).first()
+            option = CalculatePrice.objects.filter(brand = carbrand,series = car.model).first()
+        price = 0
+        if type_oil == 1:
+            price = option.semi_sync_price
+        elif type_oil == 2:
+            price = option.sync_price
+        elif type_oil == 3:
+            price = option.premium_price
+
         return JsonResponse({'status': 'www'})
 
 
@@ -79,7 +97,7 @@ class CalcalatePriceview(View):
             pass
         return render(request, 'calculate-price.html' , context = context)
     
-    def post(self, request):
+    def post(self, request):        
         # import pdb ;pdb.set_trace()
         return JsonResponse({'ok': True})
         

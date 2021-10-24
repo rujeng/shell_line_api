@@ -11,7 +11,7 @@ class OTPVerify(View):
     def get(self, request):
         line_id = request.GET.get("user_id", None)
         branch_id = request.GET.get("branch_id", None)
-        full_name = request.GET.get('fullname', None)
+        full_name = request.GET.get('full_name', None)
         mobileno = request.GET.get('mobileno', None)
         otp = Otp()
         state,ref_code = otp.register_get_otp(line_id,mobileno,full_name)

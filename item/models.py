@@ -1,5 +1,5 @@
 from django.db import models
-from line.models import CustomUser,CarBrand, Car
+from line.models import CustomUser,CarBrand, Car , CarModel
 
 # Create your models here.
 class TransactionForm(models.Model):
@@ -64,7 +64,7 @@ class CalculatePrice(models.Model):
     # ]
     brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE)
     name =  models.CharField(max_length=30)
-    series = models.CharField(max_length=100)
+    series = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     num_liter = models.CharField(max_length=5)
     eco = models.BooleanField(default=False)
     bensin = models.BooleanField(default=False)

@@ -39,9 +39,9 @@
     <div class="form-box mt-4">
       <div class="d-flex justify-content-between">
         <h5>บริการ</h5>
-        <h5>{{value.created_at}}</h5>
+        <h5>{{value.created_date}} {{value.created_at}}</h5>
       </div>
-      <p class="text-end">{{value.created_date}}</p>
+      <!-- <p class="text-end"></p> -->
       <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
         {% for detail in value.details %}
         <div class="mt-2">
@@ -52,8 +52,8 @@
           </div>
         </div>
         {% endfor %}
-      <div class="mt-4">รวมจำนวนเงิน {{item.total_price}} บาท</div>
-      <div class="text-end mt-4">บริการครั้งต่อไป {{item.next_service}}</div>
+      <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
+      <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
     </div>
   {% endfor %}
 </div>

@@ -12,14 +12,17 @@
                 <div class="form-group">
                     <label>ยี่ห้อรถยนต์</label>
                     <label for="require" class="form-label require">*</label>
-                    <select class="form-control mb-2" id='car-brand'>
+                    <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
                         <option default value=''>กรุณาเลือก</option>
                         {% for car in cars_dropdown %}
-                        <option value='{{car.name}}'>{{car.name}}</option>
+                            <option value='{{car.id}}'>{{car.name}}</option>
                         {% endfor %}
                     </select>
                     <label>รุ่นรถยนต์</label>
-                    <input type='text' id='model' class="form-control form-input" />
+                    <select class="form-control mb-2" id='car-series'>
+                        <!-- <option default value=''>กรุณาเลือก</option> -->
+                    </select>
+                    <!-- <input type='text' id='model' class="form-control form-input" /> -->
                     <label>ทะเบียนรถ</label>
                     <input type='text' id='car_register' class="form-control form-input" />
                 </div>
@@ -49,7 +52,7 @@
                 <select class="form-control mb-2" name="car_id" id='brand'>
                     <option default value=''>กรุณาเลือก</option>
                     {% for car in cars %}
-                    <option value={{car.id}}>{{car.car_register}} ({{car.brand}}) </option>
+                    <option value={{car.id}}>{{car.car_register}} ({{car.model.brand.name}}-{{car.model.name}}) </option>
                     {% endfor %}
                 </select>
                 <div class="d-flex justify-content-end">
@@ -182,8 +185,7 @@
         const user_id = urlParams.get('user_id');
         const data = {
             car_register: $('#car_register').val(),
-            model: $('#model').val(),
-            brand: $('#car-brand').val(),
+            model: $('#car-series').val(),
             line_id: user_id
         }
         const response = await fetch('/line/addcar/', {
@@ -235,7 +237,6 @@
     }
   }
     function validateSubmit(e) {
-        debugger
         var state = false
         document.getElementById('spinner').style.display = 'flex'
         const vCar = validate('brand');
@@ -264,7 +265,6 @@
     }
 
     function validatebranch(){
-      debugger
       const urlParams = new URLSearchParams(window.location.search);
       const branch_id_br = urlParams.get('branch_id');
       if(branch_id_br == 1 || branch_id_br == 2 )
@@ -287,5 +287,23 @@
     }
     return false;
   }
+</script>
+<script>
+    function getCarSeries(){
+        const seriesId = $('#car-brand').val()
+        if(seriesId){
+            fetch(`/line/car-series?seriesId=${seriesId}`)
+            .then(response => response.json())
+            .then(data => {
+                var html = '';
+                for(car of data.series){
+                    html += `<option value=${car.id}>${car.name}</option>`
+                }
+                $('#car-series').html(html)
+            });
+        }else{
+            $('#car-series').html('')
+        }
+    }
 </script>
 {% endblock %}

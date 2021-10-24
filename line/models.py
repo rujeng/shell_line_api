@@ -66,10 +66,19 @@ class CarModel(models.Model):
     def __str__(self):
         return str(self.name)
 
-class  Car(models.Model):
+    def map_object_to_json(objects):
+        result = []
+        for model in objects:
+            result.append({
+                'name': model.name,
+                'id': model.id
+            })
+        return result
+
+class Car(models.Model):
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE,blank=True,null=True )
-    brand = models.CharField(max_length=20)
-    model = models.CharField(max_length=20)
+    # TODO forieng key
+    model = models.ForeignKey(CarModel, on_delete=models.CASCADE,blank=True,null=True )
     car_register = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -81,7 +90,7 @@ class  Car(models.Model):
         cars = []
         for car in objects:
             cars.append({
-                    'brand': car.brand,
+                    # 'brand': car.brand,
                     'model': car.model,
                     'car_register': car.car_register,
                     'id': car.id

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-sm">
+    <button type="button" class="btn btn-primary">
+        Notifications <span class="badge badge-light" id='notify'>0</span>
+    </button>
+    {% for restaurant in object_list%}
+        <div>ร้าน {{restaurant.name}}</div>
+        <div>เมนู</div>
+        <div class="d-flex justify-content-between mb-3">
+            {% for menu in restaurant.menus %}
+                <div>{{menu.name}}</div>
+                <div class="d-flex">
+                    <button class="btn btn-warning" id='{{menu.id}}' onclick="handleOrderDetail(this, '{{restaurant.id}}', 'add')">add</button>
+                    <div>{{menu.price}} บาท</div>
+                    <button class="btn btn-danger" id='{{menu.id}}' onclick="handleOrderDetail(this, '{{restaurant.id}}', 'del')">del</button>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block script %}
+    <script>
+        function handleOrderDetail(event, restaurantId, action){
+            console.log(restaurantId)
+            const menuId = event.id;
+            const url = '/delivery/api/order/';
+            const data = {
+                'menu_id': parseInt(menuId),
+                'action': action,
+                'restaurant_id': parseInt(restaurantId)
+            }
+            const body = {
+                method: 'PATCH',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            fetch(url, body)
+            .then(res => res.json())
+            .then(data => console.log(data))
+        }
+
+        function get_notify(){
+               fetch('/delivery/api/order/')
+               .then(res => res.json())
+               .then(data => {
+                   $('#notify').html(data.count)
+               })
+           }
+        $(document).ready(function(){
+           get_notify()
+        }())
+    </script>
+{% endblock %}
