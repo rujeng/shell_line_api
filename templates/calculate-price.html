@@ -6,6 +6,10 @@
             <h3>คุณ {{user.full_name}}</h3>
           <!-- <div class="mb-1"></div> -->
           <div class="mb-1">เบอโทรศัพท์: {{user.mobile_no}}</div>
+          {% if car %}
+          <div class="mb-1">ยี่ห้อรถ: {{car.model.name}}</div>
+          <div class="mb-1">รุ่นรถ: {{car.model.brand.name}}</div>
+          {% endif %}
           <div class="d-flex justify-content-between car-plat-option">
             <div>ทะเบียนรถ</div>
             <select onchange="changeRegister(this)" id='selectCar' class="custom-select"> 
@@ -30,6 +34,7 @@
                 <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
               </div>
         {% else %}
+        <div id="myOption">
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="typeOil" id="typeOil1" value="1" checked>
                 <label class="form-check-label">
@@ -51,6 +56,28 @@
               <div class="d-flex mt-4 mb-4">
                 <button class="btn btn-warning" style="margin-right: 8px;" onclick="calculatePriceForNormalCar()">คำนวณราคา</button>
               </div>
+        </div>
+        <div id="myResult" class="d-none">
+          <div>ราคาโดยประมาณ</div>
+            <div id='semi_sync_price' class="d-none">
+              {{option.semi_sync_price}} บาท
+            </div>
+            <div id='sync_price' class="d-none">
+              {{option.sync_price}} บาท
+            </div>
+            <div id='premium_price' class="d-none">
+              {{option.premium_price}} บาท
+            </div>
+            <div>ใช้เวลาประมาณ 15 - 30 นาที</div>
+            <div>________________________</div>
+            <div>*ราคารวมกรองนํ้ามันเครื่อง</div>
+            <div>**บริการตรวจสภาพฟรี 10 รายการ ไม่มีค่าแรง</div>
+            <div>***ราคาอาจมีการเปลี่ยงแปลง ตามจำนวนลิตรนํ้ามันที่ใช้</div>
+            <div class="d-flex mt-4 mb-4">
+              <button class="btn btn-warning" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
+              <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
+            </div>
+        </div>
         {% endif %}
     {% endif %}
 </div>
@@ -72,21 +99,32 @@
         window.location.replace(`${path}?user_id=${params['user_id']}`)
       }
 
+    function calculatePriceForNormalCar(){
+        var typeOil = GetvalueRadio();
+        document.getElementById("myOption").className = 'd-none'
+        document.getElementById("myResult").className = ''
+        if(typeOil == 1)
+        {
+          document.getElementById("semi_sync_price").className = ''
+        }
+        else if(typeOil == 2)
+        {
+          document.getElementById("sync_price").className = ''
+        }
+        else
+        {
+          document.getElementById("premium_price").className = ''
+        }
+        // var body = { 'type_oil' : typeOil }
+        // const res = await postData(url="/item/price/", data=body)
+        // console.log(res)
+      }
+      
     $(document).ready(function(){
       function initial(){
-        const carId = "{{car.0.id}}";
+        const carId = "{{car.id}}";
         $('#selectCar').val(carId)
       }
-
-      async function calculatePriceForNormalCar(){
-        var typeOil = GetvalueRadio();
-        var body = { 'type_oil' : typeOil }
-        const res = await postData(url="/item/price/", data=body)
-        // debugger
-        console.log(res)
-
-      }
-      calculatePriceForNormalCar()
       initial();
     }())
 
@@ -100,8 +138,6 @@
     })
     return response.json();
   }
-
-    
 
     function GetvalueRadio(){
       var radioOil = document.getElementsByName("typeOil");

@@ -25,6 +25,10 @@ from utils.functions import get_paginator
 
 # Create your views here.
 
+def response_error_handler(request, exception=None):
+    import pdb ; pdb.set_trace()
+    return render(request, 'error.html')
+
 
 class WebFormView(View):
     def get(self, request):

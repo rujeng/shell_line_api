@@ -29,3 +29,6 @@ urlpatterns = [
     path('itemlist/',ListItem.as_view()),
     path('test/', Testview.as_view()),
 ]
+handler400 = "line.views.response_error_handler"
+handler500 = 'line.views.response_error_handler'
+handler404 = "line.views.response_error_handler"

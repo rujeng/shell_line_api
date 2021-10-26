@@ -49,11 +49,11 @@ class CalItemPrice(View):
         cars = Car.objects.filter(user_id__line_id=line_id)
         user = CustomUser.objects.filter(line_id=line_id).first()
         option = None
+        car = None
         if car_id:
             car = Car.objects.filter(id = car_id , user_id__line_id=line_id).filter().first()
-            carbrand = CarBrand.objects.filter(name = car.brand).first()
-            option = CalculatePrice.objects.filter(brand = carbrand,series = car.model).first()
-        context = {'cars_dropdown': cars, 'user': user,'option':option}
+            option = CalculatePrice.objects.filter(brand = car.model.brand,series = car.model).first()
+        context = {'cars_dropdown': cars, 'user': user,'option':option,'car': car}
         return render(request, 'calculate-price.html', context=context)
     
     def post(self, request):
@@ -65,8 +65,9 @@ class CalItemPrice(View):
         option = None
         if car_id:
             car = Car.objects.filter(id = car_id , user_id__line_id=line_id).filter().first()
-            carbrand = CarBrand.objects.filter(name = car.brand).first()
-            option = CalculatePrice.objects.filter(brand = carbrand,series = car.model).first()
+            if not car.model or not car.model.brand:
+                return JsonResponse({'ok': False, 'result': {'message' : ''} })
+            option = CalculatePrice.objects.filter(brand = car.model.brand,series = car.model).first()
         price = 0
         if type_oil == 1:
             price = option.semi_sync_price
@@ -75,7 +76,7 @@ class CalItemPrice(View):
         elif type_oil == 3:
             price = option.premium_price
 
-        return JsonResponse({'status': 'www'})
+        return JsonResponse({'ok': True,'result': option})
 
 
 class CalcalatePriceview(View):
@@ -85,9 +86,9 @@ class CalcalatePriceview(View):
         cars = user.car_set.all()
         brand = []
         for car in cars:
-            if car.brand not in brand:
-                brand.append(car.brand)
-        # print('br' , brand)
+            if car.model.brand not in brand:
+                brand.append(car.model.brand)
+        print('br' , brand)
         list_brand = CarBrand.objects.filter(name__in = brand)
         # print('lb' , list_brand)
         list_calculate_price = CalculatePrice.objects.filter(brand__in = list_brand)

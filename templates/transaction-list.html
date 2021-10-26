@@ -16,46 +16,55 @@
       </div>
     </div>
   </div>
-  <div class="d-flex mt-4 mb-4">
-    <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
-    <button class="btn btn-warning" style="margin-right: 8px;">ประวัติ</button>
-    <button class="btn btn-warning" style="margin-right: 8px;">โปรโมชั่น</button>
+  <div>
+    
   </div>
-  <!-- {% if car %}
-  <div class="form-box mt-4 mb-4">
-    {% for item in car %}
-    <div class="mb-1">ทะเบียนรถยนต์: {{item.car_register}}</div>
-    <div class="mb-1">ยี่ห้อรถยนต์: {{item.brand}}</div>
-    <div class="mb-1">รุ่น: {{item.model}}</div>
-    {% endfor %}
-  </div>
-  {% endif %} -->
-  {% for value in result %}
-    <div class="form-box mt-4 mb-4">
-      <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
-      <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
-      <div class="mb-1">รุ่น: {{value.model}}</div>
-    </div>
-    <div class="form-box mt-4">
-      <div class="d-flex justify-content-between">
-        <h5>บริการ</h5>
-        <h5>{{value.created_date}} {{value.created_at}}</h5>
-      </div>
-      <!-- <p class="text-end"></p> -->
-      <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
-        {% for detail in value.details %}
-        <div class="mt-2">
-          <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
-          <div>
-            <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
-            <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
+  <div class="mt-4 mb-4">
+    <p>
+      <button class="btn btn-primary" type="button" onclick="handleToggle(this)">ประวัติการให้บริการ</button>
+      <button class="btn btn-primary" type="button" onclick="handleToggle(this)">โปรโมชั่น</button>
+    </p>
+
+    <div class="row">
+      <div class="row">
+        <div class="col">
+          <div class="" id="history">
+            {% for value in result %}
+            <div class="form-box mt-4 mb-4">
+              <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
+              <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
+              <div class="mb-1">รุ่น: {{value.model}}</div>
+            </div>
+            <div class="form-box mt-4">
+              <div class="d-flex justify-content-between">
+                <h5>บริการ</h5>
+                <h5>{{value.created_date}} {{value.created_at}}</h5>
+              </div>
+              <!-- <p class="text-end"></p> -->
+              <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
+              {% for detail in value.details %}
+              <div class="mt-2">
+                <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
+                <div>
+                  <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
+                  <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
+                </div>
+              </div>
+              {% endfor %}
+              <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
+              <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
+            </div>
+            {% endfor %}
           </div>
         </div>
-        {% endfor %}
-      <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
-      <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
+      </div>
+      <div class="row">
+        <div class='col'>
+          <div class="" id="promotion">promotion</div>
+        </div>
+      </div>
     </div>
-  {% endfor %}
+  </div>
 </div>
 
 <div class="float-end mt-2">
@@ -83,6 +92,19 @@
 {% endblock %}
 {% block script %}
 <script>
+  function handleToggle(e){
+    const e1 = $('#history')
+    const e2 = $('#promotion')
+    if(e1.css('display') === 'block'){
+      e1.css('display', 'none')
+      e2.css('display', 'block')
+    }else{
+      e1.css('display', 'block')
+      e2.css('display', 'none')
+    }
+  }
+</script>
+<script>
   function changeRegister(e) {
     const carId = e.value
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -96,7 +118,7 @@
     const params = Object.fromEntries(urlSearchParams.entries());
     var path = window.location.pathname;
     var next = "{{next_page}}";
-    window.location.replace(`${path}?user_id=${params['user_id']}&page=${next||1}&car_id=${params['car_id']}`)
+    window.location.replace(`${path}?user_id=${params['user_id']}&page=${next || 1}&car_id=${params['car_id']}`)
   }
 
   function prvPage() {
@@ -104,12 +126,14 @@
     const params = Object.fromEntries(urlSearchParams.entries());
     var path = window.location.pathname
     var prv = "{{prv_page}}";
-    window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv||1}&car_id=${params['car_id']}`)
+    window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv || 1}&car_id=${params['car_id']}`)
   }
   $(document).ready(function () {
     function initial() {
       const carId = "{{car.0.id}}";
       $('#selectCar').val(carId)
+
+      $('#promotion').css('display', 'none');
     }
 
     initial();
