@@ -1,5 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
+                <button type="button" class="btn-close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>ยี่ห้อรถยนต์</label>
+                    <label for="require" class="form-label require">*</label>
+                    <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
+                        <option default value=''>กรุณาเลือก</option>
+                        {% for car in cars_dropdown %}
+                            <option value='{{car.id}}'>{{car.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <label>รุ่นรถยนต์</label>
+                    <select class="form-control mb-2" id='car-series'>
+                        <!-- <option default value=''>กรุณาเลือก</option> -->
+                    </select>
+                    <!-- <input type='text' id='model' class="form-control form-input" /> -->
+                    <label>ทะเบียนรถ</label>
+                    <input type='text' id='car_register' class="form-control form-input" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addCar()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-sm">
     <button type="button" class="btn btn-primary">
         Notifications <span class="badge badge-light" id='notify'>0</span>
@@ -7,8 +40,8 @@
     {% for restaurant in object_list%}
         <div>ร้าน {{restaurant.name}}</div>
         <div>เมนู</div>
-        <div class="d-flex justify-content-between mb-3">
-            {% for menu in restaurant.menus %}
+        {% for menu in restaurant.menus %}
+            <div class="d-flex justify-content-between mb-3">
                 <div>{{menu.name}}</div>
                 <div class="d-flex">
                     <button class="btn btn-warning" id='{{menu.id}}' onclick="handleOrderDetail(this, '{{restaurant.id}}', 'add')">add</button>
@@ -16,21 +49,24 @@
                     <button class="btn btn-danger" id='{{menu.id}}' onclick="handleOrderDetail(this, '{{restaurant.id}}', 'del')">del</button>
 
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
     {% endfor %}
 </div>
 {% endblock %}
 {% block script %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function handleOrderDetail(event, restaurantId, action){
-            console.log(restaurantId)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('user_id');
             const menuId = event.id;
             const url = '/delivery/api/order/';
             const data = {
                 'menu_id': parseInt(menuId),
                 'action': action,
-                'restaurant_id': parseInt(restaurantId)
+                'restaurant_id': parseInt(restaurantId),
+                'user_id': userId
             }
             const body = {
                 method: 'PATCH',
@@ -39,13 +75,36 @@
                 },
                 body: JSON.stringify(data)
             }
-            fetch(url, body)
-            .then(res => res.json())
-            .then(data => console.log(data))
+            //confirm action
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(url, body)
+                    .then(res => res.json())
+                    .then(data => {
+                        // TODO check status ok from server
+                        get_notify(); // refresh notify
+                        Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                        )
+                    })
+                }
+                })
         }
 
         function get_notify(){
-               fetch('/delivery/api/order/')
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('user_id');
+               fetch('/delivery/api/order/?user_id='+userId)
                .then(res => res.json())
                .then(data => {
                    $('#notify').html(data.count)

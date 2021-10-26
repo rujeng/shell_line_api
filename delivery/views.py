@@ -35,38 +35,45 @@ class RestaurantView(View):
 class OrderView(View):
     
     def get(self, request):
-        return render(request, 'order.html')
+        orders = Order.objects.all().order_by('-pk')
+        object_list = Order.map_object_to_list(orders)
+        context = {'object_list': object_list}
+        return render(request, 'order.html', context)
     
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OrderAPI(View):
 
+    #notify
     def get(self, request):
         # ถ้าไม่มี user ในระบบทำยังไง
         line_id = request.GET.get('user_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
         order = Order.objects.filter(user=user)
-        details = [OrderDetail.objects.filter(order=order)]
+        details = OrderDetail.objects.filter(order=order.first())
+        count = self.get_order_detail_quantity(details)
         lastests_order = Order.map_object_to_list(order)
-        count = len(order)
-        return JsonResponse({'orders': lastests_order, 'count': 1})
+        return JsonResponse({'orders': lastests_order, 'count': count})
+
+    def get_order_detail_quantity(self, details):
+        count = 0
+        for detail in details:
+            count += detail.quantity
+        return count
 
     def patch(self, request):
-        line_id = request.GET.get('user_id', None)
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        # print(body)
         menu_id = body['menu_id']
         action = body['action']
+        line_id = body['user_id']
         restaurant_id = body['restaurant_id']
-
-        print('-----------',body)
         with transaction.atomic():
             user = CustomUser.objects.filter(line_id=line_id).first()
             restaurant = Restaurant.objects.filter(id=restaurant_id).first()
-            order = Order.objects.get_or_create(user=user, restaurant=restaurant)
+            order, created_order = Order.objects.get_or_create(user=user, restaurant=restaurant)
             menu = Menu.objects.filter(id=menu_id).first()
-            detail,created = OrderDetail.objects.get_or_create(menu=menu, order=order)
+            detail, created_detail = OrderDetail.objects.get_or_create(menu=menu, order=order)
             if action == 'add':
                 detail.quantity += 1
             elif action == 'del':
@@ -74,4 +81,5 @@ class OrderAPI(View):
                     detail.quantity -= 1
                 else:
                     detail.delete()
+            detail.save(update_fields=['quantity'])
         return JsonResponse({})

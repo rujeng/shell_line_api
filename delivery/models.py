@@ -10,6 +10,9 @@ class Restaurant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
     def get_menu_list(restaurants):
         result = []
         for restaurant in restaurants:
@@ -32,6 +35,9 @@ class Menu(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+    
     def map_object_to_list(object_list):
         result = []
         for item in object_list:
@@ -61,13 +67,17 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
+    def __str__(self):
+        return str(self.id)
+    
     def map_object_to_list(object_list):
         result = []
         for order in object_list:
             result.append({
                 'status': order.status,
                 'id': order.id,
+                'detail': order.total_price,
             })
         return result
 
@@ -80,3 +90,16 @@ class OrderDetail(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.menu
+
+    def get_detail(order):
+        result = []
+        details = OrderDetail.objects.filter(order=order)
+        for detail in details:
+            import pdb ; pdb.set_trace()
+            # result.append({
+            #     'menu': Menu.g
+            # })
+        return result

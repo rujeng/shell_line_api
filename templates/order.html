@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-sm">
+    {% for order in object_list %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">title</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <div class="d-flex">
+                <div>id {{order.id}}</div>
+                <select class="form-control mb-2" id='car-brand'>
+                    <option value='{{car.brand}}'>initial</option>
+                    <option value='{{car.brand}}'>waiting</option>
+                    <option value='{{car.brand}}'>success</option>
+                  </select>
+                <!-- <div>status {{order.status}}</div> -->
+
+            </div>
+          <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}
