@@ -64,7 +64,7 @@ class LineHookView(View):
             ถ้าเป็น false คือ ไม่มี user
         '''
         line = Line()
-        line_login = LineLogin.objects.filter(id=branch_id , mode=1).first()
+        line_login = LineLogin.objects.filter(line_official__id=branch_id , mode=1).first()
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token(
@@ -92,7 +92,7 @@ class LineHistory(View):
 
     def businesslogic(self, code,branch_id):
         line = Line()
-        line_login = LineLogin.objects.filter(id=branch_id,mode=2).first()
+        line_login = LineLogin.objects.filter(line_official__id=branch_id,mode=2).first()
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token_history(
