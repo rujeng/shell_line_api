@@ -4,9 +4,6 @@ import requests
 import json
 from django.conf import settings
 
-
-
-
 class HttpRequest():
 
     def request(self, method, url, data=None, headers=None, max_retires=1):
@@ -38,7 +35,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'https://0810-2405-9800-b620-744b-ccb9-9203-e4bd-9e65.ngrok.io/line/webhook?branch_id={branch_id}',
+            'redirect_uri': f'http://159.223.95.82/line/webhook?branch_id={branch_id}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
@@ -81,7 +78,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'https://75fe-2405-9800-b600-1bca-a5be-304a-85ae-e5c9.ngrok.io/line/webhistory',
+            'redirect_uri': f'http://159.223.95.82/line/webhistory',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
