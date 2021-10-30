@@ -40,12 +40,7 @@ class WebFormView(View):
         full_name = request.POST.get('fullname', None)
         mobileno = request.POST.get('mobileno', None)
         meta_data = {'full_name': full_name, 'mobile': mobileno, 'line_id': line_id}
-        otp = Otp()
-        state,ref_code = otp.register_get_otp(line_id,mobileno,full_name)
-        if state:
-            context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id}
-            return redirect(f'/otp/verify?user_id={line_id}&branch_id={branch_id}&full_name={full_name}&mobileno={mobileno}')
-        return render(request, 'error.html')
+        return redirect(f'/otp/verify?user_id={line_id}&branch_id={branch_id}&full_name={full_name}&mobileno={mobileno}')
 
 
 class LineHookView(View):
@@ -199,6 +194,7 @@ class MyCar(View):
 class CarSeries(View):
 
     def get(self, request):
+        import pdb ;pdb.set_trace()
         seriesId = request.GET.get('seriesId', None)
         series = CarModel.objects.filter(brand__id=seriesId, status=True)
         car_series = CarModel.map_object_to_json(series)

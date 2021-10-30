@@ -46,7 +46,9 @@
 <div class="container-sm" id='main-container'>
   <!-- Content here -->
   <form method="post" class="form-format" onsubmit="return validateSubmit(this)" id='formSubmit'>
-    <h4 class="p-2">ระบบจองคิวเปลี่ยนถ่ายน้ำมันเครื่อง</h4>
+    <div class="mb-4 form-head">
+      <h4 class="">ระบบจองคิวเปลี่ยนถ่ายน้ำมันเครื่อง</h4>
+    </div>
     {% csrf_token %}
     <div class="mb-3 form-box">
       <label for="fullname" class="form-label">ชื่อ-นามสกุล</label>
@@ -107,7 +109,7 @@
     </div> -->
     
 
-    <button type='submit' class="btn btn-primary btn-lg button-shadow">ถัดไป</button>
+    <button type='submit' class="btn btn-danger btn-lg button-shadow">ถัดไป</button>
   </form>
 </div>
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <div class="form-box mt-4">
+  <div class="mt-4 form-head">
     <div class="">
       <h1>คุณ {{fullname}}</h1>
       <div class="mb-1">เบอโทรศัพท์: {{mobile}}</div>
@@ -19,52 +19,42 @@
   <div>
     
   </div>
-  <div class="mt-4 mb-4">
-    <p>
-      <button class="btn btn-primary" type="button" onclick="handleToggle(this)">ประวัติการให้บริการ</button>
-      <button class="btn btn-primary" type="button" onclick="handleToggle(this)">โปรโมชั่น</button>
-    </p>
 
-    <div class="row">
-      <div class="row">
-        <div class="col">
-          <div class="" id="history">
-            {% for value in result %}
-            <div class="form-box mt-4 mb-4">
-              <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
-              <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
-              <div class="mb-1">รุ่น: {{value.model}}</div>
-            </div>
-            <div class="form-box mt-4">
-              <div class="d-flex justify-content-between">
-                <h5>บริการ</h5>
-                <h5>{{value.created_date}} {{value.created_at}}</h5>
-              </div>
-              <!-- <p class="text-end"></p> -->
-              <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
-              {% for detail in value.details %}
-              <div class="mt-2">
-                <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
-                <div>
-                  <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
-                  <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
-                </div>
-              </div>
-              {% endfor %}
-              <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
-              <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
-            </div>
-            {% endfor %}
+  <p class="mt-4">
+    <button class="btn btn-danger" type="button" onclick="handleToggle(this)">ประวัติการให้บริการ</button>
+    <button class="btn btn-danger" type="button" onclick="handleToggle(this)">โปรโมชั่น</button>
+  </p>
+  <!-- <div class="mt-4 mb-4"> -->
+    <div class="" id="history">
+      {% for value in result %}
+      <div class="form-box mt-4 mb-4">
+        <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
+        <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
+        <div class="mb-1">รุ่น: {{value.model}}</div>
+      </div>
+      <div class="form-box mt-4">
+        <div class="d-flex justify-content-between">
+          <h5>บริการ</h5>
+          <h5>{{value.created_date}} {{value.created_at}}</h5>
+        </div>
+        <!-- <p class="text-end"></p> -->
+        <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
+        {% for detail in value.details %}
+        <div class="mt-2">
+          <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
+          <div>
+            <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
+            <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
           </div>
         </div>
+        {% endfor %}
+        <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
+        <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
       </div>
-      <div class="row">
-        <div class='col'>
-          <div class="" id="promotion">promotion</div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-  </div>
+    <div class="" id="promotion">promotion</div>
+  <!-- </div> -->
 </div>
 
 <div class="float-end mt-2">

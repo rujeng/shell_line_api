@@ -78,7 +78,6 @@ class CalItemPrice(View):
 
         return JsonResponse({'ok': True,'result': option})
 
-
 class CalcalatePriceview(View):
     def get(self, request):
         line_id = request.GET.get("user_id", None)

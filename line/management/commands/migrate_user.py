@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-from line.models import CustomUser, Car , CarBrand
+from line.models import CustomUser, Car , CarBrand, CarModel
 import csv
 import os
 from pathlib import Path
@@ -27,7 +27,11 @@ class Command(BaseCommand):
                     customer_id, full_name, mobile, brand, model, car_register, date, ref = row
                     mobile = mobile.replace('-', '')
                     user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile, full_name=full_name)
-                    Car.objects.create(user_id=user, brand=brand, model=model, car_register=car_register)
+                    brand = CarBrand.objects.filter(name=brand).first()
+                    if brand:  # check existed brand and model
+                        if CarModel.objects.filter(brand=brand, name=model).exists():
+                            Car.objects.create(user=user, brand=brand, car_register=car_register)
+
                 num += 1
             print('row ----', num)
         print('uploaded success')

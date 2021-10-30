@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
+              <button type="button" class="btn-close" data-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                  <label>ยี่ห้อรถยนต์</label>
+                  <label for="require" class="form-label require">*</label>
+                  <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
+                      <option default value=''>กรุณาเลือก</option>
+                      {% for car in cars_dropdown %}
+                          <option value='{{car.id}}'>{{car.name}}</option>
+                      {% endfor %}
+                  </select>
+                  <label>รุ่นรถยนต์</label>
+                  <select class="form-control mb-2" id='car-series'>
+                      <!-- <option default value=''>กรุณาเลือก</option> -->
+                  </select>
+                  <!-- <input type='text' id='model' class="form-control form-input" /> -->
+                  <label>ทะเบียนรถ</label>
+                  <input type='text' id='car_register' class="form-control form-input" />
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="addCar()">Save changes</button>
+          </div>
+      </div>
+  </div>
+</div>
+
 <div class="container form-box mt-4">
         <div class="">
             <h1>ประเมินราคา ถ่ายน้ำมันเครื่อง</h1>
@@ -18,6 +53,10 @@
                 <option value="{{car.id}}" >{{car.car_register}}</option>
               {% endfor %}
             </select>
+            <div class="d-flex justify-content-end">
+              <button type="button" class="btn btn-primary button-shadow" data-toggle="modal"
+                  data-target="#exampleModal">เพิ่มรถยนต์</button>
+          </div>
           </div>
         </div>
     {% if option %}
@@ -148,5 +187,51 @@
           }
         }
     }
+</script>
+<script>
+  function getCarSeries(){
+      const seriesId = $('#car-brand').val()
+      debugger
+      if(seriesId){
+          fetch(`/line/car-series?seriesId=${seriesId}`)
+          .then(response => response.json())
+          .then(data => {
+              var html = '';
+              for(car of data.series){
+                  html += `<option value=${car.id}>${car.name}</option>`
+              }
+              $('#car-series').html(html)
+          });
+      }else{
+          $('#car-series').html('')
+      }
+  }
+</script>
+<script>
+  async function addCar() {
+      document.getElementById('spinner').style.display = 'flex'
+      const urlParams = new URLSearchParams(window.location.search);
+      const user_id = urlParams.get('user_id');
+      const data = {
+          car_register: $('#car_register').val(),
+          model: $('#car-series').val(),
+          line_id: user_id
+      }
+      const response = await fetch('/line/addcar/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          redirect: 'follow',
+          body: JSON.stringify(data)
+      });
+      const res = await response.json();
+      window.location.reload()
+      if (res.ok) {
+          document.getElementById('spinner').style.display = 'none'
+      } else {
+          alert('error')
+      }
+  }
 </script>
 {% endblock %}

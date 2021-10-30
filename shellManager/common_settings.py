@@ -31,7 +31,7 @@ BASE = PROJECT_PATH.parent
 SECRET_KEY = getattr(configs, 'SECRET_KEY', '+y01%7#9aipmcca171@(%%3i0v#mi(f32&a-(+r0=w_i7mj2yk')
 PRODUCTION = getattr(configs, 'PRODUCTION', False)
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = getattr(configs, 'ALLOWED_HOSTS', ['*'])
 if isinstance(ALLOWED_HOSTS, str):
