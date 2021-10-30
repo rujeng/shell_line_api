@@ -73,12 +73,12 @@ class Line(HttpRequest):
         data = message_data
         return super().request('POST', url ,json.dumps(data), headers)
 
-    def get_token_history(self,code, channel_id ,channel_secret):
+    def get_token_history(self,code, channel_id ,channel_secret,branch_id):
         url = "https://api.line.me/oauth2/v2.1/token"
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'http://159.223.95.82/line/webhistory',
+            'redirect_uri': f'http://159.223.95.82/line/webhistory?branch_id={branch_id}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }

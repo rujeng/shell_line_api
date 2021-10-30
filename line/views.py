@@ -96,7 +96,7 @@ class LineHistory(View):
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token_history(
-            code,channel_id, channel_secret)
+            code,channel_id, channel_secret,branch_id)
         print('get to ', get_token_response)
         if get_token_response['ok']:
             access_token = get_token_response['result']['access_token']
