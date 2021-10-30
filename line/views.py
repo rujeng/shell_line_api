@@ -64,7 +64,7 @@ class LineHookView(View):
             ถ้าเป็น false คือ ไม่มี user
         '''
         line = Line()
-        line_login = LineLogin.objects.filter(id=branch_id).first()
+        line_login = LineLogin.objects.filter(id=branch_id , mode=1).first()
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token(
@@ -84,13 +84,15 @@ class LineHistory(View):
         branch_id = request.GET.get("branch_id")
         line_id, state = self.businesslogic(code, branch_id)
         user = CustomUser.objects.filter(line_id=line_id)
-
-        
+        if user:
+            return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=')
+        if state:
+            return redirect(f'/line/form?user_id={line_id}&branch_id={branch_id}')
         return render(request, 'error.html')
 
     def businesslogic(self, code,branch_id):
         line = Line()
-        line_login = LineLogin.objects.filter(id=branch_id).first()
+        line_login = LineLogin.objects.filter(id=branch_id,mode=2).first()
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token_history(

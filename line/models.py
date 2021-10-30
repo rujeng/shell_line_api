@@ -25,8 +25,17 @@ class LineOfficial(models.Model):
         return self.name
 
 class LineLogin(models.Model):
+    FORM = '1'
+    HISTORY = '2'
+    CALCULATEPRICE = '3'
+    RIDIRECT_CHOICES = [
+        (FORM, 'FORM'),
+        (HISTORY, 'HISTORY'),
+        (CALCULATEPRICE, 'CALCULATEPRICE'),
+    ]
     name = models.CharField(max_length=20)
     line_official = models.ForeignKey(LineOfficial, on_delete=models.CASCADE, related_name='login')
+    mode = models.IntegerField(choices=RIDIRECT_CHOICES)
     channel_secret = models.CharField(max_length=50)
     channel_id = models.CharField(max_length=20)
     
