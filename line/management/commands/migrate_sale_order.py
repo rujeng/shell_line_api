@@ -33,7 +33,7 @@ class Command(BaseCommand):
         print('uploading please wait ....')
         PROJECT_PATH = Path(__file__).resolve().parent
         BASE = os.path.join(PROJECT_PATH.parent, 'commands')
-        file_path = BASE + '\\transaction.csv'
+        file_path = BASE + '/transaction.csv'
         # import pdb ; pdb.set_trace()
         with open(file_path, newline='', encoding="utf8") as csvfile:
             spamreader = csv.reader(csvfile)
