@@ -67,7 +67,7 @@ class LineHookView(View):
         line_login = LineLogin.objects.filter(line_official__id=branch_id , mode=1).first()
         channel_id = line_login.channel_id
         channel_secret = line_login.channel_secret
-        get_token_response = line.get_token_history(
+        get_token_response = line.get_token(
             code, branch_id, channel_id, channel_secret)
         print('get to ', get_token_response)
         if get_token_response['ok']:
