@@ -196,7 +196,6 @@ class MyCar(View):
 class CarSeries(View):
 
     def get(self, request):
-        import pdb ;pdb.set_trace()
         seriesId = request.GET.get('seriesId', None)
         series = CarModel.objects.filter(brand__id=seriesId, status=True)
         car_series = CarModel.map_object_to_json(series)
