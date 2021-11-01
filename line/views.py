@@ -250,11 +250,13 @@ class MyHistory(View):
         car = []
         if not line_id:
             return render(request, 'error.html')
-        if car_id:
-            car = Car.get_car_by_id(car_id)
         user = CustomUser.objects.filter(line_id=line_id).first()
+        if car_id:
+            car = Car.get_car_by_id(car_id).first()
+            trans = TransactionForm.objects.filter(user=user, car=car).order_by('-created_at')
+        else:
+            trans = TransactionForm.objects.filter(user=user).order_by('-created_at')
         cars = Car.objects.filter(user_id=user)
-        trans = TransactionForm.objects.filter(user=user).order_by('-created_at')
         paginator = get_paginator(trans, self.show_list, page)
         start_page = self.show_list * (int(page)-1)
         end_page = start_page + self.show_list
