@@ -85,7 +85,7 @@ class LineHistory(View):
         line_id, state = self.businesslogic(code, branch_id)
         user = CustomUser.objects.filter(line_id=line_id)
         if user:
-            return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1')
+            return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1&car_id=')
         if state:
             return redirect(f'/line/form?user_id={line_id}&branch_id={branch_id}')
         return render(request, 'error.html')
