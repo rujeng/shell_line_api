@@ -181,7 +181,7 @@ class MyCar(View):
             line_message = LineMessage.objects.filter(id=branch_id).first()
             channel_access_token = line_message.channel_access_token
             message = Message()
-            message_data_push_noti,message_data_notify = message.makemessage(meta_dat)
+            message_data_push_noti,message_data_notify = message.makemessage(meta_dat,car)
             res = line.push_message(
                 meta_dat, channel_access_token,message_data_push_noti)
             if res['ok']:

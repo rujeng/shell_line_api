@@ -5,15 +5,15 @@ class Message():
     def __init__(self, *args, **kwargs):
         return
     
-    def makemessage(self,meta_dat):
+    def makemessage(self,meta_dat,car):
         fullname = meta_dat["fullname"]
         line_id = meta_dat["line_id"]
         mobileno = meta_dat["mobileno"]
         branch_name = meta_dat["branch_name"]
         date = meta_dat["date"]
         time = meta_dat["time"]
-        brand = meta_dat["brand"]
-        model = meta_dat["model"]
+        # brand = meta_dat["brand"]
+        # model = meta_dat["model"]
         service_detail = meta_dat["service_detail"]
 
         data_push_noti = {
@@ -143,7 +143,7 @@ class Message():
                                 },
                                     {
                                     "type": "text",
-                                    "text": f"{brand}",
+                                    "text": f"{car.model.brand.name}",
                                     "size": "md",
                                     "color": "#777777",
                                     "align": "end",
@@ -163,7 +163,7 @@ class Message():
                                 },
                                     {
                                     "type": "text",
-                                    "text": f"{model}",
+                                    "text": f"{car.model.name}",
                                     "size": "md",
                                     "color": "#777777",
                                     "align": "end",
@@ -208,7 +208,7 @@ class Message():
             }]
         }
 
-        data_notify = f"จองสำเร็จแล้ว\n\nผู้จอง: {fullname}\nติดต่อ: {mobileno}\n**สาขาที่จอง: {branch_name}\nวัน, เวลาที่จอง: {date} , {time}\n\nยี่ห้อรถ: {brand}\nรุ่น-ปี: {model}\nเข้ารับบริการ: {service_detail}"
+        data_notify = f"จองสำเร็จแล้ว\n\nผู้จอง: {fullname}\nติดต่อ: {mobileno}\n**สาขาที่จอง: {branch_name}\nวัน, เวลาที่จอง: {date} , {time}\n\nยี่ห้อรถ: {car.model.brand.name}\nรุ่น-ปี: {car.model.name}\nเข้ารับบริการ: {service_detail}"
         
         return data_push_noti,data_notify
 
