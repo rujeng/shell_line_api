@@ -48,17 +48,18 @@ class LineHookView(View):
     def get(self, request):
         code = request.GET.get("code")
         branch_id = request.GET.get("branch_id")
+        action = request.GET.get("action")
         line_id, state = self.businesslogic(code, branch_id)
         user = CustomUser.objects.filter(line_id=line_id)
-        if user:
-            return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
-        if state:
-            return redirect(f'/line/form?user_id={line_id}&branch_id={branch_id}')
-
-        return render(request, 'error.html')
-
+        if action == 'form':
+            if user:
+                return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
+        elif action == 'history':
+            if user:
+                return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1&car_id=')
+        return redirect(f'/line/form?user_id={line_id}&branch_id={branch_id}')
+        
     def businesslogic(self, code, branch_id):
-        # test
         '''
             return user object, boolean ถ้า state true ให้ redirect ไปที่ verify otp
             ถ้าเป็น false คือ ไม่มี user
@@ -69,7 +70,6 @@ class LineHookView(View):
         channel_secret = line_login.channel_secret
         get_token_response = line.get_token(
             code, branch_id, channel_id, channel_secret)
-        print('get to ', get_token_response)
         if get_token_response['ok']:
             access_token = get_token_response['result']['access_token']
             get_profile_response = line.get_profile(access_token)
