@@ -26,10 +26,14 @@ class Command(BaseCommand):
                     item_id,item_no,item_barcode,name,category,supplier,cost,price,image,timestamp = row
                     cost = float(cost) if cost else 0
                     price = float(price) if price else 0
+                    item_no = item_no.strip()
+                    if len(item_no) > 20:
+                        continue
                     result.append(Item(
                         purchase_barcode=item_no, barcode=item_barcode, name=name, category=category,
                         supplier=supplier, main_price=float(cost), sell_price=float(price), image_url=image 
                     ))
                 num += 1
-            Item.objects.bulk_create(result)
+            print('total -------', num)
+            # Item.objects.bulk_create(result)
         print('uploaded success')
