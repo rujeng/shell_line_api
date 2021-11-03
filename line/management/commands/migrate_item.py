@@ -35,5 +35,5 @@ class Command(BaseCommand):
                     ))
                 num += 1
             print('total -------', num)
-            # Item.objects.bulk_create(result)
+            Item.objects.bulk_create(result)
         print('uploaded success')
