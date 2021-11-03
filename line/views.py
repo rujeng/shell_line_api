@@ -26,7 +26,6 @@ from utils.functions import get_paginator
 # Create your views here.
 
 def response_error_handler(request, exception=None):
-    import pdb ; pdb.set_trace()
     return render(request, 'error.html')
 
 
@@ -116,9 +115,10 @@ class CreateCarAPIView(View):
         line_id = body['line_id']
         model_id = body['model']
         car_register = body['car_register']
-        model = CarModel.objects.filter(id=model_id).first()
-        user = CustomUser.objects.filter(line_id=line_id).first()
-        Car.objects.create(user_id=user, model=model, car_register=car_register)
+        if model_id and car_register:
+            model = CarModel.objects.filter(id=model_id).first()
+            user = CustomUser.objects.filter(line_id=line_id).first()
+            Car.objects.create(user_id=user, model=model, car_register=car_register)
         return JsonResponse({'ok': True})
 
 
