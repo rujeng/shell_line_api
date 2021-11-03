@@ -21,6 +21,7 @@ class Command(BaseCommand):
             spamreader = csv.reader(csvfile)
             num = 0
             car_brand = 0
+            result = []
             for row in spamreader:
                 if num == 0:
                     pass
@@ -29,13 +30,12 @@ class Command(BaseCommand):
                     mobile = mobile.replace('-', '')
                     mobile = mobile[:10]
                     user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile, full_name=full_name)
-                    brand = CarBrand.objects.filter(name=brand).first()
-                    if brand:  # check existed brand and model
-                        car = Car(user=user, brand=brand, car_register=car_register)
+                    model = CarModel.objects.filter(name=model).first()
+                    if model:  # check existed brand and model
+                        result.append(Car(user_id=user, model=model, car_register=car_register))
                     else:
-                        car = Car(user=user, car_register=car_register)
-                    car.save()
+                        result.append(Car(user_id=user, car_register=car_register, status=False))
                 num += 1
+            Car.objects.bulk_create(result)
             print('row ----', num)
-            print('car brand ----', car_brand)
         print('uploaded success')

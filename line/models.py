@@ -91,6 +91,7 @@ class Car(models.Model):
     car_register = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    status = models.BooleanField(default=True)
 
     def get_car_by_id(car_id):
         return Car.objects.filter(id=car_id)
