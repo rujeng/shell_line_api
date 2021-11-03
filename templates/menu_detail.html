@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="text-end">
+    <button type="button" class="btn btn-primary">
+        Notifications <span class="badge badge-light" id='notify'>0</span>
+    </button>
+</div>
+<div>
+    <img src="{% static 'food.jpg' %}" style="width: 50%"/>
+</div>
+<div>
+    <div>{{menu.name}}</div>
+    
+</div>
+<div class="d-flex">
+    <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
+    <div>{{detail.quantity}}</div>
+    <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
+</div>    
+{% endblock %}
+{% block script %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'shared/menu.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+           get_notify()
+        }())
+    </script>
+{% endblock %}

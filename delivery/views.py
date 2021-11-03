@@ -3,7 +3,7 @@ import requests
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.generic import View
+from django.views.generic import View, DetailView, detail
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
@@ -22,13 +22,33 @@ class WebhookAPI(View):
         return JsonResponse({},status=200)
 
 
+class RestaurantDetail(View):
+
+    def get(self, request, pk):
+        menus = Menu.objects.filter(restaurant__id=pk)
+        menus = Menu.map_object_to_list(menus)
+        path = request.path
+        context = {'menus': menus, 'path': path}
+        return render(request, 'restaurant_detail.html', context)
+
+
+class MenutDetail(View):
+
+    def get(self, request, res_pk, pk):
+        line_id = request.GET.get('user_id', None)
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        order = Order.objects.filter(user=user, restaurant__id=res_pk, status=Order.INITIAL).first()
+        detail = OrderDetail.objects.filter(order=order, menu__id=pk).first()
+        menu = Menu.objects.filter(id=pk)
+        menu = Menu.map_object_to_list(menu)
+        context = {'menu': menu[0], 'detail': detail}
+        return render(request, 'menu_detail.html', context)
+
 class RestaurantView(View):
 
     def get(self, request):
-        # restaurants in branch = 1
         restaurants = Restaurant.objects.all()
-        object_list = Restaurant.get_menu_list(restaurants)
-        context = {'object_list': object_list}
+        context = {'restaurants': restaurants}
         return render(request, 'restaurant.html', context=context)
 
         
@@ -49,11 +69,14 @@ class OrderAPI(View):
         # ถ้าไม่มี user ในระบบทำยังไง
         line_id = request.GET.get('user_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
-        order = Order.objects.filter(user=user)
-        details = OrderDetail.objects.filter(order=order.first())
-        count = self.get_order_detail_quantity(details)
-        lastests_order = Order.map_object_to_list(order)
-        return JsonResponse({'orders': lastests_order, 'count': count})
+        orders = Order.objects.filter(user=user, status=Order.INITIAL)
+        # get number of items in order's user
+        count = 0
+        for order in orders:
+            details = OrderDetail.objects.filter(order=order)
+            for detail in details:
+                count += detail.quantity
+        return JsonResponse({'count': count})
 
     def get_order_detail_quantity(self, details):
         count = 0

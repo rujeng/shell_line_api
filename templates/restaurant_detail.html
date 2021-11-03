@@ -7,33 +7,39 @@
             Notifications <span class="badge badge-light" id='notify'>0</span>
         </button>
     </div>
-    {% for restaurant in restaurants%}
-        <div class="card">
+    {% for menu in menus %}
+    <div class="card">
+        <a onclick="handleClick('{{menu.id}}')">
             <img class="card-img-top" src="{% static 'food.jpg' %}" alt="Card image cap">
-            <div class="card-body">
-            <h5 class="card-title">ร้าน {{restaurant.name}}</h5>
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">{{menu.name}}</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a onclick="handleClick('{{restaurant.id}}')" class="btn btn-primary">รายละเอียดเพิ่มเติม</a>
+            <div class="d-flex align-item-center justify-content-end">
+                <div>ราคา {{menu.price}} บาท</div>
+                <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
             </div>
         </div>
+      </div>
     {% endfor %}
+
 </div>
 {% endblock %}
 {% block script %}
-    <script src="{% static 'shared/menu.js' %}"></script>
     <script>
-        function handleClick(resId){
+        function handleClick(menuId){
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('user_id')
             const path = "{{path}}";
-            const url = `${path}${resId}/?user_id=${userId}`;
+            const url = `${path}${menuId}/?user_id=${userId}`;
             window.location = url
         }
     </script>
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'shared/menu.js' %}"></script>
     <script>
         $(document).ready(function(){
-        get_notify()
+           get_notify()
         }())
     </script>
 {% endblock %}
