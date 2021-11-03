@@ -38,6 +38,7 @@ class Command(BaseCommand):
         with open(file_path, newline='', encoding="utf8") as csvfile:
             spamreader = csv.reader(csvfile)
             num = 0
+            no_car = 0
             result = []
             for row in spamreader:
                 if num == 0:
@@ -60,7 +61,6 @@ class Command(BaseCommand):
                     quantity = int(quantity) if quantity else 0
                     sale_price = float(sale_price) if sale_price else 0
                     car = Car.objects.filter(car_register=car_register).first()
-                    # import pdb ; pdb.set_trace()
                     if car:
                         user = car.user_id
                         # user_id = car.user_id.id
@@ -74,9 +74,11 @@ class Command(BaseCommand):
                             location_store=location_store
                         ))
                     else:
-                        print(car_register)
+                        no_car += 1
+                        # print(car_register)
                 num += 1
             
             print('row------', num)
+            print('no car register', no_car)
             TransactionDetail.objects.bulk_create(result)
         print('uploaded success')

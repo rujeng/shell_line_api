@@ -45,6 +45,7 @@ class Menu(models.Model):
                 'name': item.name,
                 'price': item.price,
                 'id': item.id,
+                'res_id': item.restaurant.id
             })
         return result
 
