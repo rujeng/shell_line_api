@@ -1,0 +1,4 @@
+1.migrate_calculate_price
+2.migrate_user --> order ล่าสุดขึ้นมาก่อน
+3.migrate_item
+4.migrate_sell_order
