@@ -118,7 +118,13 @@ class CreateCarAPIView(View):
         if model_id and car_register:
             model = CarModel.objects.filter(id=model_id).first()
             user = CustomUser.objects.filter(line_id=line_id).first()
-            Car.objects.create(user_id=user, model=model, car_register=car_register)
+            car = Car.objects.filter(user_id=user, car_register=car_register).first()
+            if car:  # if car not have model then update car model
+                car.model = model
+                car.status = True
+                car.save()
+            else:
+                Car.objects.create(user_id=user, model=model, car_register=car_register)
         return JsonResponse({'ok': True})
 
 
@@ -137,7 +143,7 @@ class MyCar(View):
                     'name': i.name,
                     'id': i.id
                 })
-        car_objects = user.car_set.all()
+        car_objects = user.car_set.filter(status=True)
         cars = Car.map_object_to_list(car_objects)
         list_brand = CarBrand.objects.filter(status=True)
         form_services = WebForm()
