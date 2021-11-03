@@ -100,7 +100,7 @@
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
     var path = window.location.pathname
-    window.location.replace(`${path}?user_id=${params['user_id']}&page=${params['page']}&car_id=${carId}`)
+    window.location.replace(`${path}?user_id=${params['user_id']}&page=${params['page']}&car_id=${carId}&branch_id=${params['user_id']}`)
   }
 
   function nextPage() {
@@ -108,7 +108,7 @@
     const params = Object.fromEntries(urlSearchParams.entries());
     var path = window.location.pathname;
     var next = "{{next_page}}";
-    window.location.replace(`${path}?user_id=${params['user_id']}&page=${next || 1}&car_id=${params['car_id']}`)
+    window.location.replace(`${path}?user_id=${params['user_id']}&page=${next || 1}&car_id=${params['car_id']}&branch_id=${params['user_id']}`)
   }
 
   function prvPage() {
@@ -116,7 +116,7 @@
     const params = Object.fromEntries(urlSearchParams.entries());
     var path = window.location.pathname
     var prv = "{{prv_page}}";
-    window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv || 1}&car_id=${params['car_id']}`)
+    window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv || 1}&car_id=${params['car_id']}&branch_id=${params['user_id']}`)
   }
   $(document).ready(function () {
     function initial() {
