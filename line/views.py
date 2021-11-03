@@ -118,7 +118,13 @@ class CreateCarAPIView(View):
         if model_id and car_register:
             model = CarModel.objects.filter(id=model_id).first()
             user = CustomUser.objects.filter(line_id=line_id).first()
-            Car.objects.create(user_id=user, model=model, car_register=car_register)
+            car = Car.objects.filter(user_id=user, car_register=car_register).first()
+            if car:  # if car not have model then update car model
+                car.model = model
+                car.status = True
+                car.save()
+            else:
+                Car.objects.create(user_id=user, model=model, car_register=car_register)
         return JsonResponse({'ok': True})
 
 
@@ -137,7 +143,7 @@ class MyCar(View):
                     'name': i.name,
                     'id': i.id
                 })
-        car_objects = user.car_set.all()
+        car_objects = user.car_set.filter(status=True)
         cars = Car.map_object_to_list(car_objects)
         list_brand = CarBrand.objects.filter(status=True)
         form_services = WebForm()
@@ -290,14 +296,13 @@ class MyHistory(View):
                     'quantity': detail.quantity,
                     'price': detail.sell_price,
                 })
-            car_register = tran.car.car_register
             branch = LineOfficial.objects.filter(id = tran.branch_id).first()
             transaction_by_car = {
                 'details': details,
                 'branch': branch.name if branch else 'None',
                 'car_register': tran.car.car_register,
-                'brand': tran.car.model.brand.name,
-                'model': tran.car.model.name,
+                'brand': tran.car.model.brand.name if tran.car.model else '',
+                'model': tran.car.model.name if tran.car.model else '',
                 'created_at': self.__get_day(tran.created_at),
                 'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
                 'appointed_date': tran.appointed_date,

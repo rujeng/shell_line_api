@@ -28,11 +28,16 @@ class Command(BaseCommand):
                     mobile = mobile.replace('-', '')
                     mobile = mobile[:10]
                     user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile, full_name=full_name)
-                    brand = CarBrand.objects.filter(name=brand).first()
-                    if brand:  # check existed brand and model
-                        if CarModel.objects.filter(brand=brand, name=model).exists():
-                            Car.objects.create(user=user, brand=brand, car_register=car_register)
-
+                    car_register_instance = Car.objects.filter(car_register=car_register, user_id=user).first()
+                    model = CarModel.objects.filter(name=model).first()
+                    if car_register_instance:
+                        print('-------',car_register)
+                        continue
+                    else:
+                        if model:  # check existed brand and model
+                            Car.objects.create(user_id=user, model=model, car_register=car_register)
+                        else:
+                            Car.objects.create(user_id=user, car_register=car_register, status=False)
                 num += 1
             print('row ----', num)
         print('uploaded success')
