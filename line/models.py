@@ -88,7 +88,7 @@ class Car(models.Model):
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE,blank=True,null=True )
     # TODO forieng key
     model = models.ForeignKey(CarModel, on_delete=models.CASCADE,blank=True,null=True )
-    car_register = models.CharField(max_length=20)
+    car_register = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)
