@@ -294,14 +294,13 @@ class MyHistory(View):
                     'quantity': detail.quantity,
                     'price': detail.sell_price,
                 })
-            car_register = tran.car.car_register
             branch = LineOfficial.objects.filter(id = tran.branch_id).first()
             transaction_by_car = {
                 'details': details,
                 'branch': branch.name if branch else 'None',
                 'car_register': tran.car.car_register,
-                'brand': tran.car.model.brand.name,
-                'model': tran.car.model.name,
+                'brand': tran.car.model.brand.name if tran.car.model else '',
+                'model': tran.car.model.name if tran.car.model else '',
                 'created_at': self.__get_day(tran.created_at),
                 'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
                 'appointed_date': tran.appointed_date,
