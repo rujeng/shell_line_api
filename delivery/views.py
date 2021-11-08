@@ -32,6 +32,32 @@ class RestaurantDetail(View):
         return render(request, 'restaurant_detail.html', context)
 
 
+class MyCart(View):
+
+    def get(self, request):
+        line_id = request.GET.get('user_id')
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        orders = Order.objects.filter(user=user, status=Order.INITIAL)
+        result = []
+        total = 0
+        for order in orders:
+            details = order.order_detail.all()
+            details_result = []
+            for detail in details:
+                details_result.append({
+                    'name': detail.menu,
+                    'price': detail.price,
+                    'quantity': detail.quantity
+                })
+                total += detail.price * detail.quantity
+            result.append({
+                'restaurant': order.restaurant.name,
+                'details': details_result,
+            })
+        context = {'result': result, 'total': total}
+        return render(request, 'mycart.html', context)
+
+
 class MenutDetail(View):
 
     def get(self, request, res_pk, pk):
@@ -106,3 +132,16 @@ class OrderAPI(View):
                     detail.delete()
             detail.save(update_fields=['quantity'])
         return JsonResponse({})
+    
+    def post(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        line_id = body['line_id']
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        try:
+            Order.objects.filter(user=user, status=Order.INITIAL).update(status=Order.PROCESSING)
+            return JsonResponse({'ok': True})
+        except Exception as error:
+            return JsonResponse({'ok': False, 'message': error})
+
+        
