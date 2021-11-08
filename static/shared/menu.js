@@ -51,3 +51,16 @@ function get_notify(){
            $('#notify').html(data.count)
        })
 }
+
+function myCart(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('user_id');
+    const url = `/delivery/mycart?user_id=${userId}`;
+    window.location = url;
+}
+
+function getQueryParam(name){
+    const urlParams = new URLSearchParams(window.location.search);
+    const param = urlParams.get(name);
+    return param;
+}

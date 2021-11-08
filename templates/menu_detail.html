@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="text-end">
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" onclick="myCart()">
         Notifications <span class="badge badge-light" id='notify'>0</span>
     </button>
 </div>
@@ -26,5 +26,6 @@
         $(document).ready(function(){
            get_notify()
         }())
+        
     </script>
 {% endblock %}
