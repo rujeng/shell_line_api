@@ -44,21 +44,24 @@ class TestTransactionview(View):
 class CalItemPrice(View):
 
     def get(self, request):
-        line_id = request.GET.get('user_id', 'test1')
+        # import pdb ; pdb.set_trace()
+        line_id = request.GET.get('user_id', None)
         car_id = request.GET.get('car_id', None)
+        brand_list = CarBrand.objects.all()
+        
         cars = Car.objects.filter(user_id__line_id=line_id)
         user = CustomUser.objects.filter(line_id=line_id).first()
         option = None
         car = None
         if car_id:
             car = Car.objects.filter(id = car_id , user_id__line_id=line_id).filter().first()
-            option = CalculatePrice.objects.filter(brand = car.model.brand,series = car.model).first()
-        context = {'cars_dropdown': cars, 'user': user,'option':option,'car': car}
+            option = CalculatePrice.objects.filter(series = car.model).first()
+        context = {'cars_dropdown': cars, 'user': user,'option':option,'car': car,'brand_dropdown':brand_list}
         return render(request, 'calculate-price.html', context=context)
     
     def post(self, request):
         type_oil = request.GET.get("type_oil", None)
-        line_id = request.GET.get('user_id', 'test1')
+        line_id = request.GET.get('user_id', None)
         car_id = request.GET.get('car_id', None)
         cars = Car.objects.filter(user_id__line_id=line_id)
         user = CustomUser.objects.filter(line_id=line_id).first()
