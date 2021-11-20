@@ -62,7 +62,7 @@ class CalculatePrice(models.Model):
     #     (Active, 'ACTIVE'),
     #     (Inactive, 'INACTIVE'),
     # ]
-    brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE)
+    # brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE)
     name =  models.CharField(max_length=30)
     series = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     num_liter = models.CharField(max_length=5)

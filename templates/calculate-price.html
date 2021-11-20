@@ -14,8 +14,8 @@
                   <label for="require" class="form-label require">*</label>
                   <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
                       <option default value=''>กรุณาเลือก</option>
-                      {% for car in cars_dropdown %}
-                          <option value='{{car.id}}'>{{car.name}}</option>
+                      {% for brand in brand_dropdown %}
+                          <option value='{{brand.id}}'>{{brand.name}}</option>
                       {% endfor %}
                   </select>
                   <label>รุ่นรถยนต์</label>
@@ -35,6 +35,11 @@
   </div>
 </div>
 
+<!-- spinner -->
+<div class="justify-content-center" id='spinner'>
+  <div class="spinner-grow" role="status">
+  </div>
+</div>
 <div class="container form-box mt-4">
         <div class="">
             <h1>ประเมินราคา ถ่ายน้ำมันเครื่อง</h1>
@@ -45,7 +50,7 @@
           <div class="mb-1">ยี่ห้อรถ: {{car.model.name}}</div>
           <div class="mb-1">รุ่นรถ: {{car.model.brand.name}}</div>
           {% endif %}
-          <div class="d-flex justify-content-between car-plat-option">
+          <div class="d-flex car-plat-option-2">
             <div>ทะเบียนรถ</div>
             <select onchange="changeRegister(this)" id='selectCar' class="custom-select"> 
               <option value="" default>กรุณาเลือก</option>
@@ -54,7 +59,7 @@
               {% endfor %}
             </select>
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-primary button-shadow" data-toggle="modal"
+              <button type="button" class="btn btn-danger button-shadow" data-toggle="modal"
                   data-target="#exampleModal">เพิ่มรถยนต์</button>
           </div>
           </div>
@@ -191,7 +196,6 @@
 <script>
   function getCarSeries(){
       const seriesId = $('#car-brand').val()
-      debugger
       if(seriesId){
           fetch(`/line/car-series?seriesId=${seriesId}`)
           .then(response => response.json())

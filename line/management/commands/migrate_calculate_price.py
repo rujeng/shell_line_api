@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 semi_sync_price = float(semi_sync_price) if semi_sync_price else 0
                 sync_price = float(sync_price) if sync_price else 0
                 premium_price = float(premium_price) if premium_price else 0
-                result.append(CalculatePrice(brand=brand_db,name=name,series=series_db,num_liter=num_liter,eco=bool(eco),bensin=bool(bensin),
+                result.append(CalculatePrice(name=name,series=series_db,num_liter=num_liter,eco=bool(eco),bensin=bool(bensin),
                                             diesel=bool(diesel),rimula=bool(rimula),eco_price=eco_price,semi_sync_price=semi_sync_price,
                                             sync_price=sync_price,premium_price=premium_price
                 ))
