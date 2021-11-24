@@ -1,9 +1,32 @@
 {% extends "base.html" %}
+{% block style %}
+<style>
+    input[type='radio']:checked {
+      width: 16px;
+      height: 17px;
+      border-radius: 15px;
+      top: -3px;
+      left: 0px;
+      position: relative;
+      background-color: #DC3545;
+      content: '';
+      display: inline-block;
+      box-shadow: 0 0 0 1px #FF2C2C;
+      border-color: #DC3545;
+    }
+
+    input[type='radio']:checked:after {
+      display: block;
+      background-color: #ccc;
+    }
+</style>
+{% endblock %}
 {% block content %}
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content modal-fade-cls">
           <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
               <button type="button" class="btn-close" data-dismiss="modal"></button>
@@ -29,7 +52,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onclick="addCar()">Save changes</button>
+              <button type="button" class="btn btn-danger button-shadow" onclick="addCar()">Save changes</button>
           </div>
       </div>
   </div>
@@ -40,8 +63,8 @@
   <div class="spinner-grow" role="status">
   </div>
 </div>
-<div class="container form-box mt-4">
-        <div class="">
+<div class="form-cal-bg">
+        <div class="container mt-4 form-head">
             <h1>ประเมินราคา ถ่ายน้ำมันเครื่อง</h1>
             <h3>คุณ {{user.full_name}}</h3>
           <!-- <div class="mb-1"></div> -->
@@ -59,7 +82,7 @@
               {% endfor %}
             </select>
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-danger button-shadow" data-toggle="modal"
+              <button type="button" class="button-add-car" data-toggle="modal"
                   data-target="#exampleModal">เพิ่มรถยนต์</button>
           </div>
           </div>
@@ -79,47 +102,59 @@
               </div>
         {% else %}
         <div id="myOption">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="typeOil" id="typeOil1" value="1" checked>
+          <div class="mt-4">
+            <label class="label-bold">เกรดนํ้ามัน</span>
+          </div>
+
+              <!-- <div class="form-check mt-2 optin-box-edit">
+                <input class="custom-control-input" type="radio" name="typeOil" id="typeOil1" value="1" checked>
                 <label class="form-check-label">
                     กึ่งสังเคราะห์แท้
                 </label>
+              </div> -->
+              <div class="form-check-2 mt-2 optin-box-edit">
+                <input class="form-check-input" type="radio" name="typeOil" id="typeOil1" value="1">
+                <label class="form-check-label" >
+                  กึ่งสังเคราะห์แท้
+                </label>
               </div>
-              <div class="form-check">
+              <div class="form-check-2 mt-2 optin-box-edit">
                 <input class="form-check-input" type="radio" name="typeOil" id="typeOil2" value="2">
                 <label class="form-check-label" >
                     สังเคราะห์แท้
                 </label>
               </div>
-              <div class="form-check">
+              <div class="form-check-2 mt-2 optin-box-edit">
                 <input class="form-check-input" type="radio" name="typeOil" id="typeOil3" value="3">
                 <label class="form-check-label" >
                     สังเคราะห์แท้พรีเมียม
                 </label>
               </div>
-              <div class="d-flex mt-4 mb-4">
-                <button class="btn btn-warning" style="margin-right: 8px;" onclick="calculatePriceForNormalCar()">คำนวณราคา</button>
+              <div class="d-flex mt-4 mb-4 justify-content-center">
+                <button class="btn btn-danger" style="margin-right: 8px;" onclick="calculatePriceForNormalCar()">คำนวณราคา</button>
               </div>
         </div>
         <div id="myResult" class="d-none">
-          <div>ราคาโดยประมาณ</div>
+          <div class="label-bold-center mt-4">ราคาถ่ายนํ้ามันเครื่องโดยประมาณ (บาท)</div>
+          <div class="mt-2" style="padding: 0px 60px;">
             <div id='semi_sync_price' class="d-none">
-              {{option.semi_sync_price}} บาท
+              {{option.semi_sync_price}}
             </div>
             <div id='sync_price' class="d-none">
-              {{option.sync_price}} บาท
+              {{option.sync_price}}
             </div>
             <div id='premium_price' class="d-none">
-              {{option.premium_price}} บาท
+              {{option.premium_price}}
             </div>
-            <div>ใช้เวลาประมาณ 15 - 30 นาที</div>
-            <div>________________________</div>
-            <div>*ราคารวมกรองนํ้ามันเครื่อง</div>
-            <div>**บริการตรวจสภาพฟรี 10 รายการ ไม่มีค่าแรง</div>
-            <div>***ราคาอาจมีการเปลี่ยงแปลง ตามจำนวนลิตรนํ้ามันที่ใช้</div>
-            <div class="d-flex mt-4 mb-4">
-              <button class="btn btn-warning" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
-              <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
+          </div>
+            <div class="label-bold-center-f1 mt-2">ใช้เวลาประมาณ 15 - 30 นาที</div>
+            <div class="label-bold-center">________________________</div>
+            <div class="label-bold-center-f2">*ราคารวมกรองนํ้ามันเครื่อง</div>
+            <div class="label-bold-center-f2">**บริการตรวจสภาพฟรี 10 รายการ ไม่มีค่าแรง</div>
+            <div class="label-bold-center-f2">***ราคาอาจมีการเปลี่ยงแปลง ตามจำนวนลิตรนํ้ามันที่ใช้</div>
+            <div class="d-flex justify-content-center mb-4">
+              <button class="button-add-car" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
+              <button class="btn btn-danger" style="margin-right: 8px;" onclick="RedirectQPage()">จองคิว</button>
             </div>
         </div>
         {% endif %}
@@ -149,15 +184,15 @@
         document.getElementById("myResult").className = ''
         if(typeOil == 1)
         {
-          document.getElementById("semi_sync_price").className = ''
+          document.getElementById("semi_sync_price").className = 'cal-box'
         }
         else if(typeOil == 2)
         {
-          document.getElementById("sync_price").className = ''
+          document.getElementById("sync_price").className = 'cal-box'
         }
         else
         {
-          document.getElementById("premium_price").className = ''
+          document.getElementById("premium_price").className = 'cal-box'
         }
         // var body = { 'type_oil' : typeOil }
         // const res = await postData(url="/item/price/", data=body)
@@ -209,6 +244,13 @@
       }else{
           $('#car-series').html('')
       }
+  }
+  function RedirectQPage(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const user_id = urlParams.get('user_id');
+    const branch_id = urlParams.get('branch_id');
+    const htmla = window.location.hostname;
+    window.location.href = `/line/car/?user_id=${user_id}&branch_id=${branch_id}`
   }
 </script>
 <script>

@@ -18,6 +18,10 @@
     color: white;
 }
 
+.form-cal-bg{
+    padding: 0px 25px;
+}
+
 .form-input {
     border: none;
     border-bottom: solid #a8a8a8b4;
@@ -92,7 +96,73 @@ body{
 
 .car-plat-option-2 {
     justify-content: space-between;
-    width: 80%;
     height: 40px;
     align-items: center;
 }
+
+.button-add-car {
+    background-color: white;
+    color: #DC3545;
+    font-weight: bold;
+    border-color: #DC3545;
+    border-radius : 10px;
+}
+
+.optin-box-edit {
+    padding : 5px;
+    border : 0.8px solid #DADCE0;
+    border-radius : 8px;
+    background: white;
+    box-shadow: 8px 8px 6px lightgray;
+    font-weight: bold;
+    border-color: #DC3545;
+    color: #DC3545;
+}
+
+.label-bold{
+    color: #DC3545;
+    font-weight: bold;
+}
+
+.label-bold-center{
+    color: #DC3545;
+    font-weight: bold;
+    text-align: center;
+}
+
+.label-bold-center-f1{
+    color: #DC3545;
+    font-weight: bold;
+    text-align: center;
+    font-size: small;
+}
+
+.label-bold-center-f2{
+    color: #DC3545;
+    font-weight: bold;
+    text-align: center;
+    font-size: small;
+}
+
+.cal-box{
+    padding : 5px 25px;
+    border : 0.8px solid #DADCE0;
+    border-radius : 4px;
+    box-shadow: 8px 8px 6px lightgray;
+    font-size: xx-large;
+    border-color: #DC3545;
+    background: #DC3545;
+    color: white;
+    text-align: center;
+}
+
+.form-check-2 {
+    /* display: block; */
+    min-height: 1.5rem;
+    padding-left: 2rem;
+    margin-bottom: 0.125rem;
+}
+
+/* .custom-radio:checked{
+    background-color:rgb(253, 69, 69);
+  } */
