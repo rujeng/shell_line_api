@@ -30,12 +30,12 @@ class Line(HttpRequest):
     def __init__(self, *args, **kwargs):
         return
     
-    def get_token(self,code,branch_id, channel_id ,channel_secret):
+    def get_token(self,code,branch_id, channel_id ,channel_secret,action):
         url = "https://api.line.me/oauth2/v2.1/token"
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'http://159.223.95.82/line/webhook?branch_id={branch_id}',
+            'redirect_uri': f'http://159.223.95.82/line/webhook?branch_id={branch_id}&action={action}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }

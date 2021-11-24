@@ -25,6 +25,7 @@ class OTPVerify(View):
         ref_code = request.POST.get('ref_code', None)
         branch_id = request.POST.get('branch_id', None)
         otp_code = request.POST.get('otp_code',None)
+        action = request.GET.get('action',None)
         print('----------')
         # verify otp
         otp = Otp()
@@ -36,9 +37,18 @@ class OTPVerify(View):
                 'line_id': line_id
             }
             self.check_old_user_and_update_line_id(meta_data)
-            return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
-        context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id,'error_message':error_message}
-        return render(request, 'otp.html', context=context)
+
+            if action == 'form':
+                return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
+            elif action == 'history':
+                return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1&car_id=')
+            elif action == 'calculate':
+                return redirect(f'/item/price/?user_id={line_id}&branch_id={branch_id}&car_id=')
+            else:
+                return render(request, 'error.html')
+        else:
+           context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id,'error_message':error_message}
+           return render(request, 'otp.html', context=context)
 
     def check_old_user_and_update_line_id(self, meta_data):
         '''
