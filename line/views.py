@@ -46,8 +46,7 @@ class LineHookView(View):
 
     def get(self, request):
         code = request.GET.get("code")
-        branch_id = request.GET.get("branch_id")
-        action = request.GET.get("action")
+        branch_id,action = request.GET.get("reqo").split(sep=",")
         line_id, state = self.businesslogic(code, branch_id,action)
         user = CustomUser.objects.filter(line_id=line_id)
         if action == 'form':

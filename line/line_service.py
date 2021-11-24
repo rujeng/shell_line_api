@@ -32,10 +32,11 @@ class Line(HttpRequest):
     
     def get_token(self,code,branch_id, channel_id ,channel_secret,action):
         url = "https://api.line.me/oauth2/v2.1/token"
+        reqo = branch_id + "," + action
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'http://159.223.95.82/line/webhook?branch_id={branch_id}&action={action}',
+            'redirect_uri': f'https://5d97-49-228-97-137.ngrok.io/line/webhook?reqo={reqo}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
