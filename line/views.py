@@ -52,12 +52,18 @@ class LineHookView(View):
         if action == 'form':
             if user:
                 return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
+            else:
+                return redirect(f'/line/form/?user_id={line_id}&branch_id={branch_id}&action={action}')
         elif action == 'history':
             if user:
                 return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1&car_id=')
+            else:
+                return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}&action={action}')
         elif action == 'calculate':
             if user:
                 return redirect(f'/item/price/?user_id={line_id}&branch_id={branch_id}&car_id=')
+            else:
+                return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}&action={action}')
         else:
             return render(request, 'error.html')
         
