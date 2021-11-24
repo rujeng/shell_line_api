@@ -168,14 +168,14 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         var path = window.location.pathname
-        window.location.replace(`${path}?user_id=${params['user_id']}&car_id=${carId}`)
+        window.location.replace(`${path}?user_id=${params['user_id']}&branch_id=${params['branch_id']}&car_id=${carId}`)
       }
     
     function refreshItemPricePage(){
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         var path = window.location.pathname
-        window.location.replace(`${path}?user_id=${params['user_id']}`)
+        window.location.replace(`${path}?user_id=${params['user_id']}&branch_id=${params['branch_id']}`)
       }
 
     function calculatePriceForNormalCar(){
