@@ -38,8 +38,9 @@ class WebFormView(View):
         branch_id = request.GET.get("branch_id", None)
         full_name = request.POST.get('fullname', None)
         mobileno = request.POST.get('mobileno', None)
+        action = request.GET.get("action",None)
         meta_data = {'full_name': full_name, 'mobile': mobileno, 'line_id': line_id}
-        return redirect(f'/otp/verify?user_id={line_id}&branch_id={branch_id}&full_name={full_name}&mobileno={mobileno}')
+        return redirect(f'/otp/verify?user_id={line_id}&branch_id={branch_id}&full_name={full_name}&mobileno={mobileno}&action={action}')
 
 
 class LineHookView(View):
