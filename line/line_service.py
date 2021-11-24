@@ -36,7 +36,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'https://5d97-49-228-97-137.ngrok.io/line/webhook?reqo={reqo}',
+            'redirect_uri': f'http://159.223.95.82/line/webhook?reqo={reqo}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
