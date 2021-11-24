@@ -13,10 +13,11 @@ class OTPVerify(View):
         branch_id = request.GET.get("branch_id", None)
         full_name = request.GET.get('full_name', None)
         mobileno = request.GET.get('mobileno', None)
+        action = request.GET.get('action',None)
         otp = Otp()
         state,ref_code = otp.register_get_otp(line_id,mobileno,full_name)
         if state:
-            context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id}
+            context = {'ref_code': ref_code, 'line_id': line_id, 'branch_id': branch_id, 'action': action}
             return render(request, 'otp.html', context=context)
         return render(request, 'error.html')
 
@@ -25,7 +26,7 @@ class OTPVerify(View):
         ref_code = request.POST.get('ref_code', None)
         branch_id = request.POST.get('branch_id', None)
         otp_code = request.POST.get('otp_code',None)
-        action = request.GET.get('action',None)
+        action = request.POST.get('action',None)
         print('----------')
         # verify otp
         otp = Otp()
