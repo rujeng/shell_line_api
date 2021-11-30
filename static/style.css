@@ -163,6 +163,47 @@ body{
     margin-bottom: 0.125rem;
 }
 
+/* privacy policy */
+.pp {
+    padding-left: 20px;
+    padding-right: 5px;
+    background-color: white;
+}
+
+.pno{
+    text-decoration: none;
+    vertical-align: top;
+    width: 20px;
+}
+
+.table-pp {
+    padding-left: 20px;
+}
+
+td {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-align: left;
+    vertical-align: top;
+}
+
+.tb-bt{
+    text-align: center;
+}
+
+.sp-pp{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sm-pp{
+    font-size: 10;
+}
+
 /* .custom-radio:checked{
     background-color:rgb(253, 69, 69);
   } */

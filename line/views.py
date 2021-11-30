@@ -54,17 +54,17 @@ class LineHookView(View):
             if user:
                 return redirect(f'/line/car/?user_id={line_id}&branch_id={branch_id}')
             else:
-                return redirect(f'/line/form/?user_id={line_id}&branch_id={branch_id}&action={action}')
+                return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
         elif action == 'history':
             if user:
                 return redirect(f'/line/history/?user_id={line_id}&branch_id={branch_id}&page=1&car_id=')
             else:
-                return redirect(f'/line/form/?user_id={line_id}&branch_id={branch_id}&action={action}')
+                return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
         elif action == 'calculate':
             if user:
                 return redirect(f'/item/price/?user_id={line_id}&branch_id={branch_id}&car_id=')
             else:
-                return redirect(f'/line/form/?user_id={line_id}&branch_id={branch_id}&action={action}')
+                return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
         else:
             return render(request, 'error.html')
         
@@ -241,7 +241,7 @@ class MyHistory(View):
         cars = Car.objects.filter(user_id=user)
         result = []
         for car in cars:
-            tran = TransactionForm.objects.filter(user=user, car=car).order_by('-created_at').first()
+            tran = TransactionForm.objects.filter(user=user, car=car, status='3').order_by('-created_at').first()
             details, total_price = self.get_transaction_detail(transaction=tran)
             branch = LineOfficial.objects.filter(id=tran.branch_id).first()
             transaction_by_car = {
@@ -269,9 +269,9 @@ class MyHistory(View):
         user = CustomUser.objects.filter(line_id=line_id).first()
         if car_id:
             car = Car.get_car_by_id(car_id).first()
-            trans = TransactionForm.objects.filter(user=user, car=car).order_by('-created_at')
+            trans = TransactionForm.objects.filter(user=user, car=car , status='3').order_by('-created_at')
         else:
-            trans = TransactionForm.objects.filter(user=user).order_by('-created_at')
+            trans = TransactionForm.objects.filter(user=user, status='3').order_by('-created_at')
         cars = Car.objects.filter(user_id=user)
         paginator = get_paginator(trans, self.show_list, page)
         start_page = self.show_list * (int(page)-1)
@@ -287,10 +287,10 @@ class MyHistory(View):
         car = []
         if car_id:
             car = Car.objects.filter(id=int(car_id)).first()
-            transactions = TransactionForm.objects.filter(user_id=user, car=car)
+            transactions = TransactionForm.objects.filter(user_id=user, car=car, status='3')
             car = Car.map_object_to_list([car])
         else:
-            transactions = TransactionForm.objects.filter(user_id=user)
+            transactions = TransactionForm.objects.filter(user_id=user, status='3')
         return transactions.filter(status=TransactionForm.DONE), car
 
     def get_slice_transaction(self, transactions, start_page, end_page):
@@ -339,8 +339,6 @@ class MyHistory(View):
         next_service = datetime + relativedelta(months=4)
         return next_service.strftime('%d/%m/%Y')
 
-
-
 class ListItem(View):
 
     show_list = 10
@@ -371,6 +369,9 @@ class ListItem(View):
         context = {'result' : result,'page_obj': page_obj, 'path': path}
         return render(request, 'item-list.html', context=context)
 
+class PrivacyPolicy(View):
+    def get(self, request):
+        return render(request, 'PrivacyPolicy.html')
 # import requests
 @method_decorator(csrf_exempt, name='dispatch')
 class Testview(View):
