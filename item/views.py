@@ -39,7 +39,6 @@ class TestTransactionview(View):
         
         return render(request, 'list.html', context={'form': result})
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class CalItemPrice(View):
 

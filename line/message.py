@@ -194,6 +194,15 @@ class Message():
                                 {
                                 "type": "separator",
                                 "margin": "xxl"
+                            }, {
+                                 "type": "button",
+                                 "style": "primary",
+                                 "color": "#FF3E15",
+                                  "action": {
+                                  "type": "uri",
+                                  "label": "ติดต่อเจ้าหน้าที่",
+                                   "uri": "tel:0970968653"
+                                }
                             }
                             ]
                         }
