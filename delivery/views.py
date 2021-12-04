@@ -120,7 +120,9 @@ class OrderAPI(View):
         with transaction.atomic():
             user = CustomUser.objects.filter(line_id=line_id).first()
             restaurant = Restaurant.objects.filter(id=restaurant_id).first()
-            order, created_order = Order.objects.get_or_create(user=user, restaurant=restaurant)
+            order = Order.objects.filter(user=user, status=Order.INITIAL).order_by('-pk').first()
+            if not order:  # make new order if lastest order status is not initial
+                order = Order.objects.create(user=user, restaurant=restaurant)
             menu = Menu.objects.filter(id=menu_id).first()
             detail, created_detail = OrderDetail.objects.get_or_create(menu=menu, order=order)
             if action == 'add':

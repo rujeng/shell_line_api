@@ -8,16 +8,20 @@
         </button>
     </div>
     {% for menu in menus %}
-    <div class="card">
-        <a onclick="handleClick('{{menu.id}}')">
-            <img class="card-img-top" src="{% static 'food.jpg' %}" alt="Card image cap">
-        </a>
-        <div class="card-body">
-            <h5 class="card-title">{{menu.name}}</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <div class="d-flex align-item-center justify-content-end">
-                <div>ราคา {{menu.price}} บาท</div>
-                <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
+    <div class="card mb-2">
+        <div class="row">
+            <div class="col">
+                <a onclick="handleClick('{{menu.id}}')">
+                    <img class="card-img-top" src="{% static 'food.jpg' %}" alt="Card image cap">
+                </a>
+            </div>
+            <div class="col">
+                <h5 class="card-title">{{menu.name}}</h5>
+                <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                <div class="d-flex align-item-center justify-content-end">
+                    <div>ราคา {{menu.price}} บาท</div>
+                    <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
+                </div>
             </div>
         </div>
       </div>

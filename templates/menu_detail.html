@@ -3,21 +3,74 @@
 {% block content %}
 <div class="text-end">
     <button type="button" class="btn btn-primary" onclick="myCart()">
-        Notifications <span class="badge badge-light" id='notify'>0</span>
+        ตระกร้าสินค้า <span class="badge badge-light" id='notify'>0</span>
     </button>
 </div>
-<div>
-    <img src="{% static 'food.jpg' %}" style="width: 50%"/>
+<div class="container">
+  <div>
+    <div class="row">
+      <div class="d-flex flex-column align-items-center">
+        <div class="text-center">
+          <img src="{% static 'food.jpg' %}" style="width: 50%"/>
+        </div>
+        <div>
+          <div>{{menu.name}}</div>
+          {% for detail in menu.details %}
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault">
+                  {{detail.name}}
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+              <label class="form-check-label" for="flexCheckChecked">
+                Checked checkbox
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="d-flex">
+          <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
+          <div>{{detail.quantity|default:0}}</div>
+          <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
-<div>
-    <div>{{menu.name}}</div>
+<!-- <div class="row">
+  <div class="col">
+    <div>
+      <img src="{% static 'food.jpg' %}" style="width: 50%"/>
+    </div>
+  <div>
+      <div>{{menu.name}}</div>
+      {% for detail in menu.details %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          <label class="form-check-label" for="flexCheckDefault">
+              {{detail.name}}
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+          <label class="form-check-label" for="flexCheckChecked">
+            Checked checkbox
+          </label>
+        </div>
+      {% endfor %}
+  </div>
+  <div class="d-flex">
+      <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
+      <div>{{detail.quantity}}</div>
+      <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
+  </div>
+  </div>
+</div> -->
     
-</div>
-<div class="d-flex">
-    <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
-    <div>{{detail.quantity}}</div>
-    <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
-</div>    
 {% endblock %}
 {% block script %}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

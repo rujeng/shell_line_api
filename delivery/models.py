@@ -29,6 +29,7 @@ class Restaurant(models.Model):
 class Menu(models.Model):
     restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    # detail = models.TextField(null=True, blank=True)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     status = models.BooleanField(default=True)
 
@@ -41,13 +42,30 @@ class Menu(models.Model):
     def map_object_to_list(object_list):
         result = []
         for item in object_list:
+            details = MenuDetail.objects.filter(menu=item)
+            detail_result = []
+            for detail in details:
+                detail_result.append({
+                    'name': detail.detail,
+                    'price': detail.on_top_price
+                })
             result.append({
                 'name': item.name,
                 'price': item.price,
                 'id': item.id,
-                'res_id': item.restaurant.id
+                'res_id': item.restaurant.id,
+                'details': detail_result
             })
         return result
+
+
+class MenuDetail(models.Model):
+    menu = models.ForeignKey('Menu', related_name='menu_detail', on_delete=models.CASCADE)
+    detail = models.CharField(max_length=50)
+    on_top_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Order(models.Model):
@@ -88,19 +106,20 @@ class OrderDetail(models.Model):
     menu = models.ForeignKey('Menu', on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    description = models.CharField(max_length=100, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.menu
+        return str(self.menu)
 
     def get_detail(order):
         result = []
         details = OrderDetail.objects.filter(order=order)
         for detail in details:
-            import pdb ; pdb.set_trace()
-            # result.append({
-            #     'menu': Menu.g
-            # })
+            # import pdb ; pdb.set_trace()
+            result.append({
+                'name': detail.name
+            })
         return result
