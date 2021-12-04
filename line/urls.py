@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from line.views import LineHistory, WebFormView, LineHookView, MyCar, MyHistory, CreateCarAPIView, ListItem, CarSeries
-from line.views import Testview
+from line.views import Testview, PrivacyPolicy
 
 urlpatterns = [
     path('form/', WebFormView.as_view()),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('car-series/', CarSeries.as_view(), name='test'),
     path('itemlist/',ListItem.as_view()),
     path('test/', Testview.as_view()),
+    path('privacypolicy/', PrivacyPolicy.as_view())
 ]
 handler400 = "line.views.response_error_handler"
 handler500 = 'line.views.response_error_handler'

@@ -89,17 +89,19 @@
         </div>
     {% if option %}
         {% if option.eco %}
-            <div>ราคาโดยประมาณ</div>
+            <div class="label-bold-center mt-4">ราคาถ่ายนํ้ามันเครื่องโดยประมาณ (บาท)</div>
+            <div class="mt-2" style="padding: 0px 60px;"></div>
             <div>{{option.eco_price}}</div>
-            <div>ใช้เวลาประมาณ 15 - 30 นาที</div>
-            <div>________________________</div>
-            <div>*ราคารวมกรองนํ้ามันเครื่อง</div>
-            <div>**บริการตรวจสภาพฟรี 10 รายการ ไม่มีค่าแรง</div>
-            <div>***ราคาอาจมีการเปลี่ยงแปลง ตามจำนวนลิตรนํ้ามันที่ใช้</div>
-            <div class="d-flex mt-4 mb-4">
-                <button class="btn btn-warning" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
-                <button class="btn btn-warning" style="margin-right: 8px;">จองคิว</button>
-              </div>
+            </div>
+            <div class="label-bold-center-f1 mt-2">ใช้เวลาประมาณ 15 - 30 นาที</div>
+            <div class="label-bold-center">________________________</div>
+            <div class="label-bold-center-f2">*ราคารวมกรองนํ้ามันเครื่อง</div>
+            <div class="label-bold-center-f2">**บริการตรวจสภาพฟรี 10 รายการ ไม่มีค่าแรง</div>
+            <div class="label-bold-center-f2">***ราคาอาจมีการเปลี่ยงแปลง ตามจำนวนลิตรนํ้ามันที่ใช้</div>
+            <div class="d-flex justify-content-center mb-4">
+              <button class="button-add-car" type="button" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
+              <button class="btn btn-danger" type="button" style="margin-right: 8px;" onclick="RedirectQPage()">จองคิว</button>
+            </div>
         {% else %}
         <div id="myOption">
           <div class="mt-4">
@@ -158,6 +160,8 @@
             </div>
         </div>
         {% endif %}
+    {% else %}
+        <div>ไม่มีข้อมูล สอบถามเพิ่มเติม ติดต่อ </div>
     {% endif %}
 </div>
 {% endblock %}
