@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="container-sm">
+<div class="container sticky">
     <div class="text-end">
         <button type="button" class="btn btn-primary" onclick="myCart()">
-            Notifications <span class="badge badge-light" id='notify'>0</span>
+            ตระกร้าสินค้า <span class="badge badge-light" id='notify'>0</span>
         </button>
     </div>
     {% for restaurant in restaurants%}
