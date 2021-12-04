@@ -3,10 +3,10 @@ from line.models import CustomUser,CarBrand, Car , CarModel
 
 # Create your models here.
 class TransactionForm(models.Model):
-    INITIAL = '1'
-    PROCESSING = '2'
-    DONE = '3'
-    FAILED = '4'
+    INITIAL = 'INITIAL'
+    PROCESSING = 'PROCESSING'
+    DONE = 'DONE'
+    FAILED = 'FAILED'
     STATUS_CHOICES = [
         (INITIAL, 'INITIAL'),
         (PROCESSING, 'PROCESSING'),
@@ -37,7 +37,7 @@ class TransactionDetail(models.Model):
     sell_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     # total_bill = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     location_store =  models.CharField(max_length=30)
-    comment =  models.CharField(max_length=50)
+    comment =  models.CharField(max_length=50 , blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

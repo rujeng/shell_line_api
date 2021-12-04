@@ -241,7 +241,7 @@ class MyHistory(View):
         cars = Car.objects.filter(user_id=user)
         result = []
         for car in cars:
-            tran = TransactionForm.objects.filter(user=user, car=car, status='3').order_by('-created_at').first()
+            tran = TransactionForm.objects.filter(user=user, car=car, status=TransactionForm.DONE).order_by('-created_at').first()
             details, total_price = self.get_transaction_detail(transaction=tran)
             branch = LineOfficial.objects.filter(id=tran.branch_id).first()
             transaction_by_car = {
@@ -269,9 +269,9 @@ class MyHistory(View):
         user = CustomUser.objects.filter(line_id=line_id).first()
         if car_id:
             car = Car.get_car_by_id(car_id).first()
-            trans = TransactionForm.objects.filter(user=user, car=car , status='3').order_by('-created_at')
+            trans = TransactionForm.objects.filter(user=user, car=car , status=TransactionForm.DONE).order_by('-created_at')
         else:
-            trans = TransactionForm.objects.filter(user=user, status='3').order_by('-created_at')
+            trans = TransactionForm.objects.filter(user=user, status=TransactionForm.DONE).order_by('-created_at')
         cars = Car.objects.filter(user_id=user)
         paginator = get_paginator(trans, self.show_list, page)
         start_page = self.show_list * (int(page)-1)
@@ -287,10 +287,10 @@ class MyHistory(View):
         car = []
         if car_id:
             car = Car.objects.filter(id=int(car_id)).first()
-            transactions = TransactionForm.objects.filter(user_id=user, car=car, status='3')
+            transactions = TransactionForm.objects.filter(user_id=user, car=car, status=TransactionForm.DONE)
             car = Car.map_object_to_list([car])
         else:
-            transactions = TransactionForm.objects.filter(user_id=user, status='3')
+            transactions = TransactionForm.objects.filter(user_id=user, status=TransactionForm.DONE)
         return transactions.filter(status=TransactionForm.DONE), car
 
     def get_slice_transaction(self, transactions, start_page, end_page):
