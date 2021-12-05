@@ -79,3 +79,8 @@ class CalculatePrice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class ItemImage(models.Model):
+    item = models.OneToOneField('Item', on_delete=models.CASCADE, primary_key=True,)
+    image = models.ImageField(upload_to='items/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
