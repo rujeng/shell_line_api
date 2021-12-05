@@ -1,9 +1,11 @@
 from django.contrib import admin
 
-from delivery.models import Restaurant, Order, OrderDetail, Menu
+from delivery.models import MenuDetail, Restaurant, Order, OrderDetail, Menu
 # Register your models here.
 admin.site.register(Restaurant)
 admin.site.register(Menu)
+admin.site.register(MenuDetail)
+
 
 @admin.register(OrderDetail)
 class OrderDetailAdmin(admin.ModelAdmin):
