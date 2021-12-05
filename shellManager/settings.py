@@ -6,6 +6,7 @@ INSTALLED_APPS += [
     'item',
     'otp',
     'delivery',
+    'inventory',
 ]
 
 

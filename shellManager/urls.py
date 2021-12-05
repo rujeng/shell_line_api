@@ -23,6 +23,7 @@ urlpatterns = [
     path('item/', include('item.urls')),
     path('otp/', include('otp.urls')),
     path('delivery/', include('delivery.urls')),
+    path('inventory/', include('inventory.urls')),
 ]
 
 from django.conf import settings
