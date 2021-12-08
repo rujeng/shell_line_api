@@ -1,9 +1,10 @@
 from django.contrib import admin
-from item.models import Item, TransactionForm, TransactionDetail , CalculatePrice
+from item.models import Item, TransactionForm, TransactionDetail , CalculatePrice, ItemImage
 # from line.models import Car
 # Register your models here.
 
 admin.site.register(Item)
+admin.site.register(ItemImage)
 admin.site.register(TransactionDetail)
 
 @admin.register(TransactionForm)
