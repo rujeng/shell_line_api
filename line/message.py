@@ -201,7 +201,7 @@ class Message():
                                   "action": {
                                   "type": "uri",
                                   "label": "ติดต่อเจ้าหน้าที่",
-                                   "uri": "tel:0970968653"
+                                   "uri": "tel:033641010"
                                 }
                             }
                             ]
