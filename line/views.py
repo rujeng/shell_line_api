@@ -222,43 +222,6 @@ class MyHistory(View):
 
     show_list = 2
 
-    def get_transaction_detail(self, transaction):
-        total_price = 0
-        result = []
-        tran_details = transaction.sale_detail.all()
-        for detail in tran_details:
-            total_price += detail.quantity * detail.item.sell_price
-            result.append({
-                'item': detail.item.name,
-                'quantity': detail.quantity,
-                'price': detail.sell_price,
-            })
-        return result, total_price
-            
-
-    def get_first_transaction_by_car(self, line_id):
-        user = CustomUser.objects.filter(line_id=line_id).first()
-        cars = Car.objects.filter(user_id=user)
-        result = []
-        for car in cars:
-            tran = TransactionForm.objects.filter(user=user, car=car, status=TransactionForm.DONE).order_by('-created_at').first()
-            details, total_price = self.get_transaction_detail(transaction=tran)
-            branch = LineOfficial.objects.filter(id=tran.branch_id).first()
-            transaction_by_car = {
-                'details': details,
-                'branch': branch.name if branch else 'None',
-                'car_register': tran.car.car_register,
-                'brand': tran.car.model.brand.name,
-                'created_at': self.__get_day(tran.created_at),
-                'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
-                'appointed_date': tran.appointed_date,
-                'status': tran.status,
-                'total_price': total_price,
-                'next_service': self.__next_service(tran.created_at)
-            }
-            result.append(transaction_by_car)
-        return result, cars
-        
     def get(self, request):
         page = request.GET.get('page', 1)
         car_id = request.GET.get('car_id', None)
@@ -283,16 +246,6 @@ class MyHistory(View):
         }
         return render(request, 'transaction-list.html', context=context)
 
-    def get_transaction_by_car(self, car_id, user):
-        car = []
-        if car_id:
-            car = Car.objects.filter(id=int(car_id)).first()
-            transactions = TransactionForm.objects.filter(user_id=user, car=car, status=TransactionForm.DONE)
-            car = Car.map_object_to_list([car])
-        else:
-            transactions = TransactionForm.objects.filter(user_id=user, status=TransactionForm.DONE)
-        return transactions.filter(status=TransactionForm.DONE), car
-
     def get_slice_transaction(self, transactions, start_page, end_page):
         result = []
         for tran in transactions[start_page:end_page]:
@@ -313,19 +266,13 @@ class MyHistory(View):
                 'car_register': tran.car.car_register,
                 'brand': tran.car.model.brand.name if tran.car.model else '',
                 'model': tran.car.model.name if tran.car.model else '',
-                'created_at': self.__get_day(tran.created_at),
-                'created_date': datetime.strftime(tran.created_at, '%d/%m/%Y'),
-                'appointed_date': tran.appointed_date,
+                'appointed_at': self.__get_day(tran.appointed_date),
+                'appointed_date': datetime.strftime(tran.appointed_date, '%d/%m/%Y'),
                 'status': tran.status,
                 'total_price': total_price,
-                'next_service': self.__next_service(tran.created_at)
+                'next_service': self.__next_service(tran.appointed_date)
             }
             result.append(transaction_by_car)
-            # group transaction by car
-            # if result.get(car_register):
-            #     result[car_register]['data'].append(transaction_by_car)
-            # else:
-            #     result.update({car_register: {'car_register': tran.car.car_register,'brand':tran.car.brand,'model':tran.car.model, 'data': [transaction_by_car]}})
         return result
 
     def __get_day(self, datetime):
@@ -338,6 +285,7 @@ class MyHistory(View):
     def __next_service(self, datetime):
         next_service = datetime + relativedelta(months=4)
         return next_service.strftime('%d/%m/%Y')
+
 
 class ListItem(View):
 
