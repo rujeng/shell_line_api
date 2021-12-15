@@ -235,8 +235,9 @@
     const urlParams = new URLSearchParams(window.location.search);
     const user_id = urlParams.get('user_id');
     const branch_id = urlParams.get('branch_id');
+    const action = urlParams.get('action');
     const htmla = window.location.hostname;
-    window.location.href = `/line/form/?user_id=${user_id}&branch_id=${branch_id}`
+    window.location.href = `/line/form/?user_id=${user_id}&branch_id=${branch_id}&action=${action}`
   }
 </script>
 {% endblock %}
