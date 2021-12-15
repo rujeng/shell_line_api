@@ -232,7 +232,7 @@ class Message():
                 if ser_fact:
                     if count_ser > 1:
                         service_detail = service_detail + ',' 
-                    service_detail = service_detail + self.__getservicename(count_ser)
+                    service_detail = service_detail + self.__getservicename(ser_fact)
                 count_ser = count_ser + 1
             return service_detail
 
