@@ -36,7 +36,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'http://159.223.95.82/line/webhook?reqo={reqo}',
+            'redirect_uri': f'http://{settings.DOMAIN_NAME}/line/webhook?reqo={reqo}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
@@ -79,7 +79,7 @@ class Line(HttpRequest):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': f'http://159.223.95.82/line/webhistory?branch_id={branch_id}',
+            'redirect_uri': f'http://{settings.DOMAIN_NAME}/line/webhistory?branch_id={branch_id}',
             'client_id': channel_id,
             'client_secret': channel_secret,
         }
