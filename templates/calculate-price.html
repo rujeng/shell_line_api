@@ -161,6 +161,7 @@
         </div>
         {% endif %}
     {% else %}
+    {% if car %}
         <div class="label-bold-center mt-4" >ไม่มีข้อมูล สอบถามเพิ่มเติม ติดต่อ </div>
         <div class="label-bold-center mt-2" >097-096-8653</div>
         <div class="mt-2" ></div>
@@ -168,6 +169,7 @@
           <button class="button-add-car" style="margin-right: 8px;" onclick="refreshItemPricePage()">คำนวณใหม่</button>
           <button class="btn btn-danger" style="margin-right: 8px;" onclick="RedirectQPage()">จองคิว</button>
         </div>
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}
