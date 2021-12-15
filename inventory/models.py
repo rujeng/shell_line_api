@@ -6,8 +6,12 @@ from django.db.models import indexes
 class Inventory(models.Model):
     shipment_number = models.CharField(max_length=50)
     delivery_number = models.CharField(max_length=50)
+    comment = models.CharField(max_length=50, blank=True, null=True)
     reference_order = models.CharField(max_length=50)
     storage = models.CharField(max_length=50, db_index=True)
+    branch_id = models.IntegerField()
+
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -36,6 +40,7 @@ class InventoryCount(models.Model):
     name = models.CharField(max_length=50)
     category = models.CharField(max_length=50, db_index=True)
     amount = models.IntegerField(default=0)
+    branch_id = models.IntegerField()
     storage = models.CharField(max_length=50, db_index=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

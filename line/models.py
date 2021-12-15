@@ -10,6 +10,9 @@ class CustomUser(models.Model):
     mobile_no = models.CharField(max_length=10)
     ref_friend = models.ForeignKey('CustomUser', related_name='ref', on_delete=models.SET_NULL, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     def __str__(self):
         return str(self.id)
 
