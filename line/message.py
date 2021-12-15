@@ -227,12 +227,14 @@ class Message():
             lst_filt_chkbox = [form.cleaned_data[key] for key in form.cleaned_data]
             service_detail = ''
             count_ser = 1
-            # TODO debug ,
+            count_num = 1
+            # TODO debug , // [true true true]
             for ser_fact in lst_filt_chkbox:
                 if ser_fact:
-                    if count_ser > 1:
+                    if count_num > 1:
                         service_detail = service_detail + ',' 
-                    service_detail = service_detail + self.__getservicename(ser_fact)
+                    service_detail = service_detail + self.__getservicename(count_ser)
+                    count_num = count_num + 1
                 count_ser = count_ser + 1
             return service_detail
 
