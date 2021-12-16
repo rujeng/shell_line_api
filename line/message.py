@@ -201,7 +201,7 @@ class Message():
                                   "action": {
                                   "type": "uri",
                                   "label": "ติดต่อเจ้าหน้าที่",
-                                   "uri": "tel:0970968653"
+                                   "uri": "tel:033641010"
                                 }
                             }
                             ]
@@ -227,12 +227,14 @@ class Message():
             lst_filt_chkbox = [form.cleaned_data[key] for key in form.cleaned_data]
             service_detail = ''
             count_ser = 1
-            # TODO debug ,
+            count_num = 1
+            # TODO debug , // [true true true]
             for ser_fact in lst_filt_chkbox:
                 if ser_fact:
-                    if count_ser > 1:
+                    if count_num > 1:
                         service_detail = service_detail + ',' 
-                    service_detail = service_detail + self.__getservicename(ser_fact)
+                    service_detail = service_detail + self.__getservicename(count_ser)
+                    count_num = count_num + 1
                 count_ser = count_ser + 1
             return service_detail
 
@@ -240,12 +242,12 @@ class Message():
          switcher={
                 1:'เปลี่ยนถ่ายนํ้ามันเครื่อง พร้อมไส้กรอง',
                 2:'ฟลัชชิ่ง ออยล์ ล้างตะกอนตกค้างภายในเครื่องยนต์',
-                3:'เปลี่ยนน้ำมันเกียร์',
-                4:'เปลี่ยนน้ำมันเฟืองท้าย',
-                5:'เปลี่ยนน้ำมันพวงมาลัยพาวเวอร์',
-                6:'เปลี่ยนน้ำยาหม้อน้ำ (คูลแลนท์)',
-                7:'เปลี่ยนไส้กรองอากาศ',
-                8:'เปลี่ยนน้ำมันเบรค',
-                9:'เปลี่ยนก้านปัดน้ำฝน'
+                3:'เปลี่ยนน้ำมันเฟืองท้าย',
+                4:'เปลี่ยนน้ำมันพวงมาลัยพาวเวอร์',
+                5:'เปลี่ยนน้ำยาหม้อน้ำ (คูลแลนท์)',
+                6:'เปลี่ยนไส้กรองอากาศ',
+                7:'เปลี่ยนน้ำมันเบรค',
+                8:'เปลี่ยนก้านปัดน้ำฝน',
+                9:'เปลี่ยนน้ำมันเกียร์'
              }
          return switcher.get(i,"Invalid number of service")
