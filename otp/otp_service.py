@@ -68,7 +68,7 @@ class Otp(HttpRequest):
         
     def register_verify_otp(self,line_id,otp_code):
         otp_request = OtpRequest.objects.filter(line_id=line_id).order_by('-id').first()
-        if otp_request.count > 3:
+        if otp_request.count >= 3:
             return False,'otp is over 3 times please get otp again.', otp_request
         token = otp_request.token
         otp_result = self.verify_otp(token,otp_code)

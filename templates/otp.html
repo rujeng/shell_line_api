@@ -22,7 +22,7 @@
       <p>( รหัสอ้างอิง : {{ref_code}} )</p>
       <p>เราได้ส่งรหัสผ่านแบบใช้ครั้งเดียวไปยังมือถือของคุณ</p>
     </div>
-    <input name='otp_code' id='otp_code' type='text' class="form-control" onfocusout='validateOtp(this)'/>
+    <input name='otp_code' id='otp_code' type='text' class="form-control" onchange="validateOtp()"/>
     <button type='submit' class="btn btn-danger btn-lg button-shadow mt-3" onclick="refreshOtp()">ขอรหัสใหม่</button>
     <button type='submit' class="btn btn-danger btn-lg button-shadow mt-3">ยืนยัน</button>
     <div class='d-none' id='otp_code_error'>
@@ -34,22 +34,26 @@
         <span class="required">จำเป็นต้องตอบคำถามนี้</span>
       </div>
   </div>
-    <input name='line_id' type='text' value='{{line_id}}' class='invisible'/>
+    <input name='user_id' type='text' value='{{line_id}}' class='invisible'/>
     <input name='ref_code' type='text' value='{{ref_code}}' class='invisible'/>
     <input name='branch_id' type='text' value='{{branch_id}}' class='invisible'/>
     <input name='action' type='text' value='{{action}}' class='invisible'/>
+    <input name='full_name' type='text' value='{{full_name}}' class='invisible'/>
+    <input name='mobileno' type='text' value='{{mobileno}}' class='invisible'/>
     
 </form>
 </div>
 <script>
-    
   function refreshOtp(){
-    window.location.reload();
+    const user_id = "{{line_id}}";
+    const branch_id = "{{branch_id}}";
+    const action = "{{action}}";
+    const full_name = "{{full_name}}";
+    const mobileno = "{{mobileno}}";
+    const url = `/otp/verify/?user_id=${user_id}&branch_id=${branch_id}&full_name=${full_name}&mobileno=${mobileno}&action=${action}`;
+    window.location.href = url;
   }
   function validateSubmit(e) {
-    // var clickedAble = false;
-    // if(!clickedAble) return
-    // debugger
     var state = false
     document.getElementById('spinner').style.display = 'flex'
     const nullAble = validateOtp();
@@ -65,6 +69,7 @@
     
   function validateOtp() {
     const otp_code = document.getElementById("otp_code").value
+    console.log(otp_code)
     if (!otp_code.match(/\d/g)) {
       document.getElementById("otp_code_error").className = ''
       return false
