@@ -46,7 +46,7 @@ class CalItemPrice(View):
         # import pdb ; pdb.set_trace()
         line_id = request.GET.get('user_id', None)
         car_id = request.GET.get('car_id', None)
-        brand_list = CarBrand.objects.all()
+        brand_list = CarBrand.objects.all().order_by('name')
         
         cars = Car.objects.filter(user_id__line_id=line_id)
         user = CustomUser.objects.filter(line_id=line_id).first()

@@ -35,7 +35,10 @@
       </div>
   </div>
 </div>
-
+<div class="justify-content-center" id='spinner'>
+  <div class="spinner-grow" role="status">
+  </div>
+</div>
 <div class="container">
   <div class="mt-4 form-head">
     <div class="">
@@ -205,5 +208,22 @@
           alert('error')
       }
   }
+
+  function getCarSeries(){
+        const seriesId = $('#car-brand').val()
+        if(seriesId){
+            fetch(`/line/car-series?seriesId=${seriesId}`)
+            .then(response => response.json())
+            .then(data => {
+                var html = '';
+                for(car of data.series){
+                    html += `<option value=${car.id}>${car.name}</option>`
+                }
+                $('#car-series').html(html)
+            });
+        }else{
+            $('#car-series').html('')
+        }
+    }
 </script>
 {% endblock %}

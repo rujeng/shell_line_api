@@ -213,7 +213,7 @@ class CarSeries(View):
 
     def get(self, request):
         seriesId = request.GET.get('seriesId', None)
-        series = CarModel.objects.filter(brand__id=seriesId, status=True)
+        series = CarModel.objects.filter(brand__id=seriesId, status=True).order_by('name')
         car_series = CarModel.map_object_to_json(series)
         return JsonResponse({'series': car_series})
 
@@ -240,8 +240,9 @@ class MyHistory(View):
         start_page = self.show_list * (int(page)-1)
         end_page = start_page + self.show_list
         result = self.get_slice_transaction(trans, start_page, end_page)
+        brand_list = CarBrand.objects.all().order_by('name')
         context = {'result': result, 'fullname': user.full_name, 'mobile': user.mobile_no, 
-        'page_obj': paginator['page_obj'], 'cars_dropdown': cars, 'car': car,
+        'page_obj': paginator['page_obj'], 'cars_dropdown': cars, 'car': car, 'brand_dropdown': brand_list,
         'next_page': paginator['next_page'], 'prv_page': paginator['prv_page']
         }
         return render(request, 'transaction-list.html', context=context)
