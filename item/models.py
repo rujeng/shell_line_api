@@ -55,6 +55,9 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.name}' if self.name else '---' 
+
 
 class CalculatePrice(models.Model):
     # Active = True
@@ -85,3 +88,6 @@ class ItemImage(models.Model):
     image = models.ImageField(upload_to='items/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.item}' if self.item else '---' 
