@@ -21,6 +21,7 @@ class TransactionForm(models.Model):
     appointed_date = models.DateTimeField()
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     comment = models.TextField(blank=True, null=True)
+    is_notify = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
