@@ -287,3 +287,39 @@ class Message():
             }]
         }
         return data_push_noti
+
+    def makemessage_job_done(self,meta_dat):
+        line_id = meta_dat["line_id"]
+        data_push_noti =  {
+            "to": f"{line_id}",
+            "messages": [{
+                "type": "flex",
+                "altText": "โปรโมชั่น...",
+                "contents": {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [{
+                            "type": "text",
+                            "text": "โปรโมชั่น..",
+                            "color": "#FF3E15",
+                            "weight": "bold",
+                            "size": "xl",
+                            "wrap": True
+                        },
+                            {
+                            "type": "separator",
+                            "margin": "xxl"
+                        }
+                        ]
+                    },
+                    "styles": {
+                        "footer": {
+                            "separator": True
+                        }
+                    }
+                }
+            }]
+        }
+        return data_push_noti
