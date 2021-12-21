@@ -21,7 +21,7 @@ class Command(BaseCommand):
             line_message = LineMessage.objects.filter(id=tran.branch_id).first()
             channel_access_tk = line_message.channel_access_token
             message = Message()
-            message_job = message.makemessage_job_4_mount(meta_data)
+            message_job = message.makemessage_job_done(meta_data)
             line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
 
 
