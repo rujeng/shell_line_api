@@ -258,7 +258,7 @@ class Message():
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "ครบวัน...",
+                "altText": "ครบวันกำหนดเปลี่ยนถ่ายนํ้ามันเครื่อง",
                 "contents": {
                     "type": "bubble",
                     "body": {
@@ -294,7 +294,7 @@ class Message():
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "โปรโมชั่น...",
+                "altText": "โปรโมชั่น กาแฟ 1 แถม 1 หรือ สิทธิ์เติมน้ำมันฟรี 1 ครั้ง",
                 "contents": {
                     "type": "bubble",
                     "body": {
