@@ -32,7 +32,6 @@ class Command(BaseCommand):
                 line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
                 tran.is_notify = True
                 tran.save(update_fields=['is_notify'])
-                import pdb ; pdb.set_trace()
 
 
     
