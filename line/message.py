@@ -266,7 +266,7 @@ class Message():
                         "layout": "vertical",
                         "contents": [{
                             "type": "text",
-                            "text": "ครบวัน..",
+                            "text": "ครบวันกำหนดเปลี่ยนถ่ายนํ้ามันเครื่อง",
                             "color": "#FF3E15",
                             "weight": "bold",
                             "size": "xl",
@@ -302,7 +302,7 @@ class Message():
                         "layout": "vertical",
                         "contents": [{
                             "type": "text",
-                            "text": "โปรโมชั่น..",
+                            "text": "โปรโมชั่น กาแฟ 1 แถม 1 หรือ สิทธิ์เติมน้ำมันฟรี 1 ครั้ง",
                             "color": "#FF3E15",
                             "weight": "bold",
                             "size": "xl",
