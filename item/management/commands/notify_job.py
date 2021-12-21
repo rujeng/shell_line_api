@@ -1,7 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from item.models import TransactionForm , LineMessage
+from item.models import TransactionForm
+from line.models import LineMessage
 from line.line_service import Line
 from line.message import Message
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
@@ -9,8 +12,12 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         return
 
-    def is_date_notify(self, date):
-        return True
+    def is_date_notify(self, current_date):
+        next_4_month = current_date + relativedelta(months=4)
+        today = datetime.today()
+        if today.month == next_4_month.month and today.day == next_4_month.day:
+            return True
+        return False
     
     def handle(self, *args, **options):
         transactions = TransactionForm.objects.filter(is_notify=False)
@@ -25,6 +32,7 @@ class Command(BaseCommand):
                 line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
                 tran.is_notify = True
                 tran.save(update_fields=['is_notify'])
+                import pdb ; pdb.set_trace()
 
 
     
