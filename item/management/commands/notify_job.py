@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from item.models import TransactionForm
+from item.models import TransactionForm , LineMessage
 from line.line_service import Line
+from line.message import Message
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
@@ -16,7 +17,12 @@ class Command(BaseCommand):
         line = Line()
         for tran in transactions:
             if self.is_date_notify(tran.appointed_date):
-                line.push_message(channel_access_token='ee', message_data={})
+                meta_data = {'line_id': tran.user.line_id}
+                line_message = LineMessage.objects.filter(id=tran.branch_id).first()
+                channel_access_tk = line_message.channel_access_token
+                message = Message()
+                message_job = message.makemessage_job_4_mount(meta_data)
+                line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
                 tran.is_notify = True
                 tran.save(update_fields=['is_notify'])
 

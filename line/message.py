@@ -251,3 +251,39 @@ class Message():
                 9:'เปลี่ยนน้ำมันเกียร์'
              }
          return switcher.get(i,"Invalid number of service")
+
+    def makemessage_job_4_mount(self,meta_dat):
+        line_id = meta_dat["line_id"]
+        data_push_noti =  {
+            "to": f"{line_id}",
+            "messages": [{
+                "type": "flex",
+                "altText": "ครบวัน...",
+                "contents": {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [{
+                            "type": "text",
+                            "text": "ครบวัน..",
+                            "color": "#FF3E15",
+                            "weight": "bold",
+                            "size": "xl",
+                            "wrap": True
+                        },
+                            {
+                            "type": "separator",
+                            "margin": "xxl"
+                        }
+                        ]
+                    },
+                    "styles": {
+                        "footer": {
+                            "separator": True
+                        }
+                    }
+                }
+            }]
+        }
+        return data_push_noti
