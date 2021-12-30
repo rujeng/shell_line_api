@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 if num == 0:
                     pass
                 else:
-                    full_name, mobile, brand, model, car_register, date, ref = row
+                    full_name, mobile, brand, model, car_register, date = row
                     mobile = mobile.replace('-', '')
                     mobile = mobile[:10]
                     user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile, full_name=full_name)
