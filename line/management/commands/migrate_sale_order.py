@@ -26,7 +26,7 @@ class Command(BaseCommand):
         year = str(int(year) - 543)
         datetime_format = f'{year}/{month}/{day}'
         # import pdb ; pdb.set_trace()
-        return datetime.strptime(datetime_format, '%Y/%m/%d')
+        return datetime.strptime(datetime_format, '%Y/%d/%m')
 
     @transaction.atomic
     def handle(self, *args, **options):
