@@ -15,9 +15,10 @@ class Command(BaseCommand):
         # parser.add_argument('poll_ids', nargs='+', type=int)
     
     def parse_string_to_datetime(self, date_string):
+        
         date, time = date_string.split(' ')
         # import pdb ; pdb.set_trace()
-        day, month, year = ''.join(date).split('/')
+        month,day , year = ''.join(date).split('/')
         # import pdb ; pdb.set_trace()
         if len(day) == 1:
             day = '0'+day
@@ -25,8 +26,11 @@ class Command(BaseCommand):
             month = '0'+month
         year = str(int(year) - 543)
         datetime_format = f'{year}/{month}/{day}'
+        # print("datetime 1 : ", datetime_format  )
+        # print("datetime 2 : ", datetime.strptime(datetime_format, '%Y/%m/%d'))
+
         # import pdb ; pdb.set_trace()
-        return datetime.strptime(datetime_format, '%Y/%d/%m')
+        return datetime.strptime(datetime_format, '%Y/%m/%d')
 
     @transaction.atomic
     def handle(self, *args, **options):
