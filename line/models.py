@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class CustomUser(models.Model):
     line_id = models.CharField(max_length=50, null=True, blank=True, unique=True)
     full_name = models.CharField(max_length=50)
-    mobile_no = models.CharField(max_length=10)
+    mobile_no = models.CharField(max_length=10, unique=True)
     ref_friend = models.ForeignKey('CustomUser', related_name='ref', on_delete=models.SET_NULL, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     full_name, mobile, brand, model, car_register, date = row
                     mobile = mobile.replace('-', '')
                     mobile = mobile[:10]
-                    user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile, full_name=full_name)
+                    user, is_existed = CustomUser.objects.get_or_create(mobile_no=mobile)
                     car_register_instance = Car.objects.filter(car_register=car_register, user_id=user).first()
                     model = CarModel.objects.filter(name=model).first()
                     if car_register_instance:
