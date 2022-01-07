@@ -43,11 +43,16 @@ class Command(BaseCommand):
                             # print('-------',car_register)
                             test += 1
                         else:
-                            ucar = Car.objects.filter(car_register=car_register).update(user_id = user)
+                            ucar = Car.objects.filter(car_register=car_register).first()
                             if ucar :
-                               tran = TransactionForm.objects.filter(car_id = ucar).update(user_id = user)
-                               if tran:
+                                ucar.user_id = user
+                                ucar.save(update_fields=['uesr_id'])
+                                trans = TransactionForm.objects.filter(car_id = ucar)
+                                for tran in trans:
+                                    tran.user_id = user
+                                    tran.save(update_fields=['user_id'])
                                     count_tran += len(tran)
+                                # if tran:
                             count_car += 1         
                             # if ucar:
                             #     ucar.user_id = user
