@@ -33,6 +33,6 @@ class Command(BaseCommand):
                         if car_register_instance:
                             print('----',full_name)
                             print('-------',car_register)
-                num += 1
+                            num += 1
             print('row ----', num)
         print('uploaded success')
