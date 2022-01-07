@@ -51,7 +51,7 @@ class Command(BaseCommand):
                                 for tran in trans:
                                     tran.user_id = user
                                     tran.save(update_fields=['user_id'])
-                                    count_tran += len(tran)
+                                    count_tran += 1
                                 # if tran:
                             count_car += 1         
                             # if ucar:
