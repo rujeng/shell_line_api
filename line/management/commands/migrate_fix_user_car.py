@@ -35,6 +35,6 @@ class Command(BaseCommand):
                             print('----',full_name)
                             print('-------',car_register)
                             test += 1
-                    num += 1
+                num += 1
             print('row ----', test)
         print('uploaded success')
