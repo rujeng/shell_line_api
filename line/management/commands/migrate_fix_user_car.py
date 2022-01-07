@@ -46,7 +46,8 @@ class Command(BaseCommand):
                             ucar = Car.objects.filter(car_register=car_register).update(user_id = user)
                             if ucar :
                                tran = TransactionForm.objects.filter(car_id = ucar).update(user_id = user)
-                               count_tran += 1
+                               if tran:
+                                    count_tran += len(tran)
                             count_car += 1         
                             # if ucar:
                             #     ucar.user_id = user
