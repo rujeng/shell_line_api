@@ -20,6 +20,7 @@ class Command(BaseCommand):
         with open(file_path, newline='', encoding="utf8") as csvfile:
             spamreader = csv.reader(csvfile)
             num = 0
+            test = 0
             for row in spamreader:
                 if num == 0:
                     pass
@@ -33,6 +34,7 @@ class Command(BaseCommand):
                         if car_register_instance:
                             print('----',full_name)
                             print('-------',car_register)
-                            num += 1
-            print('row ----', num)
+                            test += 1
+                    num += 1
+            print('row ----', test)
         print('uploaded success')
