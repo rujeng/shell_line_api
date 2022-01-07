@@ -45,8 +45,8 @@ class Command(BaseCommand):
                         else:
                             ucar = Car.objects.filter(car_register=car_register).first()
                             if ucar :
-                                ucar.user_id = user
-                                ucar.save(update_fields=['uesr_id'])
+                                ucar.user_id_id = user
+                                ucar.save(update_fields=['user_id_id'])
                                 trans = TransactionForm.objects.filter(car_id = ucar)
                                 for tran in trans:
                                     tran.user_id = user
