@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from line.models import CustomUser, Car , CarBrand, CarModel
+from item.models import TransactionForm
 import csv
 import os
 from pathlib import Path
@@ -21,6 +22,8 @@ class Command(BaseCommand):
             spamreader = csv.reader(csvfile)
             num = 0
             test = 0
+            count_car = 0
+            count_tran = 0
             for row in spamreader:
                 if num == 0:
                     pass
@@ -28,13 +31,31 @@ class Command(BaseCommand):
                     full_name, mobile, brand, model, car_register, date = row
                     mobile = mobile.replace('-', '')
                     mobile = mobile[:10]
-                    user = CustomUser.objects.filter(mobile_no=mobile).first()
+                    user = CustomUser.objects.filter(mobile_no= mobile).first()
                     if user:
                         car_register_instance = Car.objects.filter(car_register=car_register, user_id=user).first()
                         if car_register_instance:
-                            print('----',full_name)
-                            print('-------',car_register)
+                            # tran = TransactionForm.objects.filter(car_id = car_register_instance)
+                            # if tran:
+                            #     for tr in tran:
+                            #         print('--',tr.id)
+                            # print('----',full_name)
+                            # print('-------',car_register)
                             test += 1
+                        else:
+                            ucar = Car.objects.filter(car_register=car_register).update(user_id = user)
+                            if ucar :
+                               tran = TransactionForm.objects.filter(car_id = ucar).update(user_id = user)
+                               count_tran += 1
+                            count_car += 1         
+                            # if ucar:
+                            #     ucar.user_id = user
+                            #     ucar.update(update_fields=['user_id'])
+                            #     tran = TransactionForm.objects.filter(car_id = ucar)
+                            #     if tran:
+                            #         tran.user_id = user
+                            #         tran.update(update_fields=['user_id'])
                 num += 1
-            print('row ----', test)
+            print('row car ----', count_car)
+            print('row tran ----', count_tran)
         print('uploaded success')
