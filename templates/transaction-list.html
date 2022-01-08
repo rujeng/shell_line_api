@@ -79,7 +79,7 @@
       </div>
       <div class="form-box mt-4">
         <div class="d-flex justify-content-between">
-          <h5>บริการ</h5>
+          <h5><strong>บริการ</strong></h5>
           <h5>{{value.appointed_date}} {{value.appointed_at}}</h5>
         </div>
         <!-- <p class="text-end"></p> -->
@@ -89,11 +89,11 @@
           <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
           <div>
             <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
-            <span class="mb-1">ราคาต่อชิ้น: {{detail.price}} บาท</span>
+            <span class="mb-1">ราคา: {{detail.price}} บาท</span>
           </div>
         </div>
         {% endfor %}
-        <div class="mt-4">รวมจำนวนเงิน {{value.total_price}} บาท</div>
+        <div class="mt-4"><strong>รวมจำนวนเงิน {{value.total_price}} บาท</strong</div>
         <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
       </div>
       {% endfor %}
