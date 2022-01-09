@@ -66,7 +66,7 @@ class Command(BaseCommand):
                     quantity = int(quantity) if quantity else 0
                     sale_price = float(sale_price) if sale_price else 0
                     car = Car.objects.filter(car_register=car_register).first()
-                    list_barcode = ['90915YZZC5 6','90915YZZD2 4','15208ED50A','7443978','90915YZZD2 3']
+                    list_barcode = ['90915YZZC5 6','90915YZZD2 4','15208ED50A','7443978','90915YZZD2 3','04152YZZA6']
                     if barcode in list_barcode:
                         if barcode == '90915YZZC5 6':
                             barcode = '90915YZZC5  6'
@@ -78,6 +78,8 @@ class Command(BaseCommand):
                             barcode = '90915YZZD2  3'
                         elif barcode == '7443978':
                             barcode = '07443978'
+                        elif barcode == '04152YZZA6':
+                            barcode = '04152YZZA 6-'
                             print(barcode)
                         item = Item.objects.filter(barcode=barcode).first()
                         if car:
