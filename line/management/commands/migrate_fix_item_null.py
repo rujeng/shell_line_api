@@ -80,7 +80,7 @@ class Command(BaseCommand):
                         if car:
                             user = car.user_id
                             # user_id = car.user_id.id
-                            tran, is_existed = TransactionForm.objects.filter(
+                            tran = TransactionForm.objects.filter(
                                 car_id=car
                             )
                             if tran:
