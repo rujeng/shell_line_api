@@ -47,7 +47,7 @@ class TransactionDetail(models.Model):
     transaction_form = models.ForeignKey(TransactionForm, related_name='sale_detail', on_delete=models.CASCADE)
     # order = models.CharField(max_length=20)
     # product_name = models.CharField(max_length=50)
-    item = models.ForeignKey('Item', related_name='item', on_delete=models.CASCADE, blank=True, null=True)
+    item = models.ForeignKey('Item', related_name='item', on_delete=models.CASCADE)
     quantity = models.IntegerField()
     sell_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     # total_bill = models.DecimalField(default=0, max_digits=7, decimal_places=2)
