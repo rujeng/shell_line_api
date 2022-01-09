@@ -78,6 +78,7 @@ class Command(BaseCommand):
                             barcode = '90915YZZD2  3'
                         elif barcode == '7443978':
                             barcode == '07443978'
+                            print(barcode)
                         item = Item.objects.filter(barcode=barcode).first()
                         if car:
                             user = car.user_id
