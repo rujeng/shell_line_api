@@ -93,7 +93,8 @@ class Command(BaseCommand):
                                         if not td.item_id:
                                             td.item_id = item
                                             td.save(update_fields=['item_id'])
-                                            num_update +=1 
+                                            num_update +=1
+                                            print(td.id)
                         else:
                             no_car += 1
                             # print(car_register)
