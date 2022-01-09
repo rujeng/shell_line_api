@@ -65,7 +65,8 @@ class Item(models.Model):
     supplier = models.CharField(max_length=50)
     main_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     sell_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
-    image_url = models.URLField(max_length = 200)
+    image_url = models.URLField(max_length = 200, blank=True, null=True)
+    liter = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
