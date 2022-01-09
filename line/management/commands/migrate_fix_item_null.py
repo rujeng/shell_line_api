@@ -85,7 +85,7 @@ class Command(BaseCommand):
                             )
                             if tran:
                                 for tr in tran:
-                                    trde, is_existed = TransactionDetail.objects.filter(
+                                    trde = TransactionDetail.objects.filter(
                                     transaction_form_id=tr.id)
                                     for td in trde:
                                         if not trde.item_id:
