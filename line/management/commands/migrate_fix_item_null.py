@@ -81,7 +81,7 @@ class Command(BaseCommand):
                             user = car.user_id
                             # user_id = car.user_id.id
                             tran, is_existed = TransactionForm.objects.filter(
-                                car=car
+                                car_id=car
                             )
                             if tran:
                                 for tr in tran:
