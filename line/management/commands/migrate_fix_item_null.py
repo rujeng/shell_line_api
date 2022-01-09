@@ -88,7 +88,7 @@ class Command(BaseCommand):
                                     trde = TransactionDetail.objects.filter(
                                     transaction_form_id=tr.id)
                                     for td in trde:
-                                        if not trde.item_id:
+                                        if not td.item_id:
                                             td.item_id = item
                                             td.save(update_fields=['item_id'])
                                             num_update +=1 
