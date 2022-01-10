@@ -284,7 +284,7 @@ class MyHistory(View):
         return f'{day} วันที่แล้ว'
 
     def __next_service(self, datetime):
-        next_service = datetime + relativedelta(months=4)
+        next_service = datetime + relativedelta(months=6)
         return next_service.strftime('%d/%m/%Y')
 
 
