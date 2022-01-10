@@ -1,44 +1,5 @@
 {% extends "base.html" %}
-<!-- {% block style %}
-  <style>
-    a :clicked{
-      background: red;
-    }
-  </style>
-{% endblock %} -->
 {% block content%}
-<!-- Modal -->
-<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
-        <button type="button" class="btn-close" data-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>ยี่ห้อรถยนต์</label>
-          <label for="require" class="form-label require">*</label>
-          <select class="form-control mb-2" id='car-brand'>
-            <option default value=''>กรุณาเลือก</option>
-            {% for car in cars_dropdown %}
-            <option value='{{car.brand}}'>{{car.brand}}</option>
-            {% endfor %}
-          </select>
-          <label>ยี่ห้อรถยนต์</label>
-          <input type='text' id='model' class="form-control form-input" />
-          <label>ทะเบียนรถ</label>
-          <input type='text' id='car_register' class="form-control form-input" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="addCar()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-<!-- spinner -->
 <div class="justify-content-center" id='spinner'>
   <div class="spinner-grow" role="status">
   </div>
@@ -53,7 +14,6 @@
     <div class="mb-3 form-box">
       <label for="fullname" class="form-label">ชื่อ-นามสกุล</label>
       <label for="require" class="form-label require">*</label>
-      <!-- {{form_services.full_name}} -->
       <input type="text" class="form-control form-input" name="fullname" id="full_name" placeholder='คำตอบของคุณ'
         onfocusout='validateNull()' value='{{ user.full_name|default:""}}'/>
       <div class='d-none' id='name'>
@@ -65,20 +25,6 @@
         <span class="required">จำเป็นต้องตอบคำถามนี้</span>
       </div>
     </div>
-    <!-- <div class="mb-3 form-box">  
-      <label for="fullname" class="form-label">นามสกุล </label>
-      <label for="require" class="form-label require">*</label>
-      <input type="text" class="form-control form-input" name="fullname" id="last_name" placeholder='คำตอบของคุณ'
-        onfocusout='validateNull()' value='{{ user.first_name|default:""}} {{user.last_name| default:""}}'>
-      <div class='d-none' id='name'>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-          <path fill-rule="evenodd"
-            d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z">
-          </path>
-        </svg>
-        <span class="required">จำเป็นต้องตอบคำถามนี้</span>
-      </div>
-    </div> -->
     <div class="mb-3 form-box">
       <label class="form-label">เบอร์โทรศัพท์</label>
       <label for="require" class="form-label require">*</label>
@@ -93,75 +39,20 @@
         <span class="required">กรุณาตรวจสอบเบอร์โทรศัพท์</span>
       </div>
     </div>
-    
-    <!-- <div class="mb-3 form-box">
-      <label>รถยนต์</label>
-      <label for="require" class="form-label require">*</label>
-      <select class="form-control mb-2" name="car_id" id='brand'>
-        <option default>กรุณาเลือก</option>
-        {% for car in cars %}
-        <option value={{car.id}}>{{car.car_register}} ({{car.brand}}) </option>
-        {% endfor %}
-      </select>
-      <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">เพิ่มรถยนต์</button>
-      </div>
-    </div> -->
-    
-
     <button type='submit' class="btn btn-danger btn-lg button-shadow">ถัดไป</button>
   </form>
 </div>
 
 {% endblock %}
 {% block script %}
-<!-- <script>
-  $('#myModal').on('shown.bs.modal', function () {
-    $('#myInput').trigger('focus')
-  })
-</script>
-<script>
-  async function addCar() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const user_id = urlParams.get('user_id');
-    const data = {
-      car_register: $('#car_register').val(),
-      model: $('#model').val(),
-      brand: $('#car-brand').val(),
-      line_id: user_id
-    }
-    const response = await fetch('/line/car/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      body: JSON.stringify(data)
-    });
-    const res = await response.json();
-    if (res.ok) {
-      window.location.reload()
-    } else {
-      alert('error')
-    }
-  }
-</script> -->
 <script>
   
   function validateSubmit(e) {
     var state = false
     document.getElementById('spinner').style.display = 'flex'
-    // const name = $('#fullname').val()
-    // const mobileno = $('#mobileno').val()
-    // if((!!name && !!mobileno)){
-    //   state = true
-    // }
     const nullAble = validateNull();
     const vMobi = validateMobile();
-    
-    // const vCar = validate('brand');
-    // const vBranch = validate('branch_id');
-    // const vServices = validateService();
+
     if(nullAble && vMobi && vDate && vTime){
       state = true
     }else{
@@ -185,7 +76,7 @@
   }
 
   function validateNull() {
-    const name = document.getElementById("fullname").value
+    const name = document.getElementById("full_name").value
     if (name.length <= 0) {
       document.getElementById("name").className = ''
       return false
@@ -194,22 +85,6 @@
       return true;
     }
   }
-  function validate(targetId) {
-    const name = document.getElementById(targetId).value
-    if(name){
-      return true
-    }
-    return false;
-  }
-  // function validateService(){
-  //   var services = document.getElementById('services').children
-  //   for(let i=2; i<services.length; i++){
-  //     if(services[i].children[0].checked){
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
 
 </script>
 {% endblock %}
