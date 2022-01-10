@@ -52,8 +52,7 @@
     document.getElementById('spinner').style.display = 'flex'
     const nullAble = validateNull();
     const vMobi = validateMobile();
-
-    if(nullAble && vMobi && vDate && vTime){
+    if(nullAble && vMobi){
       state = true
     }else{
       state = false
@@ -66,12 +65,12 @@
   
   function validateMobile() {
     const mobile = document.getElementById("mobileno").value
-    if (!mobile.match(/^0\d{9}/g)) {
-      document.getElementById("mobile").className = ''
-      return false
-    } else {
+    if (mobile.match(/^0\d{9}/g) && mobile.length === 10) {
       document.getElementById("mobile").className = 'd-none'
       return true
+    } else {
+      document.getElementById("mobile").className = ''
+      return false
     }
   }
 
