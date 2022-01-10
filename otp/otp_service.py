@@ -21,6 +21,7 @@ class Otp(HttpRequest):
             "phone": f"{mobile_no}",
             "ref_code":""
         }
+        print(data)
         return super().request('POST', url ,json.dumps(data), headers)
     
     def verify_otp(self,token,otp_code):
