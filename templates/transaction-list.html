@@ -4,36 +4,36 @@
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content modal-fade-cls">
-          <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
-              <button type="button" class="btn-close" data-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>ยี่ห้อรถยนต์</label>
-                  <label for="require" class="form-label require">*</label>
-                  <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
-                      <option default value=''>กรุณาเลือก</option>
-                      {% for brand in brand_dropdown %}
-                          <option value='{{brand.id}}'>{{brand.name}}</option>
-                      {% endfor %}
-                  </select>
-                  <label>รุ่นรถยนต์</label>
-                  <select class="form-control mb-2" id='car-series'>
-                      <!-- <option default value=''>กรุณาเลือก</option> -->
-                  </select>
-                  <!-- <input type='text' id='model' class="form-control form-input" /> -->
-                  <label>ทะเบียนรถ</label>
-                  <input type='text' id='car_register' class="form-control form-input" />
-                  <span style="font-size: 14px;">* ระบุเฉพาะทะเบียน ไม่ต้องวรรคหรือเพิ่มสัญลักษณ์ - และจังหวัด เช่น กข1234</span>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger button-shadow" onclick="addCar()">Save changes</button>
-          </div>
+    <div class="modal-content modal-fade-cls">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
+        <button type="button" class="btn-close" data-dismiss="modal"></button>
       </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>ยี่ห้อรถยนต์</label>
+          <label for="require" class="form-label require">*</label>
+          <select class="form-control mb-2" id='car-brand' onchange="getCarSeries()">
+            <option default value=''>กรุณาเลือก</option>
+            {% for brand in brand_dropdown %}
+            <option value='{{brand.id}}'>{{brand.name}}</option>
+            {% endfor %}
+          </select>
+          <label>รุ่นรถยนต์</label>
+          <select class="form-control mb-2" id='car-series'>
+            <!-- <option default value=''>กรุณาเลือก</option> -->
+          </select>
+          <!-- <input type='text' id='model' class="form-control form-input" /> -->
+          <label>ทะเบียนรถ</label>
+          <input type='text' id='car_register' class="form-control form-input" />
+          <span style="font-size: 14px;">* ระบุเฉพาะทะเบียน ไม่ต้องวรรคหรือเพิ่มสัญลักษณ์ - และจังหวัด เช่น กข1234</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger button-shadow" onclick="addCar()">Save changes</button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="justify-content-center" id='spinner'>
@@ -55,51 +55,49 @@
         </select>
         <div class="d-flex justify-content-end">
           <button type="button" class="button-add-car" data-toggle="modal"
-              data-target="#exampleModal">เพิ่มรถยนต์</button>
-      </div>
+            data-target="#exampleModal">เพิ่มรถยนต์</button>
+        </div>
       </div>
     </div>
   </div>
   <div>
-    
-  </div>
 
-  <p class="mt-4">
-    <button class="btn btn-danger" type="button" onclick="RedirectQPage()">จองคิว</button>
-    <button class="btn btn-danger d-none" type="button" onclick="handleToggle(this)">ประวัติการให้บริการ</button>
-    <button class="btn btn-danger d-none" type="button" onclick="handleToggle(this)">โปรโมชั่น</button>
-  </p>
-  <!-- <div class="mt-4 mb-4"> -->
+    <!-- </div> -->
+
+    <p class="mt-4">
+      <button class="btn btn-danger" type="button" onclick="RedirectQPage()">จองคิว</button>
+      <button class="btn btn-danger d-none" type="button" onclick="handleToggle(this)">ประวัติการให้บริการ</button>
+      <button class="btn btn-danger d-none" type="button" onclick="handleToggle(this)">โปรโมชั่น</button>
+    </p>
+    <!-- <div class="mt-4 mb-4"> -->
     <div class="" id="history">
       {% for value in result %}
-      <div class="form-box mt-4 mb-4">
-        <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
-        <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
-        <div class="mb-1">รุ่น: {{value.model}}</div>
-      </div>
-      <div class="form-box mt-4">
-        <div class="d-flex justify-content-between">
-          <h5><strong>บริการ</strong></h5>
-          <h5>{{value.appointed_date}} {{value.appointed_at}}</h5>
+        <div class="form-box mt-4 mb-4">
+          <div class="mb-1">ทะเบียนรถยนต์:{{value.car_register}} </div>
+          <div class="mb-1">ยี่ห้อรถยนต์: {{value.brand}}</div>
+          <div class="mb-1">รุ่น: {{value.model}}</div>
         </div>
-        <!-- <p class="text-end"></p> -->
-        <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
-        {% for detail in value.details %}
-        <div class="mt-2">
-          <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
-          <div>
-            <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
-            <span class="mb-1">ราคา: {{detail.price}} บาท</span>
+        <div class="form-box mt-4">
+          <div class="d-flex justify-content-between">
+            <h5><strong>บริการ</strong></h5>
+            <h5>{{value.appointed_date}} {{value.appointed_at}}</h5>
           </div>
+          <div>ศูนย์บริการสาขา: {{value.branch|default:'ไม่ระบุ'}}</div>
+          {% for detail in value.details %}
+          <div class="mt-2">
+            <p class="mb-1">ชื่ออะไหล่: {{detail.item}}</p>
+            <div>
+              <span class="mb-1">จำนวน: {{detail.quantity}} ชิ้น</span>
+              <span class="mb-1">ราคา: {{detail.price}} บาท</span>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="mt-4"><strong>รวมจำนวนเงิน {{value.total_price}} บาท</strong></div>
+          <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
         </div>
-        {% endfor %}
-        <div class="mt-4"><strong>รวมจำนวนเงิน {{value.total_price}} บาท</strong</div>
-        <div class="text-end mt-4">บริการครั้งต่อไป {{value.next_service}}</div>
-      </div>
       {% endfor %}
-    </div>
-    <div class="" id="promotion">promotion</div>
-  <!-- </div> -->
+  </div>
+  <div class="" id="promotion">promotion</div>
 </div>
 
 <div class="float-end mt-2">
@@ -126,13 +124,13 @@
 {% endblock %}
 {% block script %}
 <script>
-  function handleToggle(e){
+  function handleToggle(e) {
     const e1 = $('#history')
     const e2 = $('#promotion')
-    if(e1.css('display') === 'block'){
+    if (e1.css('display') === 'block'){
       e1.css('display', 'none')
       e2.css('display', 'block')
-    }else{
+    } else {
       e1.css('display', 'block')
       e2.css('display', 'none')
     }
@@ -162,15 +160,15 @@
     var prv = "{{prv_page}}";
     window.location.replace(`${path}?user_id=${params['user_id']}&page=${prv || 1}&car_id=${params['car_id']}&branch_id=${params['branch_id']}`)
   }
- 
-  function RedirectQPage(){
+
+  function RedirectQPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const user_id = urlParams.get('user_id');
     const branch_id = urlParams.get('branch_id');
     const htmla = window.location.hostname;
     window.location.href = `/line/car/?user_id=${user_id}&branch_id=${branch_id}`
   }
- 
+
   $(document).ready(function () {
     function initial() {
       const carId = "{{car.id}}";
@@ -185,46 +183,46 @@
 </script>
 <script>
   async function addCar() {
-      document.getElementById('spinner').style.display = 'flex'
-      const urlParams = new URLSearchParams(window.location.search);
-      const user_id = urlParams.get('user_id');
-      const data = {
-          car_register: $('#car_register').val(),
-          model: $('#car-series').val(),
-          line_id: user_id
-      }
-      const response = await fetch('/line/addcar/', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          redirect: 'follow',
-          body: JSON.stringify(data)
-      });
-      const res = await response.json();
-      window.location.reload()
-      if (res.ok) {
-          document.getElementById('spinner').style.display = 'none'
-      } else {
-          alert('error')
-      }
+    document.getElementById('spinner').style.display = 'flex'
+    const urlParams = new URLSearchParams(window.location.search);
+    const user_id = urlParams.get('user_id');
+    const data = {
+      car_register: $('#car_register').val(),
+      model: $('#car-series').val(),
+      line_id: user_id
+    }
+    const response = await fetch('/line/addcar/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(data)
+    });
+    const res = await response.json();
+    window.location.reload()
+    if (res.ok) {
+      document.getElementById('spinner').style.display = 'none'
+    } else {
+      alert('error')
+    }
   }
 
-  function getCarSeries(){
-        const seriesId = $('#car-brand').val()
-        if(seriesId){
-            fetch(`/line/car-series?seriesId=${seriesId}`)
-            .then(response => response.json())
-            .then(data => {
-                var html = '';
-                for(car of data.series){
-                    html += `<option value=${car.id}>${car.name}</option>`
-                }
-                $('#car-series').html(html)
-            });
-        }else{
-            $('#car-series').html('')
-        }
+  function getCarSeries() {
+    const seriesId = $('#car-brand').val()
+    if (seriesId) {
+      fetch(`/line/car-series?seriesId=${seriesId}`)
+        .then(response => response.json())
+        .then(data => {
+          var html = '';
+          for (car of data.series) {
+            html += `<option value=${car.id}>${car.name}</option>`
+          }
+          $('#car-series').html(html)
+        });
+    } else {
+      $('#car-series').html('')
     }
+  }
 </script>
 {% endblock %}
