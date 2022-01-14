@@ -11,6 +11,7 @@ class HttpRequest():
         res = self.check_response(res)
         if max_retires <= 0:
             line = Line()
+            print('debug ---- error payload', data)
             message = json.dumps(res)
             line.notify(message, 'oxCyrrgf1jWuQFU7c6yBghkJDmmRhmvvDNN6xTHlb5i') 
             # line.notify(message, '9VBQke8sQrOq4GhNcRYvz8dZrxKGFhNdTxoSwfwyGGf') 
