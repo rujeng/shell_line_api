@@ -61,7 +61,7 @@ class LineHookView(View):
             else:
                 return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
         elif action == 'calculate':
-            print('debug : line_id:' , line_id , "branch_id:",branch_id,"action:",action)
+            print('debug : line_id:' , line_id , "branch_id:",branch_id,"action:",action or 'no action')
             if user:
                 return redirect(f'/item/price/?user_id={line_id}&branch_id={branch_id}&car_id=')
             else:
