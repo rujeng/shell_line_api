@@ -322,6 +322,43 @@ class ListItem(View):
 class PrivacyPolicy(View):
     def get(self, request):
         return render(request, 'PrivacyPolicy.html')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ChangeCustomerNameAPIView(View):
+    
+    def post(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        line_id = body['line_id']
+        full_name = body['full_name']
+        if full_name:
+            user = CustomUser.objects.filter(line_id=line_id).first()
+            if user:  # if car not have model then update car model
+                user.full_name = full_name
+                user.save()
+        return JsonResponse({'ok': True})
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ChangeCarModelAPIView(View):
+    
+ def post(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        line_id = body['line_id']
+        model_id = body['model']
+        car_id = body['car_id']
+        if model_id and car_id:
+            model = CarModel.objects.filter(id=model_id).first()
+            user = CustomUser.objects.filter(line_id=line_id).first()
+            car = Car.objects.filter(user_id=user, id=car_id).first()
+            if car:  # if car not have model then update car model
+                car.model = model
+                car.status = True
+                car.save()
+                return JsonResponse({'ok': True})
+            else:
+                return JsonResponse({'ok': False})
+
 # import requests
 @method_decorator(csrf_exempt, name='dispatch')
 class Testview(View):

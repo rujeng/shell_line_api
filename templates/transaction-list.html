@@ -36,14 +36,78 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-fade-cls">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ข้อมูลบุคคล</h5>
+        <button type="button" class="btn-close" data-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>ชื่อ - นามสกุล</label>
+          <input type='text' id='full_name' class="form-control form-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger button-shadow" onclick="changeName()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-fade-cls">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ข้อมูลรถยนต์</h5>
+        <button type="button" class="btn-close" data-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>ยี่ห้อรถยนต์</label>
+          <label for="require" class="form-label require">*</label>
+          <select class="form-control mb-2" id='change-car-brand' onchange="getCarSeries_ChangeCar()">
+            <option default value=''>กรุณาเลือก</option>
+            {% for brand in brand_dropdown %}
+            <option value='{{brand.id}}'>{{brand.name}}</option>
+            {% endfor %}
+          </select>
+          <label>รุ่นรถยนต์</label>
+          <select class="form-control mb-2" id='change-car-series'>
+            <!-- <option default value=''>กรุณาเลือก</option> -->
+          </select>
+          <!-- <input type='text' id='model' class="form-control form-input" /> -->
+          <div>ทะเบียนรถ</div>
+          <select class="form-control mb-2" id='car-id'>
+            <option value="" default>กรุณาเลือก</option>
+            {% for car in cars_dropdown %}
+            <option value="{{car.id}}">{{car.car_register}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger button-shadow" onclick="changeCar()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="justify-content-center" id='spinner'>
   <div class="spinner-grow" role="status">
   </div>
 </div>
 <div class="container">
   <div class="mt-4 form-head">
-    <div class="">
+    <div >
+      <div class="d-flex justify-content-between">
       <h1>คุณ {{fullname}}</h1>
+      <div class="align-self-center">
+        <button type="button" class="button-add-car" data-toggle="modal"
+          data-target="#nameModal" >แก้ไขข้อมูล</button>
+      </div>
+    </div>
       <div class="mb-1">เบอโทรศัพท์: {{mobile}}</div>
       <div class="d-flex car-plat-option-2">
         <div>ทะเบียนรถ</div>
@@ -57,6 +121,10 @@
           <button type="button" class="button-add-car" data-toggle="modal"
             data-target="#exampleModal" onclick="initialEditCar_default()">เพิ่มรถยนต์</button>
         </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="button-add-car" data-toggle="modal"
+          data-target="#carModal">แก้ไขรถยนต์</button>
       </div>
     </div>
   </div>
@@ -212,6 +280,65 @@
     }
   }
 
+  async function changeName() {
+    document.getElementById('spinner').style.display = 'flex'
+    const urlParams = new URLSearchParams(window.location.search);
+    const user_id = urlParams.get('user_id');
+    const data = {
+      full_name: $('#full_name').val(),
+      line_id: user_id
+    }
+    const response = await fetch('/line/changename/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(data)
+    });
+    const res = await response.json();
+    window.location.reload()
+    if (res.ok) {
+      document.getElementById('spinner').style.display = 'none'
+    } else {
+      alert('error')
+    }
+  }
+
+  async function changeCar() {
+    document.getElementById('spinner').style.display = 'flex'
+    const urlParams = new URLSearchParams(window.location.search);
+    const user_id = urlParams.get('user_id');
+    const car = $('#car-id').val();
+    if(car == '' || car == null)
+    {
+      alert('กรุณาเลือกรถยนต์')
+    }
+    else
+    {
+      const data = {
+        car_id: car,
+        model: $('#change-car-series').val(),
+        line_id: user_id
+      }
+      const response = await fetch('/line/changecar/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        body: JSON.stringify(data)
+      });
+      const res = await response.json();
+      window.location.reload()
+      if (res.ok) {
+        document.getElementById('spinner').style.display = 'none'
+      } else {
+        alert('error')
+      }
+    }
+  }
+
   function getCarSeries() {
     const seriesId = $('#car-brand').val()
     if (seriesId) {
@@ -226,6 +353,23 @@
         });
     } else {
       $('#car-series').html('')
+    }
+  }
+
+  function getCarSeries_ChangeCar() {
+    const seriesId = $('#change-car-brand').val()
+    if (seriesId) {
+      fetch(`/line/car-series?seriesId=${seriesId}`)
+        .then(response => response.json())
+        .then(data => {
+          var html = '';
+          for (car of data.series) {
+            html += `<option value=${car.id}>${car.name}</option>`
+          }
+          $('#change-car-series').html(html)
+        });
+    } else {
+      $('#change-car-series').html('')
     }
   }
 
