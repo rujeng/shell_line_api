@@ -218,6 +218,15 @@ td {
     font-size: 10;
 }
 
+.button-change-name {
+    background-color: #DC3545;
+    color: white;
+    font-weight: bold;
+    border: none;
+    text-decoration: underline;
+}
+
+
 /* .custom-radio:checked{
     background-color:rgb(253, 69, 69);
   } */
