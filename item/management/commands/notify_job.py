@@ -20,7 +20,7 @@ class Command(BaseCommand):
         return False
     
     def handle(self, *args, **options):
-        transactions = TransactionForm.objects.filter(is_notify=False)
+        transactions = TransactionForm.objects.filter(status=TransactionForm.DONE,is_notify=False)
         line = Line()
         for tran in transactions:
             if self.is_date_notify(tran.appointed_date):
@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 line_message = LineMessage.objects.filter(id=tran.branch_id).first()
                 channel_access_tk = line_message.channel_access_token
                 message = Message()
-                message_job = message.makemessage_job_4_mount(meta_data)
+                message_job = message.makemessage_job_4_month(meta_data,tran)
                 line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
                 tran.is_notify = True
                 tran.save(update_fields=['is_notify'])
