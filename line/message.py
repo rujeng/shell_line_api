@@ -540,29 +540,7 @@ class Message():
                                 "type": "text",
                                 "text": "รายการรับบริการ",
                                 "weight": "bold"
-                            },
-                            
-                            {
-                                "type": "box",
-                                "layout": "horizontal",
-                                "contents": [
-                                {
-                                    "type": "text",
-                                    "text": "ราคารวม",
-                                    "size": "md",
-                                    "flex": 0,
-                                    "weight": "bold",
-                                    "margin": "none"
-                                },
-                                {
-                                    "type": "text",
-                                    "text": f"{total_price} บาท",
-                                    "size": "md",
-                                    "align": "end",
-                                    "weight": "bold"
-                                }
-                                ]
-                            }
+                            }                    
                             ]
                         },
                         {
@@ -572,7 +550,28 @@ class Message():
                             {
                                 "type": "box",
                                 "layout": "horizontal",
-                                "contents": []
+                                "contents": [                            
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "ราคารวม",
+                                        "size": "md",
+                                        "flex": 0,
+                                        "weight": "bold",
+                                        "margin": "none"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"{total_price} บาท",
+                                        "size": "md",
+                                        "align": "end",
+                                        "weight": "bold"
+                                    }
+                                ]
+                            }]
                             }
                             ],
                             "backgroundColor": "#FF3E15",
