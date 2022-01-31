@@ -15,7 +15,7 @@ class Message():
         total_price = 0
         total_price = tran_detail.quantity * tran_detail.item.sell_price
         print(total_price)
-        message_summary = {
+        message_summary =  {
                                 "type": "box",
                                 "layout": "horizontal",
                                 "contents": [
@@ -35,7 +35,7 @@ class Message():
                                     "weight": "bold"
                                 }
                                 ]
-                            },
+                            }
         return message_summary
 
     def makemessage(self,meta_dat,car):
@@ -636,5 +636,5 @@ class Message():
         for detail in tran_details:
             total_price += detail.quantity * detail.item.sell_price
             message_summary = self.make_summary_item_to_noti(detail)
-
+            data_push_noti['messages'][0]['contents']['body']['contents'][2]['contents'].append(message_summary)
         return data_push_noti
