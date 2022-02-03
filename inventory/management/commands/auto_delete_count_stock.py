@@ -41,6 +41,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("test delete stock count")
+        f= open("guru99.txt","w+")
         return
         self.Delete_Data_Stock_Count(1)
         self.Delete_Data_Stock_Count(2)
