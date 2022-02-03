@@ -27,17 +27,17 @@ class Command(BaseCommand):
         line = Line()
         for tran in transactions:
             if(self.is_date_notify(tran.appointed_date)):
-                return
                 line_message = LineMessage.objects.filter(id=tran.branch_id).first()
                 branch_name = LineOfficial.objects.filter(id=tran.branch_id).first()
-                meta_data = {'line_id': tran.user.line_id,'branch_name':branch_name}
-                channel_access_tk = line_message.channel_access_token
-                message = Message()
-                message_job = message.makemessage_job_done(meta_data,tran)
-                print(message_job)
-                line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
-                tran.is_notify_done = True
-                tran.save(update_fields=['is_notify_done'])
+                if tran.user.line_id and line_message and branch_name:
+                    meta_data = {'line_id': tran.user.line_id,'branch_name':branch_name}
+                    channel_access_tk = line_message.channel_access_token
+                    message = Message()
+                    message_job = message.makemessage_job_done(meta_data,tran)
+                    # print(message_job)
+                    line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
+                    tran.is_notify_done = True
+                    tran.save(update_fields=['is_notify_done'])
             return
             
 

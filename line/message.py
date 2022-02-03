@@ -331,7 +331,7 @@ class Message():
                             },
                             {
                                 "type": "text",
-                                "text": f"{tran.car.model.name}",
+                                "text": f"{tran.car.car_register}",
                                 "size": "md",
                                 "align": "end",
                                 "weight": "bold"
@@ -443,6 +443,8 @@ class Message():
         branch_name = meta_dat["branch_name"]
         total_price = 0
         tran_details = tran.sale_detail.all()
+        for detail in tran_details:
+            total_price += detail.quantity * detail.item.sell_price
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
@@ -486,7 +488,7 @@ class Message():
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{tran.car.model.name}",
+                                    "text": f"{tran.car.car_register}",
                                     "size": "md",
                                     "align": "end",
                                     "weight": "bold"
@@ -573,9 +575,7 @@ class Message():
                                 ]
                             }]
                             }
-                            ],
-                            "backgroundColor": "#FF3E15",
-                            "cornerRadius": "10px"
+                            ]
                         },
                         {
                             "type": "separator",
@@ -634,7 +634,6 @@ class Message():
             }]
         }
         for detail in tran_details:
-            total_price += detail.quantity * detail.item.sell_price
             message_summary = self.make_summary_item_to_noti(detail)
             data_push_noti['messages'][0]['contents']['body']['contents'][2]['contents'].append(message_summary)
         return data_push_noti
