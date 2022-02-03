@@ -40,6 +40,8 @@ class Command(BaseCommand):
         return
 
     def handle(self, *args, **options):
+        print("test delete stock count")
+        return
         self.Delete_Data_Stock_Count(1)
         self.Delete_Data_Stock_Count(2)
         self.Delete_Data_Stock_Count(3)
