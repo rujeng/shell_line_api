@@ -13,26 +13,23 @@ class Command(BaseCommand):
 
     def checkdate(self, last_date):
         seven_days_ago = datetime.today() - timedelta(days = 7)
-        seven_days_ago = seven_days_ago.strftime("%d/%m/%Y")
-        last_date = last_date.strftime("%d/%m/%Y")
-        print(last_date)
-        print(seven_days_ago)
-        if(seven_days_ago > last_date):
+        if(seven_days_ago.date() > last_date.date()):
             return True
         return False
     
     def Delete_Data_Stock_Count(self,branch_id_in):
         try:
+            print("branch : ",branch_id_in)
             last_inventory_count = InventoryCount.objects.filter(branch_id=branch_id_in).latest('created_at')
         except ObjectDoesNotExist:
             last_inventory_count = None
-            print('none data branch : ' , branch_id_in)
+            print('none data')
             return
-        if last_inventory_count and self.checkdate(last_inventory_count.created_at):
+        if last_inventory_count and self.checkdate(last_inventory_count.updated_at):
             try:
                 record = InventoryCount.objects.filter(branch_id = branch_id_in)
                 record.delete()
-                print("Record deleted successfully! b : ",branch_id_in)
+                print("Record deleted successfully!")
             except:
                 print("Record doesn't exists")
             return
@@ -40,8 +37,6 @@ class Command(BaseCommand):
         return
 
     def handle(self, *args, **options):
-        print("test auto delete")
-        return
         self.Delete_Data_Stock_Count(1)
         self.Delete_Data_Stock_Count(2)
         self.Delete_Data_Stock_Count(3)
