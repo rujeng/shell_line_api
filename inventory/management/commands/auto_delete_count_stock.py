@@ -13,6 +13,8 @@ class Command(BaseCommand):
 
     def checkdate(self, last_date):
         seven_days_ago = datetime.today() - timedelta(days = 7)
+        print('svn_ago : ', seven_days_ago.date())
+        print('last_date :', last_date.date())
         if(seven_days_ago.date() > last_date.date()):
             return True
         return False
