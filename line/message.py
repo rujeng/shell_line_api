@@ -445,6 +445,9 @@ class Message():
         line_id = meta_dat["line_id"]
         branch_name = meta_dat["branch_name"]
         tran_details = tran.sale_detail.all()
+        total_price = 0
+        for detail in tran_details:
+            total_price += detail.sell_price   
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
@@ -523,7 +526,7 @@ class Message():
                                 "contents": [
                                 {
                                     "type": "text",
-                                    "text": "สาขา",
+                                    "text": "สาขา ",
                                     "size": "md",
                                     "flex": 0,
                                     "weight": "bold",
@@ -534,7 +537,8 @@ class Message():
                                     "text": f"{branch_name}",
                                     "size": "md",
                                     "align": "end",
-                                    "weight": "bold"
+                                    "weight": "bold",
+                                    "wrap": True
                                 }
                                 ]
                             },
@@ -567,7 +571,7 @@ class Message():
                                     },
                                     {
                                         "type": "text",
-                                        "text": f"{tran.total_price} บาท",
+                                        "text": f"{total_price} บาท",
                                         "size": "md",
                                         "align": "end",
                                         "weight": "bold",
