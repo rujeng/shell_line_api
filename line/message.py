@@ -12,27 +12,25 @@ class Message():
         return next_service.strftime('%d/%m/%Y')
 
     def make_summary_item_to_noti(self,tran_detail):
-        total_price = 0
-        total_price = tran_detail.quantity * tran_detail.item.sell_price
-        print(total_price)
         message_summary =  {
                                 "type": "box",
                                 "layout": "horizontal",
                                 "contents": [
                                 {
                                     "type": "text",
-                                    "text": f"{tran_detail.item.name}",
-                                    "size": "sm",
+                                    "text": f"{tran_detail.item.name} ",
+                                    "size": "xxs",
                                     "flex": 0,
                                     "weight": "bold",
                                     "margin": "none"
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{total_price} บาท",
-                                    "size": "sm",
+                                    "text": f"{tran_detail.sell_price} บาท",
+                                    "size": "xxs",
                                     "align": "end",
-                                    "weight": "bold"
+                                    "weight": "bold",
+                                    "wrap": True
                                 }
                                 ]
                             }
@@ -374,7 +372,12 @@ class Message():
                             "align": "center",
                             "size": "xxl",
                             "weight": "bold",
-                            "color": "#FFFFFF"
+                            "color": "#FFFFFF",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=1,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
+                            }
                         }
                         ],
                         "backgroundColor": "#FF3E15",
@@ -418,7 +421,7 @@ class Message():
                     },
                     {
                         "type": "text",
-                        "text": "รับส่วนลด ฟรัชชึงออยล์ ทันที 100 บาท",
+                        "text": "รับส่วนลด ฟลัชชิ่งออยล์ ทันที 100 บาท",
                         "align": "center",
                         "color": "#f75836",
                         "margin": "none",
@@ -441,15 +444,12 @@ class Message():
     def makemessage_job_done(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
         branch_name = meta_dat["branch_name"]
-        total_price = 0
         tran_details = tran.sale_detail.all()
-        for detail in tran_details:
-            total_price += detail.quantity * detail.item.sell_price
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "โปรโมชั่น กาแฟ 1 แถม 1 หรือ สิทธิ์เติมน้ำมันฟรี 1 ครั้ง",
+                "altText": "ใบเสร็จรับบริการ (e-Receipt)",
                 "contents": {
                     "type": "bubble",
                     "body": {
@@ -567,19 +567,21 @@ class Message():
                                     },
                                     {
                                         "type": "text",
-                                        "text": f"{total_price} บาท",
+                                        "text": f"{tran.total_price} บาท",
                                         "size": "md",
                                         "align": "end",
-                                        "weight": "bold"
+                                        "weight": "bold",
+                                        "wrap": True
                                     }
                                 ]
                             }]
                             }
-                            ]
+                            ],
+                            "margin": "md"
                         },
                         {
                             "type": "separator",
-                            "margin": "xxl",
+                            "margin": "sm",
                             "color": "#000000"
                         },
                         {
@@ -615,7 +617,7 @@ class Message():
                         },
                         {
                             "type": "text",
-                            "text": "สิทธินี้ใช้ในภายใน 7 วัน หลังจากวันที่ทำรายการ",
+                            "text": "สิทธินี้ใช้ได้ภายใน 7 วัน หลังจากวันที่ทำรายการ",
                             "align": "center",
                             "color": "#f75836",
                             "margin": "none",
