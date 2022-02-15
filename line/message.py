@@ -1,10 +1,41 @@
-from datetime import date
+from datetime import date,datetime
 from line.form import WebForm
+from dateutil.relativedelta import relativedelta
+import json
 class Message():
         
     def __init__(self, *args, **kwargs):
         return
     
+    def next_maintanance(self, datetime):
+        next_service = datetime + relativedelta(months=1)
+        return next_service.strftime('%d/%m/%Y')
+
+    def make_summary_item_to_noti(self,tran_detail):
+        message_summary =  {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": f"{tran_detail.item.name} ",
+                                    "size": "xxs",
+                                    "flex": 0,
+                                    "weight": "bold",
+                                    "margin": "none"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{tran_detail.sell_price} บาท",
+                                    "size": "xxs",
+                                    "align": "end",
+                                    "weight": "bold",
+                                    "wrap": True
+                                }
+                                ]
+                            }
+        return message_summary
+
     def makemessage(self,meta_dat,car):
         fullname = meta_dat["fullname"]
         line_id = meta_dat["line_id"]
@@ -252,74 +283,359 @@ class Message():
              }
          return switcher.get(i,"Invalid number of service")
 
-    def makemessage_job_4_mount(self,meta_dat):
+    def makemessage_job_4_month(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
+        maintanace_day = self.next_maintanance(tran.appointed_date)
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "ครบวันกำหนดเปลี่ยนถ่ายนํ้ามันเครื่อง",
+                "altText": "แจ้งเตือนบำรุงรักษา",
                 "contents": {
-                    "type": "bubble",
-                    "body": {
+                "type": "bubble",
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                    {
+                        "type": "text",
+                        "text": "แจ้งเตือนบำรุงรักษา",
+                        "weight": "bold",
+                        "color": "#FF3E15",
+                        "size": "xxl"
+                    },
+                    {
+                        "type": "separator",
+                        "margin": "lg",
+                        "color": "#000000"
+                    },
+                    {
                         "type": "box",
                         "layout": "vertical",
-                        "contents": [{
-                            "type": "text",
-                            "text": "ครบวันกำหนดเปลี่ยนถ่ายนํ้ามันเครื่อง",
-                            "color": "#FF3E15",
-                            "weight": "bold",
-                            "size": "xl",
-                            "wrap": True
-                        },
+                        "margin": "md",
+                        "spacing": "xs",
+                        "contents": [
+                        {
+                            "type": "box",
+                            "layout": "horizontal",
+                            "contents": [
                             {
+                                "type": "text",
+                                "text": "ทะเบียน",
+                                "size": "md",
+                                "flex": 0,
+                                "weight": "bold",
+                                "margin": "none"
+                            },
+                            {
+                                "type": "text",
+                                "text": f"{tran.car.car_register}",
+                                "size": "md",
+                                "align": "end",
+                                "weight": "bold"
+                            }
+                            ]
+                        },
+                        {
+                            "type": "box",
+                            "layout": "horizontal",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": "ครบกำหนดบำรุงรักษา",
+                                "size": "md",
+                                "color": "#555555",
+                                "flex": 0
+                            },
+                            {
+                                "type": "text",
+                                "text": f"{maintanace_day}",
+                                "size": "md",
+                                "color": "#111111",
+                                "align": "end"
+                            }
+                            ]
+                        },
+                        {
                             "type": "separator",
                             "margin": "xxl"
                         }
                         ]
                     },
-                    "styles": {
-                        "footer": {
-                            "separator": True
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "จองคิวรับบริการ",
+                            "align": "center",
+                            "size": "xxl",
+                            "weight": "bold",
+                            "color": "#FFFFFF",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=1,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
+                            }
                         }
+                        ],
+                        "backgroundColor": "#FF3E15",
+                        "cornerRadius": "10px"
+                    },
+                    {
+                        "type": "separator",
+                        "margin": "xxl",
+                        "color": "#000000"
+                    },
+                    {
+                        "type": "text",
+                        "text": "ขอบคุณที่ใช้บริการ",
+                        "align": "center",
+                        "margin": "sm",
+                        "size": "lg",
+                        "weight": "bold"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Shell Helix Oilchange+",
+                        "margin": "none",
+                        "size": "lg",
+                        "align": "center",
+                        "weight": "bold"
+                    },
+                    {
+                        "type": "separator",
+                        "color": "#000000",
+                        "margin": "xs"
+                    },
+                    {
+                        "type": "text",
+                        "text": "สิทธิพิเศษเฉพาะคุณ จองคิว วันนี้",
+                        "align": "center",
+                        "color": "#f75836",
+                        "margin": "sm",
+                        "weight": "bold",
+                        "size": "sm",
+                        "wrap": True
+                    },
+                    {
+                        "type": "text",
+                        "text": "รับส่วนลด ฟลัชชิ่งออยล์ ทันที 100 บาท",
+                        "align": "center",
+                        "color": "#f75836",
+                        "margin": "none",
+                        "weight": "bold",
+                        "size": "sm",
+                        "wrap": True
                     }
+                    ]
+                },
+                "styles": {
+                    "footer": {
+                    "separator": True
+                    }
+                }
                 }
             }]
         }
         return data_push_noti
 
-    def makemessage_job_done(self,meta_dat):
+    def makemessage_job_done(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
+        branch_name = meta_dat["branch_name"]
+        tran_details = tran.sale_detail.all()
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "โปรโมชั่น กาแฟ 1 แถม 1 หรือ สิทธิ์เติมน้ำมันฟรี 1 ครั้ง",
+                "altText": "ใบเสร็จรับบริการ (e-Receipt)",
                 "contents": {
                     "type": "bubble",
                     "body": {
                         "type": "box",
                         "layout": "vertical",
-                        "contents": [{
+                        "contents": [
+                        {
                             "type": "text",
-                            "text": "โปรโมชั่น กาแฟ 1 แถม 1 หรือ สิทธิ์เติมน้ำมันฟรี 1 ครั้ง",
-                            "color": "#FF3E15",
+                            "text": "ดำเนินการสำเร็จ",
                             "weight": "bold",
-                            "size": "xl",
+                            "color": "#FF3E15",
+                            "size": "xxl"
+                        },
+                        {
+                            "type": "separator",
+                            "margin": "lg",
+                            "color": "#000000"
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "margin": "md",
+                            "spacing": "xs",
+                            "contents": [
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "size": "md",
+                                    "flex": 0,
+                                    "weight": "bold",
+                                    "margin": "none",
+                                    "text": "ทะเบียน"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{tran.car.car_register}",
+                                    "size": "md",
+                                    "align": "end",
+                                    "weight": "bold"
+                                }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "วันที่",
+                                    "size": "md",
+                                    "color": "#555555",
+                                    "flex": 0,
+                                    "weight": "bold"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{datetime.strftime(tran.appointed_date, '%d/%m/%Y')}",
+                                    "size": "md",
+                                    "color": "#111111",
+                                    "align": "end",
+                                    "weight": "bold"
+                                }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "สาขา",
+                                    "size": "md",
+                                    "flex": 0,
+                                    "weight": "bold",
+                                    "margin": "none"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{branch_name}",
+                                    "size": "md",
+                                    "align": "end",
+                                    "weight": "bold"
+                                }
+                                ]
+                            },
+                            {
+                                "type": "text",
+                                "text": "รายการรับบริการ",
+                                "weight": "bold"
+                            }                    
+                            ]
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [                            
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "ราคารวม",
+                                        "size": "md",
+                                        "flex": 0,
+                                        "weight": "bold",
+                                        "margin": "none"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"{tran.total_price} บาท",
+                                        "size": "md",
+                                        "align": "end",
+                                        "weight": "bold",
+                                        "wrap": True
+                                    }
+                                ]
+                            }]
+                            }
+                            ],
+                            "margin": "md"
+                        },
+                        {
+                            "type": "separator",
+                            "margin": "sm",
+                            "color": "#000000"
+                        },
+                        {
+                            "type": "text",
+                            "text": "ขอบคุณที่ใช้บริการ",
+                            "align": "center",
+                            "margin": "sm",
+                            "size": "lg",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "Shell Helix Oilchange+",
+                            "margin": "none",
+                            "size": "lg",
+                            "align": "center",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "separator",
+                            "color": "#000000",
+                            "margin": "xs"
+                        },
+                        {
+                            "type": "text",
+                            "text": "สิทธิพิเศษเฉพาะคุณ ซื้อกาแฟ 1 แถม 1",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "sm",
+                            "weight": "bold",
+                            "size": "sm",
                             "wrap": True
                         },
-                            {
-                            "type": "separator",
-                            "margin": "xxl"
+                        {
+                            "type": "text",
+                            "text": "สิทธินี้ใช้ได้ภายใน 7 วัน หลังจากวันที่ทำรายการ",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "none",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
                         }
                         ]
                     },
                     "styles": {
                         "footer": {
-                            "separator": True
+                        "separator": True
                         }
                     }
                 }
             }]
         }
+        for detail in tran_details:
+            message_summary = self.make_summary_item_to_noti(detail)
+            data_push_noti['messages'][0]['contents']['body']['contents'][2]['contents'].append(message_summary)
         return data_push_noti
