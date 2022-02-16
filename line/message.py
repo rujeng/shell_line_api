@@ -26,10 +26,11 @@ class Message():
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{tran_detail.sell_price} บาท",
+                                    "text": f"{tran_detail.sell_price}",
                                     "size": "xxs",
                                     "align": "end",
                                     "weight": "bold",
+                                    "offsetTop": "3px",
                                     "wrap": True
                                 }
                                 ]
@@ -483,7 +484,7 @@ class Message():
                                 "contents": [
                                 {
                                     "type": "text",
-                                    "size": "md",
+                                    "size": "sm",
                                     "flex": 0,
                                     "weight": "bold",
                                     "margin": "none",
@@ -492,7 +493,7 @@ class Message():
                                 {
                                     "type": "text",
                                     "text": f"{tran.car.car_register}",
-                                    "size": "md",
+                                    "size": "sm",
                                     "align": "end",
                                     "weight": "bold"
                                 }
@@ -505,7 +506,7 @@ class Message():
                                 {
                                     "type": "text",
                                     "text": "วันที่",
-                                    "size": "md",
+                                    "size": "sm",
                                     "color": "#555555",
                                     "flex": 0,
                                     "weight": "bold"
@@ -513,7 +514,7 @@ class Message():
                                 {
                                     "type": "text",
                                     "text": f"{datetime.strftime(tran.appointed_date, '%d/%m/%Y')}",
-                                    "size": "md",
+                                    "size": "sm",
                                     "color": "#111111",
                                     "align": "end",
                                     "weight": "bold"
@@ -527,7 +528,7 @@ class Message():
                                 {
                                     "type": "text",
                                     "text": "สาขา ",
-                                    "size": "md",
+                                    "size": "sm",
                                     "flex": 0,
                                     "weight": "bold",
                                     "margin": "none"
@@ -535,7 +536,7 @@ class Message():
                                 {
                                     "type": "text",
                                     "text": f"{branch_name}",
-                                    "size": "md",
+                                    "size": "xs",
                                     "align": "end",
                                     "weight": "bold",
                                     "wrap": True
@@ -545,7 +546,8 @@ class Message():
                             {
                                 "type": "text",
                                 "text": "รายการรับบริการ",
-                                "weight": "bold"
+                                "weight": "bold",
+                                "size": "sm"
                             }                    
                             ]
                         },
@@ -564,7 +566,7 @@ class Message():
                                     {
                                         "type": "text",
                                         "text": "ราคารวม",
-                                        "size": "md",
+                                        "size": "sm",
                                         "flex": 0,
                                         "weight": "bold",
                                         "margin": "none"
@@ -572,7 +574,7 @@ class Message():
                                     {
                                         "type": "text",
                                         "text": f"{total_price} บาท",
-                                        "size": "md",
+                                        "size": "sm",
                                         "align": "end",
                                         "weight": "bold",
                                         "wrap": True
