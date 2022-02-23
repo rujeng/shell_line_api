@@ -37,6 +37,64 @@ class Message():
                             }
         return message_summary
 
+    def make_discount_price_to_noti(self,discount_price):
+        message_discount =  {
+                                        "type": "box",
+                                        "layout": "horizontal",
+                                        "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": "ส่วนลด ",
+                                            "color": "#FF3E15",
+                                            "size": "sm",
+                                            "flex": 0,
+                                            "weight": "bold",
+                                            "margin": "none"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "text": f"- {discount_price} บาท",
+                                            "color": "#FF3E15",
+                                            "size": "sm",
+                                            "align": "end",
+                                            "weight": "bold",
+                                            "offsetTop": "3px",
+                                            "wrap": True
+                                        }
+                                        ],
+
+                                    }
+        return message_discount
+
+    def make_summary_price_to_noti(self,summary_price):
+        message_discount =  {
+                                        "type": "box",
+                                        "layout": "horizontal",
+                                        "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": "ยอดสุทธิ ",
+                                            "color": "#00B900",
+                                            "size": "md",
+                                            "flex": 0,
+                                            "weight": "bold",
+                                            "margin": "none"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "text": f"{summary_price} บาท",
+                                            "color": "#00B900",
+                                            "size": "md",
+                                            "align": "end",
+                                            "weight": "bold",
+                                            "offsetTop": "3px",
+                                            "wrap": True
+                                        }
+                                        ],
+
+                                    }
+        return message_discount
+
     def makemessage(self,meta_dat,car):
         fullname = meta_dat["fullname"]
         line_id = meta_dat["line_id"]
@@ -447,8 +505,10 @@ class Message():
         branch_name = meta_dat["branch_name"]
         tran_details = tran.sale_detail.all()
         total_price = 0
+        summary_price = 0
         for detail in tran_details:
-            total_price += detail.sell_price   
+            total_price += detail.sell_price
+        summary_price = total_price - tran.discount_price
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
@@ -565,7 +625,7 @@ class Message():
                                     "contents": [
                                     {
                                         "type": "text",
-                                        "text": "ราคารวม",
+                                        "text": "รวม",
                                         "size": "sm",
                                         "flex": 0,
                                         "weight": "bold",
@@ -644,4 +704,9 @@ class Message():
         for detail in tran_details:
             message_summary = self.make_summary_item_to_noti(detail)
             data_push_noti['messages'][0]['contents']['body']['contents'][2]['contents'].append(message_summary)
+        if tran.discount_price > 0:
+            message_discount = self.make_discount_price_to_noti(tran.discount_price)
+            data_push_noti['messages'][0]['contents']['body']['contents'][3]['contents'].append(message_discount)
+            message_summary_price = self.make_summary_price_to_noti(summary_price)
+            data_push_noti['messages'][0]['contents']['body']['contents'][3]['contents'].append(message_summary_price)
         return data_push_noti

@@ -32,6 +32,7 @@ class TransactionForm(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
     appointed_date = models.DateTimeField()
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    discount_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     payment_method = models.CharField(blank=True, null=True,max_length=20,choices=PAYMENT_CHOICES)
     comment = models.TextField(blank=True, null=True)
     is_notify = models.BooleanField(default=False)
