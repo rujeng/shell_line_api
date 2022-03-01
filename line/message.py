@@ -8,7 +8,7 @@ class Message():
         return
     
     def next_maintanance(self, datetime):
-        next_service = datetime + relativedelta(months=1)
+        next_service = datetime + relativedelta(months=5)
         return next_service.strftime('%d/%m/%Y')
 
     def make_summary_item_to_noti(self,tran_detail):
@@ -342,9 +342,18 @@ class Message():
              }
          return switcher.get(i,"Invalid number of service")
 
+    def __geturlbook(self, branch_id):
+        url = ""
+        if branch_id == 1 or branch_id == 2:
+            url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=1,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
+        elif branch_id == 3:
+            url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=3,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
+        return url
+
     def makemessage_job_4_month(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
         maintanace_day = self.next_maintanance(tran.appointed_date)
+        url_btn = self.__geturlbook(tran.branch_id)
         data_push_noti =  {
             "to": f"{line_id}",
             "messages": [{
@@ -435,7 +444,7 @@ class Message():
                             "action": {
                                 "type": "uri",
                                 "label": "action",
-                                "uri": "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=1,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
+                                "uri": f"{url_btn}"
                             }
                         }
                         ],
