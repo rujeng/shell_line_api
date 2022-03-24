@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block style%}
+<style>
+    html{
+      height:100%; 
+    }
+    body{ 
+      margin:0px;
+      height:100%; 
+    }
+    #map {
+      height: 100%;
+    }
+</style>    
+{% endblock %}
+{% block content %}
+<body onload="init();">
+    <div id="map"></div>
+</body>
+{% endblock %}
+{% block script %}
+<script>
+     function init() {
+            map = new longdo.Map({
+              placeholder: document.getElementById('map')
+            });
+            map.location(longdo.LocationMode.Geolocation); // go to 100, 16 when created map
+          }
+</script>
+{% endblock %}

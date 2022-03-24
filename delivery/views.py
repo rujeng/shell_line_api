@@ -86,6 +86,9 @@ class OrderView(View):
         context = {'object_list': object_list}
         return render(request, 'order.html', context)
     
+class TestMap(View):
+        def get(self, request):
+            return render(request, 'testmap.html')
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OrderAPI(View):
