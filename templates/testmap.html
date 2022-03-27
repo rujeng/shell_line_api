@@ -14,17 +14,39 @@
 </style>    
 {% endblock %}
 {% block content %}
-<body onload="init();">
-    <div id="map"></div>
-</body>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <body onload="init();">
+          <div id="map"></div>
+      </body>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block script %}
 <script>
+    var map;
      function init() {
             map = new longdo.Map({
               placeholder: document.getElementById('map')
             });
             map.location(longdo.LocationMode.Geolocation); // go to 100, 16 when created map
+            map.Event.bind('drop', function() {
+              var location = map.location(); // Cross hair location
+              map.Overlays.clear();
+              var marker = new longdo.Marker({ lon: location.lon, lat: location.lat });
+              map.Overlays.add(marker)
+            });
           }
+      
 </script>
 {% endblock %}
