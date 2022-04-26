@@ -44,7 +44,10 @@ class Command(BaseCommand):
                     meta_data = {'line_id': tran.user.line_id,'branch_name':branch_name}
                     channel_access_tk = line_message.channel_access_token
                     message = Message()
-                    message_job = message.makemessage_job_done(meta_data,tran)
+                    if tran.branch_id == 1 or tran.branch_id == 2:
+                       message_job = message.makemessage_job_done(meta_data,tran)
+                    elif tran.branch_id == 3:
+                       message_job = message.makemessage_job_done_B3(meta_data,tran)
                     res = line.push_message(channel_access_token=channel_access_tk, message_data=message_job)
                     print('res ok : ',res['ok'])
                     if res['ok'] == True:
