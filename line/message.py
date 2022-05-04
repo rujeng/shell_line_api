@@ -743,7 +743,6 @@ class Message():
     def makemessage_job_done_B3(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
         branch_name = meta_dat["branch_name"]
-        pri_text = self.__getprivilegetext(tran.branch_id)
         tran_details = tran.sale_detail.all()
         total_price = 0
         summary_price = 0
