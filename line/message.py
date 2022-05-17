@@ -489,7 +489,17 @@ class Message():
                     },
                     {
                         "type": "text",
-                        "text": "รับฟรี ตรวจสภาพ 10 รายการ และ สปาห้องเครื่อง",
+                        "text": "รับฟรี ตรวจสภาพฟรี 10 รายการ และ",
+                        "align": "center",
+                        "color": "#f75836",
+                        "margin": "none",
+                        "weight": "bold",
+                        "size": "sm",
+                        "wrap": True
+                    },
+                    {
+                        "type": "text",
+                        "text": "น้ำยาเคลือบกระจกเรนออฟ กันฝนมูลค่า 180 บาท",
                         "align": "center",
                         "color": "#f75836",
                         "margin": "none",
