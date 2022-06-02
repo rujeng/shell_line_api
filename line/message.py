@@ -349,7 +349,7 @@ class Message():
         elif branch_id == 3:
             url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655193304&redirect_uri=http://139.59.119.129/line/webhook?reqo=3,form&state=12345abcde&scope=profile%20openid&nonce=09876xyz"
         return url
-
+    
     def makemessage_job_4_month(self,meta_dat,tran):
         line_id = meta_dat["line_id"]
         maintanace_day = self.next_maintanance(tran.appointed_date)
@@ -489,7 +489,17 @@ class Message():
                     },
                     {
                         "type": "text",
-                        "text": "รับส่วนลด ฟลัชชิ่งออยล์ ทันที 100 บาท",
+                        "text": "รับฟรี ตรวจสภาพฟรี 10 รายการ และ",
+                        "align": "center",
+                        "color": "#f75836",
+                        "margin": "none",
+                        "weight": "bold",
+                        "size": "sm",
+                        "wrap": True
+                    },
+                    {
+                        "type": "text",
+                        "text": "น้ำยาเคลือบกระจกเรนออฟ กันฝนมูลค่า 180 บาท",
                         "align": "center",
                         "color": "#f75836",
                         "margin": "none",
@@ -682,7 +692,248 @@ class Message():
                         },
                         {
                             "type": "text",
-                            "text": "สิทธิพิเศษเฉพาะคุณ ซื้อกาแฟ 1 แถม 1",
+                            "text": "พิเศษเฉพาะคุณ ซื้อเครื่องดื่มเย็น ลด 15 บาทที่เดลี่คาเฟ่ / ดอยช้าง",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "sm",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
+                        },
+                        {
+                            "type": "text",
+                            "text": "และรับฟรี ยากิโทริเมื่อสั่งอาหาร",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "sm",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
+                        },
+                        {
+                            "type": "text",
+                            "text": "ครบ 500 บาท ที่ นิกิวาอิ สาขาอู่ตะเภา*",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "sm",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
+                        },
+                        {
+                            "type": "text",
+                            "text": "สิทธินี้ใช้ได้ภายใน 7 วัน หลังจากวันที่ทำรายการ",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "none",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
+                        }
+                        ]
+                    },
+                    "styles": {
+                        "footer": {
+                        "separator": True
+                        }
+                    }
+                }
+            }]
+        }
+        for detail in tran_details:
+            message_summary = self.make_summary_item_to_noti(detail)
+            data_push_noti['messages'][0]['contents']['body']['contents'][2]['contents'].append(message_summary)
+        if tran.discount_price > 0:
+            message_discount = self.make_discount_price_to_noti(tran.discount_price)
+            data_push_noti['messages'][0]['contents']['body']['contents'][3]['contents'].append(message_discount)
+            message_summary_price = self.make_summary_price_to_noti(summary_price)
+            data_push_noti['messages'][0]['contents']['body']['contents'][3]['contents'].append(message_summary_price)
+        return data_push_noti
+
+    def makemessage_job_done_B3(self,meta_dat,tran):
+        line_id = meta_dat["line_id"]
+        branch_name = meta_dat["branch_name"]
+        tran_details = tran.sale_detail.all()
+        total_price = 0
+        summary_price = 0
+        for detail in tran_details:
+            total_price += detail.sell_price
+        summary_price = total_price - tran.discount_price
+        data_push_noti =  {
+            "to": f"{line_id}",
+            "messages": [{
+                "type": "flex",
+                "altText": "ใบเสร็จรับบริการ (e-Receipt)",
+                "contents": {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "ดำเนินการสำเร็จ",
+                            "weight": "bold",
+                            "color": "#FF3E15",
+                            "size": "xxl"
+                        },
+                        {
+                            "type": "separator",
+                            "margin": "lg",
+                            "color": "#000000"
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "margin": "md",
+                            "spacing": "xs",
+                            "contents": [
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "size": "sm",
+                                    "flex": 0,
+                                    "weight": "bold",
+                                    "margin": "none",
+                                    "text": "ทะเบียน"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{tran.car.car_register}",
+                                    "size": "sm",
+                                    "align": "end",
+                                    "weight": "bold"
+                                }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "วันที่",
+                                    "size": "sm",
+                                    "color": "#555555",
+                                    "flex": 0,
+                                    "weight": "bold"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{datetime.strftime(tran.appointed_date, '%d/%m/%Y')}",
+                                    "size": "sm",
+                                    "color": "#111111",
+                                    "align": "end",
+                                    "weight": "bold"
+                                }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "สาขา ",
+                                    "size": "sm",
+                                    "flex": 0,
+                                    "weight": "bold",
+                                    "margin": "none"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": f"{branch_name}",
+                                    "size": "xs",
+                                    "align": "end",
+                                    "weight": "bold",
+                                    "wrap": True
+                                }
+                                ]
+                            },
+                            {
+                                "type": "text",
+                                "text": "รายการรับบริการ",
+                                "weight": "bold",
+                                "size": "sm"
+                            }                    
+                            ]
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [                            
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "รวม",
+                                        "size": "sm",
+                                        "flex": 0,
+                                        "weight": "bold",
+                                        "margin": "none"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"{total_price} บาท",
+                                        "size": "sm",
+                                        "align": "end",
+                                        "weight": "bold",
+                                        "wrap": True
+                                    }
+                                ]
+                            }]
+                            }
+                            ],
+                            "margin": "md"
+                        },
+                        {
+                            "type": "separator",
+                            "margin": "sm",
+                            "color": "#000000"
+                        },
+                        {
+                            "type": "text",
+                            "text": "ขอบคุณที่ใช้บริการ",
+                            "align": "center",
+                            "margin": "sm",
+                            "size": "lg",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "Shell Helix Oilchange+",
+                            "margin": "none",
+                            "size": "lg",
+                            "align": "center",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "separator",
+                            "color": "#000000",
+                            "margin": "xs"
+                        },
+                        {
+                            "type": "text",
+                            "text": "สิทธิพิเศษเฉพาะคุณ",
+                            "align": "center",
+                            "color": "#f75836",
+                            "margin": "sm",
+                            "weight": "bold",
+                            "size": "sm",
+                            "wrap": True
+                        },
+                        {
+                            "type": "text",
+                            "text": "ซื้อกาแฟแก้วใหญ่ ลด 15 บาท ทุกแก้ว",
                             "align": "center",
                             "color": "#f75836",
                             "margin": "sm",

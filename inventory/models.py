@@ -27,8 +27,8 @@ class InventoryDetail(models.Model):
     product = models.CharField(max_length=50)
 
     quantity = models.IntegerField(default=0)
-    total_bill = models.DecimalField(default=0, max_digits=7, decimal_places=2)
-    price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    total_bill = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
