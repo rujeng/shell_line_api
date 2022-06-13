@@ -2,6 +2,17 @@ from django.db import models
 from line.models import LineOfficial, CustomUser
 # Create your models here.
 
+class LocationUser(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longtitude = models.DecimalField(max_digits=9, decimal_places=6)
+    detail_1st = models.CharField(max_length=100, blank=True, null=True)
+    detail_2nd = models.CharField(max_length=100, blank=True, null=True)
+    user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Restaurant(models.Model):
     line_official = models.ForeignKey(LineOfficial, related_name='restaurant', on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=50)
@@ -24,7 +35,6 @@ class Restaurant(models.Model):
                 'id': restaurant.id
             })
         return result
-
 
 class Menu(models.Model):
     restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
@@ -58,7 +68,6 @@ class Menu(models.Model):
             })
         return result
 
-
 class MenuDetail(models.Model):
     menu = models.ForeignKey('Menu', related_name='menu_detail', on_delete=models.CASCADE)
     detail = models.CharField(max_length=50)
@@ -66,7 +75,6 @@ class MenuDetail(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
 class Order(models.Model):
     INITIAL = '1'
@@ -100,7 +108,6 @@ class Order(models.Model):
             })
         return result
 
-
 class OrderDetail(models.Model):
     order = models.ForeignKey('Order', related_name='order_detail', on_delete=models.CASCADE)
     menu = models.ForeignKey('Menu', on_delete=models.CASCADE)
@@ -123,3 +130,4 @@ class OrderDetail(models.Model):
                 'name': detail.name
             })
         return result
+

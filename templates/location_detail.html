@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block style %}
+<script src="https://kit.fontawesome.com/d3f7966bff.js" crossorigin="anonymous"></script>
+{% endblock %}
+{% block content%}
+<div class="container-sm" id='main-container'>
+    <div class="mb-3 form-box">
+        <label style="color: black;">Start with</label>
+        <div onclick="" class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;">
+            <label style="margin: 5px 0px 5px 10px; color: black;">Current Location</label>
+            <i class="fa-solid fa-chevron-right" style="
+            float: right;
+            margin: 10px 10px 0px 0px;
+            color: black;"></i></div>
+    </div>
+    <div class="mb-3 form-box">
+        <label>Saved Place</label>
+        <div class="d-grid gap-2">
+            <button type="button" class="btn btn-danger button-shadow" 
+            style="border-radius: 20px;margin-top: 15px;" onclick="RedirectFormPage()">Add new</button>
+        </div>
+    </div>
+    <div class="mb-3 form-box">
+        <label>History</label>
+        {% if historys %}
+        {% for history in historys %}
+        <div class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;">
+            <label style="margin: 5px 0px 5px 10px; color: black;">{{history.name}}</label>
+            <i class="fa-solid fa-chevron-right" style="
+            float: right;
+            margin: 10px 10px 0px 0px;
+        color: black;"></i>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function RedirectFormPage(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const user_id = urlParams.get('user_id');
+  const branch_id = urlParams.get('branch_id');
+  const htmla = window.location.hostname;
+  window.location.href = `/delivery/location_save?user_id=${user_id}&branch_id=${branch_id}`
+}
+</script>
+{% endblock %}

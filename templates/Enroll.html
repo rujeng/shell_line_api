@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+    <html>
+        <style>
+            html, body{
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+            }
+            #mapDiv {
+              height: 50%;
+              width: 50%;
+            }
+        </style>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+            <title></title>
+        </head>
+        <script type="text/javascript" src="http://api.nostramap.com/nostraapi/v2.0?key=GXIa08)awkPkHDd3E(6akpd0XAj3iHkWyHvADPnado4voS8oNN4XPvZ5Hv)jRt01DeNBWOlbYMDLecQiut3sFM0=====2"> </script>
+    
+        <body>  
+            <div id="mapDiv"></div>
+            <div><h4>1234</h4></div>
+        </body>
+    <script>
+         nostra.onready = function () {
+                //start your code here
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+                function showError(error) {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("User denied the request for Geolocation.");
+                            break;
+        
+                        case error.POSITION_UNAVAILABLE:
+                            alert("Location information is unavailable.");
+                            break;
+                
+                        case error.TIMEOUT:
+                            alert("The request to get user location timed out.");
+                            break;
+            
+                        case error.UNKNOWN_ERROR:
+                            alert("An unknown error occurred.");
+                            break;
+                    }
+                }
+
+                function showPosition(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    var map = new nostra.maps.Map("mapDiv", {
+                    id: "mapTest",
+                    logo: true,
+                    scalebar: true,
+                    basemap: "streetmap",
+                    slider: true,
+                    level: 15,
+                    lat: lat,
+                    lon: lon,
+                    country: "TH"
+                });
+                    var pointLayer = new nostra.maps.layers.GraphicsLayer(map, { id: "pointLayer" });
+                    map.addLayer(pointLayer);
+                    var pointMarker = new nostra.maps.symbols.Marker({ url: "", width: 60, height: 6, attributes: { POI_NAME: "Current Location" },draggable:true });
+                    var g = pointLayer.addMarker(lat, lon, pointMarker);
+                    pointMarker.events.dragStart = function (geometry) {
+                    console.log("Start Drag at Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
+                    }
+                    pointMarker.events.dragMove = function (geometry) {
+                        console.log("Move To Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
+                    }
+                    pointMarker.events.dragEnd = function (geometry) {
+                        console.log("End Drag at Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
+                        // code here for edit location
+                    }
+                }
+            };
+    </script>
+        </html>

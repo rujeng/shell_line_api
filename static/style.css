@@ -226,7 +226,13 @@ td {
     text-decoration: underline;
 }
 
+.hover-location {
+	background-color: white;
+}
 
+.hover-location:hover{
+    background-color: lightgray;
+}
 /* .custom-radio:checked{
     background-color:rgb(253, 69, 69);
   } */

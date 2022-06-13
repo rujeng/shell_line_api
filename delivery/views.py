@@ -7,8 +7,9 @@ from django.views.generic import View, DetailView, detail
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
+from django.shortcuts import redirect
 
-from delivery.models import Menu, Restaurant, Order, OrderDetail
+from delivery.models import Menu, Restaurant, Order, OrderDetail, LocationUser
 from line.models import CustomUser
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -85,7 +86,36 @@ class OrderView(View):
         object_list = Order.map_object_to_list(orders)
         context = {'object_list': object_list}
         return render(request, 'order.html', context)
-    
+
+class Enroll(View):
+        def get(self, request):
+            return render(request, 'Enroll.html')
+
+class LocationDetail(View):
+        def get(self, request):
+            line_id = request.GET.get("user_id", None)
+            user = CustomUser.objects.filter(line_id=line_id).first()
+            history = LocationUser.objects.filter(user=user)
+            context = {'historys': history}
+            return render(request, 'location_detail.html', context=context)    
+
+class LocationSave(View):
+        def get(self, request):
+            return render(request, 'location_save.html')
+        
+        def post(self, request):
+            line_id = request.GET.get("user_id", None)
+            branch_id = request.GET.get("branch_id", None)
+            locationName = request.POST.get('locationName', None)
+            latitude = request.POST.get('latitude', None)
+            longitude = request.POST.get('longitude', None)
+            detail_1st = request.POST.get("detail1st",None)
+            detail_2nd = request.POST.get("detail2nd",None)
+            user = CustomUser.objects.filter(line_id=line_id).first()
+            LocationUser.objects.create(name=locationName, user=user, latitude=float(latitude), 
+                                         longtitude=float(longitude), detail_1st=detail_1st, detail_2nd=detail_2nd)
+            return redirect(f'/delivery/location_detail?user_id={line_id}&branch_id={branch_id}')
+
 class TestMap(View):
         def get(self, request):
             return render(request, 'testmap.html')
