@@ -5,13 +5,13 @@
     <div class="card">
         <div class="card-body">
             {% for item in result %}
-            <div class="card-title">ร้าน {{item.restaurant}}</div>
+            <div class="card-title">ร้าน {{item.name}}</div>
             <div class="mb-3">
                 <span>รายละเอียดสินค้า</span>
                 <div class="p-3">
-                    {% for detail in item.details %}
+                    {% for detail in item.detail_list %}
                     <div class="row">
-                        <div class="col">{{detail.name}}</div>
+                        <div class="col">{{detail.menu}}</div>
                         <div class="col">{{detail.quantity}} ชิ้น</div>
                         <div class="col">{{detail.price}} บาท</div>
                     </div>
