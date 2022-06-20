@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import redirect
 
-from delivery.models import Menu, Restaurant, Order, OrderDetail, LocationUser
+from delivery.models import Menu, Restaurant, OrderTrans, OrderDetail, LocationUser
 from line.models import CustomUser
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -38,11 +38,11 @@ class MyCart(View):
     def get(self, request):
         line_id = request.GET.get('user_id')
         user = CustomUser.objects.filter(line_id=line_id).first()
-        orders = Order.objects.filter(user=user, status=Order.INITIAL)
+        orders = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL)
         result = []
         total = 0
-        for order in orders:
-            details = order.order_detail.all()
+        for OrderTrans in orders:
+            details = OrderTrans.order_detail.all()
             details_result = []
             for detail in details:
                 details_result.append({
@@ -52,7 +52,7 @@ class MyCart(View):
                 })
                 total += detail.price * detail.quantity
             result.append({
-                'restaurant': order.restaurant.name,
+                'restaurant': OrderTrans.restaurant.name,
                 'details': details_result,
             })
         context = {'result': result, 'total': total}
@@ -64,11 +64,11 @@ class MenutDetail(View):
     def get(self, request, res_pk, pk):
         line_id = request.GET.get('user_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
-        order = Order.objects.filter(user=user, restaurant__id=res_pk, status=Order.INITIAL).first()
-        detail = OrderDetail.objects.filter(order=order, menu__id=pk).first()
+        OrderTrans = OrderTrans.objects.filter(user=user, restaurant__id=res_pk, status=OrderTrans.INITIAL).first()
+        detail = OrderDetail.objects.filter(OrderTrans=OrderTrans, menu__id=pk).first()
         menu = Menu.objects.filter(id=pk)
         menu = Menu.map_object_to_list(menu)
-        context = {'menu': menu[0], 'detail': detail}
+        context = {'menu': menu[0], 'detail': detail, 'restaurant_id': res_pk}
         return render(request, 'menu_detail.html', context)
 
 class RestaurantView(View):
@@ -82,10 +82,10 @@ class RestaurantView(View):
 class OrderView(View):
     
     def get(self, request):
-        orders = Order.objects.all().order_by('-pk')
-        object_list = Order.map_object_to_list(orders)
+        orders = OrderTrans.objects.all().order_by('-pk')
+        object_list = OrderTrans.map_object_to_list(orders)
         context = {'object_list': object_list}
-        return render(request, 'order.html', context)
+        return render(request, 'OrderTrans.html', context)
 
 class Enroll(View):
         def get(self, request):
@@ -128,11 +128,11 @@ class OrderAPI(View):
         # ถ้าไม่มี user ในระบบทำยังไง
         line_id = request.GET.get('user_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
-        orders = Order.objects.filter(user=user, status=Order.INITIAL)
-        # get number of items in order's user
+        orders = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL)
+        # get number of items in OrderTrans's user
         count = 0
-        for order in orders:
-            details = OrderDetail.objects.filter(order=order)
+        for OrderTrans in orders:
+            details = OrderDetail.objects.filter(OrderTrans=OrderTrans)
             for detail in details:
                 count += detail.quantity
         return JsonResponse({'count': count})
@@ -153,11 +153,11 @@ class OrderAPI(View):
         with transaction.atomic():
             user = CustomUser.objects.filter(line_id=line_id).first()
             restaurant = Restaurant.objects.filter(id=restaurant_id).first()
-            order = Order.objects.filter(user=user, status=Order.INITIAL).order_by('-pk').first()
-            if not order:  # make new order if lastest order status is not initial
-                order = Order.objects.create(user=user, restaurant=restaurant)
+            OrderTrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
+            if not OrderTrans:  # make new OrderTrans if lastest OrderTrans status is not initial
+                OrderTrans = OrderTrans.objects.create(user=user, restaurant=restaurant)
             menu = Menu.objects.filter(id=menu_id).first()
-            detail, created_detail = OrderDetail.objects.get_or_create(menu=menu, order=order)
+            detail, created_detail = OrderDetail.objects.get_or_create(menu=menu, OrderTrans=OrderTrans)
             if action == 'add':
                 detail.quantity += 1
             elif action == 'del':
@@ -174,7 +174,7 @@ class OrderAPI(View):
         line_id = body['line_id']
         user = CustomUser.objects.filter(line_id=line_id).first()
         try:
-            Order.objects.filter(user=user, status=Order.INITIAL).update(status=Order.PROCESSING)
+            OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).update(status=OrderTrans.PROCESSING)
             return JsonResponse({'ok': True})
         except Exception as error:
             return JsonResponse({'ok': False, 'message': error})

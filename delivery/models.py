@@ -15,6 +15,7 @@ class LocationUser(models.Model):
 
 class Restaurant(models.Model):
     line_official = models.ForeignKey(LineOfficial, related_name='restaurant', on_delete=models.SET_NULL, blank=True, null=True)
+    branch_id = models.IntegerField()
     name = models.CharField(max_length=50)
     status = models.BooleanField(default=True)
 
@@ -76,7 +77,7 @@ class MenuDetail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Order(models.Model):
+class OrderTrans(models.Model):
     INITIAL = '1'
     PROCESSING = '2'
     DONE = '3'
@@ -87,7 +88,7 @@ class Order(models.Model):
         (DONE, 'DONE'),
         (FAILED, 'FAILED'),
     ]
-    restaurant = models.ForeignKey('Restaurant', related_name='order', on_delete=models.CASCADE)
+    # restaurant = models.ForeignKey('Restaurant', related_name='order', on_delete=models.CASCADE)
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
@@ -109,8 +110,9 @@ class Order(models.Model):
         return result
 
 class OrderDetail(models.Model):
-    order = models.ForeignKey('Order', related_name='order_detail', on_delete=models.CASCADE)
+    ordertrans = models.ForeignKey('OrderTrans', related_name='order_detail', on_delete=models.CASCADE)
     menu = models.ForeignKey('Menu', on_delete=models.CASCADE)
+    menu_detail_id = models.TextField(blank=True, null=True)
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     description = models.CharField(max_length=100, blank=True, null=True)
