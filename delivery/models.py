@@ -102,7 +102,7 @@ class OrderTrans(models.Model):
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
-
+    location_user = models.ForeignKey(LocationUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
