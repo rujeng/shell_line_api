@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block style %}
+<script src="https://getbootstrap.com/2.0.4/assets/js/bootstrap-tab.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Admin management</h1>
+    <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="card">
+                    <div class="card-body">
+                        {% for item in init_orders_trans_list %}
+                            <div>{{item.total_price}}</div>
+                            <div>{{item.user}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">.ccc..</div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">..bbb.</div>
+          </div>
+    </div>
+</div>
+{% endblock %}
