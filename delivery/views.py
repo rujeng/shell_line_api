@@ -1,5 +1,4 @@
 import json
-import requests
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -9,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import redirect
 
-from delivery.models import Menu, Restaurant, OrderTrans, OrderDetail, LocationUser
+from delivery.models import Menu, MenuDetail, Restaurant, OrderTrans, OrderDetail, LocationUser
 from line.models import CustomUser
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -32,7 +31,6 @@ class RestaurantDetail(View):
         context = {'menus': menus, 'path': path}
         return render(request, 'restaurant_detail.html', context)
 
-
 class MyCart(View):
 
     def get(self, request):
@@ -44,7 +42,18 @@ class MyCart(View):
         total = 0
         for order in order_detail_list:
             restaurant_name = order.menu.restaurant.name
-            detail_dict = {'menu': order.menu.name, 'price': order.menu.price, 'quantity': order.quantity}
+            menu_detail_id_list = order.menu_detail_id
+            details = []
+            if menu_detail_id_list:
+                menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
+                for item in menu_detail_obj:
+                    details.append({
+                        'name': item.detail,
+                        'on_top_price': item.on_top_price,
+                    })
+                    total += item.on_top_price
+                details = MenuDetail.map_to_list(menu_detail_obj)
+            detail_dict = {'menu': order.menu.name, 'price': order.menu.price, 'quantity': order.quantity, 'details': details, 'description': order.description}
             total += order.quantity * order.menu.price
             if restaurant_name in result_dict:
                 result_dict[restaurant_name].append(detail_dict)
@@ -53,7 +62,7 @@ class MyCart(View):
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
-        context = {'result': tmp, 'total': total}
+        context = {'result': tmp, 'total': total, 'ordertrans_id': ordertrans.id}
         return render(request, 'mycart.html', context)
 
 
@@ -177,4 +186,13 @@ class OrderAPI(View):
         except Exception as error:
             return JsonResponse({'ok': False, 'message': error})
 
+    def delete(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        line_id = body['user_id']
+        ordertrans_id = body['ordertrans_id']
+        ordertrans = OrderTrans.objects.filter(id=ordertrans_id, status=OrderTrans.INITIAL).first()
+        ordertrans.status = OrderTrans.FAILED
+        ordertrans.save(update_fields=['status'])
+        return JsonResponse({})
         

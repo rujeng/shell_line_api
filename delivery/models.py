@@ -77,6 +77,16 @@ class MenuDetail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def map_to_list(obj):
+        tmp = []
+        for item in obj:
+            tmp.append({
+                'name': item.detail,
+                'on_top_price': item.on_top_price,
+            })
+        return tmp
+
+
 class OrderTrans(models.Model):
     INITIAL = '1'
     PROCESSING = '2'

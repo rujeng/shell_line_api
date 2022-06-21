@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-
-    <div class="card">
+    <div class="card" style="height: 80vh; overflow-y: scroll;">
         <div class="card-body">
             {% for item in result %}
             <div class="card-title">ร้าน {{item.name}}</div>
@@ -15,6 +14,17 @@
                         <div class="col">{{detail.quantity}} ชิ้น</div>
                         <div class="col">{{detail.price}} บาท</div>
                     </div>
+                    <!-- <div class="container"> -->
+                    {% for menu_detail in detail.details %}
+                    <div class="row">
+                        <div class="col ms-3">{{menu_detail.name}}</div>
+                        <div class="col"></div>
+                        <div class="col">{{menu_detail.on_top_price}} บาท</div>
+                    </div>
+                    {% endfor %}
+                    <div class="form-floating">
+                        <textarea class="form-control disabled" id="floatingTextarea">{{detail.description|default:''}}</textarea>
+                      </div>
                     {% endfor %}
                 </div>
             </div>
@@ -26,7 +36,7 @@
     <!-- button segtion -->
     <div class="row mt-3">
         <div class="col-6 text-center">
-            <button class="btn btn-danger">ยกเลิกการสั่งซื้อ</button>
+            <button class="btn btn-danger" onclick="cancleOrderTrans({{ordertrans_id}})">ยกเลิกการสั่งซื้อ</button>
         </div>
         <div class="col-6 text-center">
             <button class="btn btn-success" onclick="confirmOrder()">ยืนยันการสั่งซื้อ</button>
@@ -38,6 +48,46 @@
 {% block script %}
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function cancleOrderTrans(orderTransId){
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        const url = '/delivery/api/order/';
+        const data = {
+            'ordertrans_id': parseInt(orderTransId),
+            'user_id': userId
+        }
+        const body = {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, body)
+                .then(res => res.json())
+                .then(data => {
+                    // TODO check status ok from server
+                    // get_notify(); // refresh notify
+                    Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                    )
+                })
+            }
+            })
+    }
+
     function getQueryParam(name) {
         const urlParams = new URLSearchParams(window.location.search);
         const param = urlParams.get(name);
@@ -73,9 +123,11 @@
                             message = 'การสั่งซื้อสำเร็จ'
                         } else {
                             message = 'การสั่งซื้อไม่สำเร็จ'
-
                         }
                         Swal.fire(message)
+                        setTimeout(() => {
+                            window.location.href = `/delivery?user_id=${lineId}`
+                        }, 4000)
                     })
             }
         })
