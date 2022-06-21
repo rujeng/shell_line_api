@@ -45,9 +45,8 @@
         function handleClick(resId){
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('user_id')
-            const path = "{{path}}";
-            const url = `${path}${resId}/?user_id=${userId}`;
-            window.location = url
+            const branchId = urlParams.get('branch_id');
+            window.location.href = `/delivery/${resId}/?user_id=${userId}&branch_id=${branchId}`
         }
     </script>
 
