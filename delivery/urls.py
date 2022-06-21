@@ -18,3 +18,10 @@ urlpatterns = [
     path('webhook/', WebhookAPI.as_view()),
     path('testmap/', TestMap.as_view())
 ]
+
+# admin
+from delivery.views_admin import AdminView
+
+urlpatterns += [
+    path('admin/', AdminView.as_view())
+]
