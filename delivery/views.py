@@ -81,11 +81,23 @@ class MenutDetail(View):
 class RestaurantView(View):
 
     def get(self, request):
-        restaurants = Restaurant.objects.all()
-        context = {'restaurants': restaurants}
+        line_id = request.GET.get('user_id', None)
+        branch_id = request.GET.get('branch_id', None)
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        restaurants = Restaurant.objects.filter(branch_id=branch_id).order_by('show_id')
+        if restaurants.count() > 2:
+            restaurants = [ restaurants[0] , restaurants[1]]
+        context = {'restaurants': restaurants, 'full_name': user.full_name,'phone':user.mobile_no}
         return render(request, 'restaurant.html', context=context)
 
-        
+class RestaurantAllView(View):
+
+    def get(self, request):
+        branch_id = request.GET.get('branch_id', None)
+        restaurants = Restaurant.objects.filter(branch_id=branch_id).order_by('show_id')
+        context = {'restaurants': restaurants}
+        return render(request, 'restaurant_all.html', context=context)
+
 class OrderView(View):
     
     def get(self, request):

@@ -18,7 +18,8 @@ class Restaurant(models.Model):
     branch_id = models.IntegerField()
     name = models.CharField(max_length=50)
     status = models.BooleanField(default=True)
-
+    detail = models.TextField(null=True, blank=True)
+    show_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -43,7 +44,7 @@ class Menu(models.Model):
     # detail = models.TextField(null=True, blank=True)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     status = models.BooleanField(default=True)
-
+    show_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

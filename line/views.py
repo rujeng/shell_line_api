@@ -66,6 +66,11 @@ class LineHookView(View):
                 return redirect(f'/item/price/?user_id={line_id}&branch_id={branch_id}&car_id=')
             else:
                 return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
+        elif action == 'delivery':
+            if user:
+                return redirect(f'/delivery/price/?user_id={line_id}&branch_id={branch_id}')
+            else:
+                return redirect(f'/line/privacypolicy/?user_id={line_id}&branch_id={branch_id}&action={action}')
         else:
             return render(request, 'error.html')
         
