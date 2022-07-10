@@ -45,7 +45,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="btn btn-danger button-shadow" style="border-radius: 20px;margin: 20px;">
+        <div class="btn btn-danger button-shadow" style="border-radius: 20px;margin: 20px;" onclick="allRestuarantClick()">
             <label style="text-align: start;font-size: large;">View more restaurant</label>
             <i class="fa-solid fa-chevron-right" style="
             float: right;
@@ -62,8 +62,17 @@
         function handleClick(resId){
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('user_id')
+            const branchId = urlParams.get('branch_id');
             const path = "{{path}}";
-            const url = `${path}${resId}/?user_id=${userId}`;
+            const url = `${path}${resId}/?user_id=${userId}&branch_id=${branchId}`;
+            window.location = url
+        }
+        function allRestuarantClick(resId){
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('user_id');
+            const branchId = urlParams.get('branch_id');
+            const path = "{{path}}";
+            const url = `${path}all/?user_id=${userId}&branch_id=${branchId}`;
             window.location = url
         }
     </script>
