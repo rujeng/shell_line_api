@@ -1,3 +1,4 @@
+from turtle import distance
 from django.db import models
 from line.models import LineOfficial, CustomUser
 # Create your models here.
@@ -9,6 +10,8 @@ class LocationUser(models.Model):
     detail_1st = models.CharField(max_length=100, blank=True, null=True)
     detail_2nd = models.CharField(max_length=100, blank=True, null=True)
     user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    distance = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    distance_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

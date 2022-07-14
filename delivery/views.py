@@ -85,8 +85,8 @@ class RestaurantView(View):
         branch_id = request.GET.get('branch_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
         restaurants = Restaurant.objects.filter(branch_id=branch_id).order_by('show_id')
-        if restaurants.count() > 2:
-            restaurants = [ restaurants[0] , restaurants[1]]
+        # if restaurants.count() > 2:
+        #     restaurants = [ restaurants[0] , restaurants[1]]
         context = {'restaurants': restaurants, 'full_name': user.full_name,'phone':user.mobile_no}
         return render(request, 'restaurant.html', context=context)
 
