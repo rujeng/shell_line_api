@@ -16,7 +16,7 @@
         </div>
     </div>
     <div>
-        <img class='hero-image' src="{% static 'food.jpg' %}" alt="">
+        <img class='hero-image' src="{{restaurant.avatar.url}}" alt="">
     </div>
     <div class="card">
         <div class="card-body">
@@ -30,7 +30,8 @@
                 <div class="row border mt-2 shadow">
                     <div class="col">
                         <a onclick="handleClick('{{menu.id}}')">
-                            <img class="card-img-top" src="{% static 'food.jpg' %}" alt="Card image cap">
+                            <!-- <img class="card-img-top" src="{% static 'food.jpg' %}" alt="Card image cap"> -->
+                            <img class="card-img-top" src="{{menu.avatar.url}}" alt="Card image cap">
                         </a>
                     </div>
                     <div class="col">

@@ -28,7 +28,9 @@ class RestaurantDetail(View):
         menus = Menu.objects.filter(restaurant__id=pk)
         menus = Menu.map_object_to_list(menus)
         path = request.path
-        context = {'menus': menus, 'path': path}
+        restaurant = Restaurant.objects.filter(id=pk).first()
+        print(restaurant.avatar.url)
+        context = {'menus': menus, 'path': path, 'restaurant': restaurant}
         return render(request, 'restaurant_detail.html', context)
 
 class MyCart(View):
@@ -151,7 +153,7 @@ class OrderAPI(View):
         # get number of items in order's user
         count = 0
         for order in orders:
-            details = OrderDetail.objects.filter(order=order)
+            details = OrderDetail.objects.filter(ordertrans=order)
             for detail in details:
                 count += detail.quantity
         return JsonResponse({'count': count})

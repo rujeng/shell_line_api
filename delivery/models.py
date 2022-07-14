@@ -17,6 +17,7 @@ class LocationUser(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Restaurant(models.Model):
+    avatar = models.ImageField(upload_to='restaurant_images')
     line_official = models.ForeignKey(LineOfficial, related_name='restaurant', on_delete=models.SET_NULL, blank=True, null=True)
     branch_id = models.IntegerField()
     name = models.CharField(max_length=50)
@@ -42,6 +43,7 @@ class Restaurant(models.Model):
         return result
 
 class Menu(models.Model):
+    avatar = models.ImageField(upload_to='menu_images')
     restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     # detail = models.TextField(null=True, blank=True)
@@ -69,7 +71,8 @@ class Menu(models.Model):
                 'price': item.price,
                 'id': item.id,
                 'res_id': item.restaurant.id,
-                'details': detail_result
+                'details': detail_result,
+                'avatar': item.avatar
             })
         return result
 
@@ -106,7 +109,7 @@ class OrderTrans(models.Model):
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
-    location_user = models.ForeignKey(LocationUser, on_delete=models.CASCADE)
+    location_user = models.ForeignKey(LocationUser, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
