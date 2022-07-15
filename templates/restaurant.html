@@ -35,7 +35,8 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="" onclick="handleClick('{{restaurant.id}}')">
-                            <img class="card-img-top img-size" src="{% static 'food.jpg' %}" alt="Card image cap">
+                            <!-- <img class="card-img-top img-size" src="{% static 'food.jpg' %}" alt="Card image cap"> -->
+                            <img class="card-img-top img-size" src="{{restaurant.avatar.url}}" alt="Card image cap">
                         </div>
                         <div class="container">
                             <div>{{restaurant.name}}</div>
