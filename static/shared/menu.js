@@ -18,13 +18,14 @@ function handleOrderDetail(event, restaurantId, action){
     }
     //confirm action
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'ต้องการสั่งสินค้าใช่หรือไม่',
+        // text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'ตกลง',
+        cancleButtonText: 'ยกเลิก'
         }).then((result) => {
         if (result.isConfirmed) {
             fetch(url, body)
@@ -33,9 +34,7 @@ function handleOrderDetail(event, restaurantId, action){
                 // TODO check status ok from server
                 get_notify(); // refresh notify
                 Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
+                'สินค้าถูกเพิ่มลงไปในตระกร้าแล้ว',
                 )
             })
         }

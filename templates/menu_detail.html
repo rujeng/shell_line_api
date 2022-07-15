@@ -9,11 +9,7 @@
   </div>
   <div>
     <div class="row">
-      <img src="{% static 'food.jpg' %}" class="menu-detail-img"/>
-      <!-- <div class="d-flex flex-column align-items-center">
-        <div class="text-center">
-        </div>
-      </div> -->
+      <img src="{{restaurant.avatar.url}}" class="menu-detail-img"/>
       <div>
         <h2>{{menu.name}}</h2>
         <p>หมูกระเทียมกรอบ</p>
@@ -39,7 +35,7 @@
         </div>
       </div>
       <div>
-        <button class="btn btn-danger" id="{{menu.id}}" onclick="handleOrderDetail(this, {{restaurant_id}}, 'add')">เพิ่มลงตระกร้า</button>
+        <button class="btn btn-danger" id="{{menu.id}}" onclick="handleOrderDetail(this, {{restaurant.id}}, 'add')">เพิ่มลงตระกร้า</button>
       </div>
         <!-- {% for detail in menu.details %}
         <div class="form-check">

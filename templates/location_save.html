@@ -5,7 +5,6 @@
       height: 100%;
     }
 </style>
-<script type="text/javascript" src="http://api.nostramap.com/nostraapi/v2.0?key=GlSAYuak)t3wqsyMuo1rfFkfaP7L4h1ZhmH1SJKFtbPgwpPCVuCjzSDI)CatIjdH3yKW(13pB6WCGsoWynuh2RW=====2"></script>
 {% endblock %}
 {% block content%}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -27,23 +26,22 @@
     </div>
 </div>
 <div class="container-sm" id='main-container'>
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger button-shadow" data-toggle="modal"
-            data-target="#exampleModal">แผนที่</button>
-    </div>
-    <form method="post" class="form-format" id='formSubmit'>
+    <body onload="init();" >
+        <div id="map" style="height: 300px;"></div>
+      </body>
+    <form method="post" class="form-format box-shadow" id='formSubmit'>
         <div class="mb-3 form-box">
-            <label>Name Place</label>
+            <div>Name Place</div>
             {% csrf_token %}
-            <input name = "locationName" id = "location_name" class="form-control" type="text" placeholder="Location Name" aria-label="default input example">
-            <input name = "detail1st" id = "detail_1st" class="form-control" type="text" placeholder="Detail" aria-label="default input example">
-            <input name = "detail2nd" id = "detail_2nd" class="form-control" type="text" placeholder="Detail" aria-label="default input example">
+            <input name = "locationName" id = "location_name" class="form-control shadow-sm p-3 mb-2 bg-white rounded type="text" placeholder="Location Name" aria-label="default input example">
+            <input name = "detail1st" id = "detail_1st" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="Detail" aria-label="default input example">
+            <input name = "detail2nd" id = "detail_2nd" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="Detail" aria-label="default input example">
             <input name = "latitude" type='text' class='invisible'/>
             <input name = "longitude" type='text' class='invisible'/>
         </div>
         <div class="d-grid gap-2">
-            <button class="btn btn-primary" type="button">Cancel</button>
-            <button class="btn btn-primary" type="submit">Confirm</button>
+            <button class="btn btn- btn button-shadow round-button" style='background: lightgrey;' type="button">Cancel</button>
+            <button class="btn btn-primary btn btn-danger button-shadow round-button" type="submit">Confirm</button>
         </div>
     </form>
 
@@ -51,65 +49,22 @@
 {% endblock %}
 {% block script %}
 <script>
-    nostra.onready = function () {
-           //start your code here
-           if (navigator.geolocation) {
-               navigator.geolocation.getCurrentPosition(showPosition, showError);
-           } else {
-               alert("Geolocation is not supported by this browser.");
-           }
-           function showError(error) {
-               switch (error.code) {
-                   case error.PERMISSION_DENIED:
-                       alert("User denied the request for Geolocation.");
-                       break;
-   
-                   case error.POSITION_UNAVAILABLE:
-                       alert("Location information is unavailable.");
-                       break;
-           
-                   case error.TIMEOUT:
-                       alert("The request to get user location timed out.");
-                       break;
-       
-                   case error.UNKNOWN_ERROR:
-                       alert("An unknown error occurred.");
-                       break;
-               }
-           }
-
-           function showPosition(position) {
-               var lat = position.coords.latitude;
-               var lon = position.coords.longitude;
-               document.getElementsByName('latitude')[0].value = lat;
-               document.getElementsByName('longitude')[0].value = lon;
-               debugger;
-               var map = new nostra.maps.Map("mapDiv", {
-               id: "mapTest",
-               logo: true,
-               scalebar: true,
-               basemap: "streetmap",
-               slider: true,
-               level: 15,
-               lat: lat,
-               lon: lon,
-               country: "TH"
-           });
-               var pointLayer = new nostra.maps.layers.GraphicsLayer(map, { id: "pointLayer" });
-               map.addLayer(pointLayer);
-               var pointMarker = new nostra.maps.symbols.Marker({ url: "", width: 60, height: 6, attributes: { POI_NAME: "Current Location" },draggable:true });
-               var g = pointLayer.addMarker(lat, lon, pointMarker);
-               pointMarker.events.dragStart = function (geometry) {
-               console.log("Start Drag at Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
-               }
-               pointMarker.events.dragMove = function (geometry) {
-                   console.log("Move To Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
-               }
-               pointMarker.events.dragEnd = function (geometry) {
-                   console.log("End Drag at Latitude: " + geometry.lat + ", Longitude: " + geometry.lon);
-                   // code here for edit location
-               }
-           }
-       };
+    var map;
+     function init() {
+            map = new longdo.Map({
+                placeholder: document.getElementById('map'),
+                ui: longdo.UiComponent.Mobile
+            });
+            map.Ui.Zoombar.visible(false);
+            map.Ui.LayerSelector.visible(false);
+            map.Ui.Fullscreen.visible(false);
+            map.location(longdo.LocationMode.Geolocation); // go to 100, 16 when created map
+            map.Event.bind('drop', function() {
+              var location = map.location(); // Cross hair location
+              map.Overlays.clear();
+              var marker = new longdo.Marker({ lon: location.lon, lat: location.lat });
+              map.Overlays.add(marker)
+            });
+          }
 </script>
 {% endblock %}

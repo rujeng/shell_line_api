@@ -8,6 +8,11 @@
     color: #DC3545;
 }
 
+.round-button{
+    border-radius: 20px;
+    margin-top: 15px;
+}
+
 .sticky{
     position: fixed;
     height: 70vh;

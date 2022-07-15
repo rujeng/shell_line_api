@@ -39,6 +39,8 @@ class MyCart(View):
         line_id = request.GET.get('user_id')
         user = CustomUser.objects.filter(line_id=line_id).first()
         ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
+        if not ordertrans:
+            return render(request, 'mycart.html')
         order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans)
         result_dict = dict()
         total = 0
@@ -77,7 +79,8 @@ class MenutDetail(View):
         # detail = OrderDetail.objects.filter(order=order, menu__id=pk).first()
         menu = Menu.objects.filter(id=pk)
         menu = Menu.map_object_to_list(menu)
-        context = {'menu': menu[0], 'detail': detail, 'restaurant_id': res_pk}
+        restaurant = Restaurant.objects.filter(id=res_pk).first()
+        context = {'menu': menu[0], 'detail': detail, 'restaurant': restaurant}
         return render(request, 'menu_detail.html', context)
 
 class RestaurantView(View):
