@@ -66,7 +66,8 @@ class MyCart(View):
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
-        context = {'result': tmp, 'total': total, 'ordertrans_id': ordertrans.id}
+        locations_user = LocationUser.objects.filter(user=user).first()
+        context = {'result': tmp, 'total': total, 'ordertrans_id': ordertrans.id, 'locations_user': locations_user}
         return render(request, 'mycart.html', context)
 
 

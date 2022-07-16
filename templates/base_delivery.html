@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    .shadow{
+      box-shadow: 0 3px lightgrey;
+    }
+    .round {
+      border-radius: 8px;
+    }
+    .menu-detail-img{
+      width: 320px;
+      height: 240px;
+    }
+  </style>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'popper.min.js' %}"></script>
+    <!-- <script src="{% static 'bootstrap.min.js' %}"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mitr">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script type="text/javascript" src="https://api.longdo.com/map/?key=3865653e7544b7c9cca57c04fda5144c"></script>
+    {% block style %}
+    {% endblock %}
+</head>
+<nav class="navbar">
+    <div class="container-fluid">
+      <img src="{% static 'icons/house.svg' %}" style="height: 50px;"/>
+      <!-- <span class="navbar-brand mb-0 h1">GIGO</span> -->
+    </div>
+  </nav>
+<body>
+{% block content %}
+{% endblock %}
+</body>
+{% block script%}
+{% endblock %}
+</html>
