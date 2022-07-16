@@ -12,7 +12,7 @@ class line_message():
             "to": f"{line_id}",
             "messages": [{
                 "type": "flex",
-                "altText": "Collected your order",
+                "altText": "โปรดรอยืนยันออเดอร์",
                 "contents": {
                     "type": "bubble",
                     "body": {
@@ -21,10 +21,18 @@ class line_message():
                         "contents": [
                         {
                             "type": "text",
-                            "text": "Collected your order",
+                            "text": "โปรดรอยืนยันออเดอร์",
                             "weight": "bold",
-                            "color": "#FF3E15",
-                            "size": "xxl"
+                            "color": "#DC493F",
+                            "size": "xl"
+                        },
+                        {
+                            "type": "text",
+                            "text": f"{branch_name}",
+                            "weight": "bold",
+                            "color": "#000000",
+                            "margin": "lg",
+                            "size": "md"
                         },
                         {
                             "type": "separator",
@@ -47,14 +55,16 @@ class line_message():
                                     "flex": 0,
                                     "weight": "bold",
                                     "margin": "none",
-                                    "text": "order number"
+                                    "text": "order number",
+                                    "color": "#A0ABB1"
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"1234",
+                                    "text": f"{tran.id}",
                                     "size": "sm",
                                     "align": "end",
-                                    "weight": "bold"
+                                    "weight": "bold",
+                                    "color": "#A0ABB1"
                                 }
                                 ]
                             },
@@ -64,44 +74,22 @@ class line_message():
                                 "contents": [
                                 {
                                     "type": "text",
-                                    "text": "วันที่",
+                                    "text": "เวลาสั่ง",
                                     "size": "sm",
-                                    "color": "#555555",
+                                    "color": "#A0ABB1",
                                     "flex": 0,
                                     "weight": "bold"
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{datetime.strftime(tran.appointed_date, '%d/%m/%Y')}",
+                                    "text": f"{datetime.strftime(tran.created_at, '%m/%d/%Y, %H:%M')}",
                                     "size": "sm",
-                                    "color": "#111111",
+                                    "color": "#A0ABB1",
                                     "align": "end",
                                     "weight": "bold"
                                 }
                                 ]
-                            },
-                            {
-                                "type": "box",
-                                "layout": "horizontal",
-                                "contents": [
-                                {
-                                    "type": "text",
-                                    "text": "สาขา ",
-                                    "size": "sm",
-                                    "flex": 0,
-                                    "weight": "bold",
-                                    "margin": "none"
-                                },
-                                {
-                                    "type": "text",
-                                    "text": f"{branch_name}",
-                                    "size": "xs",
-                                    "align": "end",
-                                    "weight": "bold",
-                                    "wrap": True
-                                }
-                                ]
-                            }                  
+                            }
                             ]
                         },
                         {

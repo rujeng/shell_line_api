@@ -54,7 +54,8 @@ function get_notify(){
 function myCart(){
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
-    const url = `/delivery/mycart?user_id=${userId}`;
+    const branchId = urlParams.get('branch_id');
+    const url = `/delivery/mycart?user_id=${userId}&&branch_id=${branchId}`;
     window.location = url;
 }
 

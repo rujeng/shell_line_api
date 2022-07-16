@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content%}
 <div class="container-sm" id='main-container'>
-    <div class="mb-3 form-box">
+    <!-- <div class="mb-3 form-box">
         <label style="color: black;">Start with</label>
         <div onclick="" class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;">
             <label style="margin: 5px 0px 5px 10px; color: black;">Current Location</label>
@@ -12,7 +12,7 @@
             float: right;
             margin: 10px 10px 0px 0px;
             color: black;"></i></div>
-    </div>
+    </div> -->
     <div class="mb-3 form-box">
         <label>Saved Place</label>
         <div class="d-grid gap-2">
@@ -24,7 +24,7 @@
         <label>History</label>
         {% if historys %}
         {% for history in historys %}
-        <div class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;">
+        <div class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;" onclick="">
             <label style="margin: 5px 0px 5px 10px; color: black;">{{history.name}}</label>
             <i class="fa-solid fa-chevron-right" style="
             float: right;

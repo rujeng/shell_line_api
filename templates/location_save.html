@@ -59,10 +59,16 @@
             map.Ui.LayerSelector.visible(false);
             map.Ui.Fullscreen.visible(false);
             map.location(longdo.LocationMode.Geolocation); // go to 100, 16 when created map
+            debugger;
+            var location_now = map.location();
+            document.getElementsByName('latitude')[0].value = location_now.lat;
+            document.getElementsByName('longitude')[0].value = location_now.lon;
             map.Event.bind('drop', function() {
               var location = map.location(); // Cross hair location
               map.Overlays.clear();
               var marker = new longdo.Marker({ lon: location.lon, lat: location.lat });
+              document.getElementsByName('latitude')[0].value = location.lat;
+              document.getElementsByName('longitude')[0].value = location.lon;
               map.Overlays.add(marker)
             });
           }

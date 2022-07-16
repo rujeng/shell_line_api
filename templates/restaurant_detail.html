@@ -77,8 +77,9 @@
         function handleClick(menuId){
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('user_id')
+            const branchId = urlParams.get('branch_id');
             const path = "{{path}}";
-            const url = `${path}${menuId}/?user_id=${userId}`;
+            const url = `${path}${menuId}/?user_id=${userId}&&branch_id=${branch_id}`;
             window.location = url
         }
     </script>

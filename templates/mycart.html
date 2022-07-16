@@ -66,7 +66,6 @@
         <div class="col-6 text-center">
             <button class="btn btn-success" onclick="confirmOrder()">ยืนยันการสั่งซื้อ</button>
         </div>
-
     </div>
 </div>
 {% endblock %}
@@ -121,17 +120,20 @@
     }
     function confirmOrder() {
         const lineId = getQueryParam('user_id');
+        const branch_id= getQueryParam('branch_id');
         let data = {
             line_id: lineId,
+            branch_id:branch_id
         };
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'ยืนยันรายการสั่งซื้อใช่ไหม?',
+            // text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'ต้องการ',
+            cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
                 const url = '/delivery/api/order/';
@@ -152,7 +154,7 @@
                         }
                         Swal.fire(message)
                         setTimeout(() => {
-                            window.location.href = `/delivery?user_id=${lineId}`
+                            window.location.href = `/delivery/location_detail/?user_id=${lineId}&&branch_id=${branch_id}`
                         }, 4000)
                     })
             }
