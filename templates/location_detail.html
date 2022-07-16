@@ -23,15 +23,15 @@
     <div class="mb-3 form-box">
         <label>History</label>
         {% if historys %}
+        <ul class="list-group list-group-flush">
         {% for history in historys %}
-        <div class="hover-location" style="box-shadow: 6px 6px 8px lightgray;border-radius: 7.5px;margin-bottom: 10px;" onclick="">
-            <label style="margin: 5px 0px 5px 10px; color: black;">{{history.name}}</label>
-            <i class="fa-solid fa-chevron-right" style="
+            <li class="list-group-item md-2">{{history.name}}</li>
+            <!-- <i class="fa-solid fa-chevron-right" style="
             float: right;
             margin: 10px 10px 0px 0px;
-        color: black;"></i>
-        </div>
+        color: black;"></i> -->
         {% endfor %}
+        </ul>
         {% endif %}
     </div>
 </div>

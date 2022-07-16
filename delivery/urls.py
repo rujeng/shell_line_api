@@ -4,7 +4,6 @@ from delivery.views import Enroll,LocationDetail,LocationSave
 urlpatterns = [
     # mvc
     path('', RestaurantView.as_view()),
-    path('all/', RestaurantAllView.as_view()),
     path('<int:pk>/', RestaurantDetail.as_view(), name='restaurant_detail'),
     path('<int:res_pk>/<int:pk>/', MenutDetail.as_view(), name='menu_detail'),
     path('order/', OrderView.as_view()),
@@ -20,8 +19,9 @@ urlpatterns = [
 ]
 
 # admin
-from delivery.views_admin import AdminView
+from delivery.views_admin import AdminView, AdminViewDetail
 
 urlpatterns += [
-    path('admin/', AdminView.as_view())
+    path('admin/', AdminView.as_view()),
+    path('admin/<int:pk>/', AdminViewDetail.as_view())
 ]

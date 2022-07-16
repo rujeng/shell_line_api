@@ -13,9 +13,20 @@ from line.models import CustomUser
 class AdminView(View):
 
     def get(self, request):
-        init_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.INITIAL).order_by('-pk')
+        #init_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.INITIAL).order_by('-pk')
         pro_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.PROCESSING).order_by('-pk')
         done_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.DONE).order_by('-pk')
         fail_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.FAILED).order_by('-pk')
-        context = {'init_orders_trans_list': init_orders_trans_list}
+        context = {'pro_orders_trans_list':pro_orders_trans_list}
         return render(request, 'admin_view.html', context=context)
+
+class AdminViewDetail(View):
+
+    def get(self,request,pk):
+        ordertrans = OrderTrans.objects.filter(id=pk)
+        context = {'ordertrans':ordertrans[0]}
+        import pdb;pdb.set_trace()
+        return render(request, 'admin_view_detail.html',context=context)
+    
+    # def post(self,request):
+    #     return render(request, 'admin_view.html')

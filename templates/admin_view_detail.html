@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">วันที่</label>
+            <div>{{ordertrans.updated_at|date:"DATETIME_FORMAT"}}</div>
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">ชื่อลูกค้า</label>
+            <div>{{ordertrans.user.full_name}}</div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">สถานที่</label>
+            <!-- <div>{{work_location.name}}</div> -->
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">เบอร์โทรศัพท์</label>
+            <div>{{ordertrans.user.mobile_no}}</div>
+        </div>
+    </div>
+    <!-- <div class="row mt-3">
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">กำหนดส่งสินค้า</label>
+            <div>{{delivery_date}}</div>
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">ที่อยู่</label>
+            <div>{{sale_order.delivery_address}} {{sale_order.district}} {{sale_order.amphoe}} {{sale_order.province}} {{sale_order.zipcode}}</div>
+        </div>
+    </div> -->
+</div>
+<div class="mb-4">
+    รายการอาหาร
+</div>
+{% endblock %}

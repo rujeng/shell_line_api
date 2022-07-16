@@ -21,10 +21,24 @@
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="card">
                     <div class="card-body">
-                        {% for item in init_orders_trans_list %}
-                            <div>{{item.total_price}}</div>
-                            <div>{{item.user}}</div>
-                        {% endfor %}
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">หมายเลขออเดอร์</th>
+                            <th scope="col">ชื่อผู้สั่ง</th>
+                            <th scope="col">เวลาสั่งอาหาร</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for item in pro_orders_trans_list %}
+                          <tr>
+                              <td><a href="/deliver/admin/{{item.id}}">{{item.id}}</a></td>
+                              <td>{{item.user.full_name}}</td>
+                              <td>{{item.updated_at|date:"DATETIME_FORMAT"}}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
                     </div>
                 </div>
             </div>

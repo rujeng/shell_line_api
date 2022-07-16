@@ -209,7 +209,6 @@ class OrderAPI(View):
             lineMessage = LineMessage.objects.filter(id=branch_id).first()
             channel_access_token = lineMessage.channel_access_token
             message = line_message()
-            import pdb;pdb.set_trace()
             meta_dat = {'line_id':line_id,'branch_name':branch_name}
             message_data_push_noti = message.order_message(meta_dat=meta_dat,tran=ordertrans)
             res = line.push_message(
