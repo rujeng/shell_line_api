@@ -7,7 +7,7 @@
                 <label for="exampleFormControlSelect1">ที่อยู่จัดส่ง</label>
                 <select class="form-control" id="exampleFormControlSelect1">
                     {% for location in locations_user %}
-                        <option>{{location.name}}</option>
+                        <option value="{{location.id}}">{{location.name}}</option>
                     {% endfor %}
                 </select>
               </div>
@@ -18,8 +18,8 @@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">รูปแบบการชำระเงิน</label>
                 <select class="form-control" id="exampleFormControlSelect1">
-                    <option>เงินสด</option>
-                    <option>โอนเงิน</option>
+                    <option value="1">เงินสด</option>
+                    <option value="2">โอนเงิน(ระบบจะส่งบัญชีให้หลังยืนยันออเดอร์)</option>
                 </select>
             </div>
         </div>

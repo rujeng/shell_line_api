@@ -1,5 +1,28 @@
 {% extends 'base.html' %}
+{% block style%}
+<style>
+    html{
+      height:100%; 
+    }
+    body{ 
+      margin:0px;
+      height:100%; 
+    }
+    #map {
+      height: 100%;
+    }
+</style>    
+{% endblock %}
 {% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <body onload="init('{{ordertrans.location_user.longtitude}}','{{ordertrans.location_user.latitude}}');">
+            <div id="map"></div>
+        </body>
+      </div>
+    </div>
+  </div>
 <div>
     <div class="row mt-3">
         <div class="col-6">
@@ -13,26 +36,101 @@
     </div>
     <div class="row mt-3">
         <div class="col-6">
-            <label for="exampleFormControlInput1" class="form-label">สถานที่</label>
-            <!-- <div>{{work_location.name}}</div> -->
+            <label for="exampleFormControlInput1" class="form-label">รูปแบบการชำระเงิน</label>
+            {{x}}
+            <div>{{payment_method}}</div>
         </div>
         <div class="col-6">
             <label for="exampleFormControlInput1" class="form-label">เบอร์โทรศัพท์</label>
             <div>{{ordertrans.user.mobile_no}}</div>
         </div>
     </div>
-    <!-- <div class="row mt-3">
-        <div class="col-6">
-            <label for="exampleFormControlInput1" class="form-label">กำหนดส่งสินค้า</label>
-            <div>{{delivery_date}}</div>
-        </div>
-        <div class="col-6">
-            <label for="exampleFormControlInput1" class="form-label">ที่อยู่</label>
-            <div>{{sale_order.delivery_address}} {{sale_order.district}} {{sale_order.amphoe}} {{sale_order.province}} {{sale_order.zipcode}}</div>
-        </div>
-    </div> -->
 </div>
 <div class="mb-4">
     รายการอาหาร
+        <div class="card-body">
+            {% for item in result %}
+            <div class="card-title">ร้าน {{item.name}}</div>
+            <div class="mb-2">
+                <div class="p-2">
+                    {% for detail in item.detail_list %}
+                    <div class="row">
+                        <div class="col">{{detail.menu}}</div>
+                        <div class="col">{{detail.quantity}} ชิ้น</div>
+                        <div class="col">{{detail.price}} บาท</div>
+                    </div>
+                    <!-- <div class="container"> -->
+                    {% for menu_detail in detail.details %}
+                    <div class="row">
+                        <div class="col ms-3">{{menu_detail.name}}</div>
+                        <div class="col"></div>
+                        <div class="col">{{menu_detail.on_top_price}} บาท</div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="text-end">รวมเป็นเงินทั้งหมด {{total}} บาท</div>
+        </div>
+    <div class="mb-4">
+        สถานที่จัดส่ง
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="exampleFormControlInput1" class="form-label">ชื่อสถานที่</label>
+            {{ordertrans.location_user.name}}
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="exampleFormControlInput1" class="form-label">รายละเอียด</label>
+            {{ordertrans.location_user.detail_1st}}
+            {{ordertrans.location_user.detail_2nd}}
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        แผนที่
+    </button>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row mt-3">
+            <div class="col-6">
+                <label for="exampleFormControlInput1">ระยะทาง</label>
+                <input type="number" step="any" class="form-control" value={{ordertrans.location_user.distance}} id="distance" name="distance" placeholder="ระยะทาง">
+            </div>
+            <div class="col-6">
+                <label for="exampleFormControlInput1">ค่าส่ง</label>
+                <input type="number" step="any" class="form-control" value={{ordertrans.location_user.distance_price}} id="distance_price" name="distance_price" placeholder="ค่าส่ง">
+            </div>
+        </div>
+        <div class="form-group">
+                <label for="exampleFormControlSelect1">สถานะ</label>
+                <select class="form-control" id="status" name="status">
+                    <option value="3">Confirm</option>
+                    <option value="5">Reject</option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">หมายเหตุ</label>
+            <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input type="submit" value="submit" class="btn btn-primary btn-submit">
+        </div>
+    </form>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    var map;
+     function init(lon,lat) {
+            map = new longdo.Map({
+              placeholder: document.getElementById('map')
+            });
+            map.location({ lon:lon, lat:lat }, true);
+          }
+      
+</script>
 {% endblock %}

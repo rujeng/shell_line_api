@@ -97,19 +97,33 @@ class MenuDetail(models.Model):
 class OrderTrans(models.Model):
     INITIAL = '1'
     PROCESSING = '2'
-    DONE = '3'
-    FAILED = '4'
+    CONFIRM = '3'
+    DONE = '4'
+    REJECT = '6'
+    FAILED = '7'
     STATUS_CHOICES = [
         (INITIAL, 'INITIAL'),
         (PROCESSING, 'PROCESSING'),
+        (CONFIRM, 'CONFIRM'),
         (DONE, 'DONE'),
+        (REJECT, 'REJECT'),
         (FAILED, 'FAILED'),
+    ]
+    CASH = '1'
+    TRANSFER = '2'
+    PAYMENT_CHOICES= [
+        (CASH, 'CASH'),
+        (TRANSFER, 'TRANSFER'),
     ]
     # restaurant = models.ForeignKey('Restaurant', related_name='order', on_delete=models.CASCADE)
     total_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    distance_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     user =  models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=INITIAL)
     location_user = models.ForeignKey(LocationUser, on_delete=models.CASCADE, null=True, blank=True)
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_CHOICES, default=CASH)
+    description = models.CharField(max_length=100, blank=True, null=True)
+    branch_id = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
