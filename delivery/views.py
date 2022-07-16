@@ -7,6 +7,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import redirect
+from line.line_service import Line
+from line.models import LineMessage , LineOfficial
+from delivery.line_message import line_message
 
 from delivery.models import Menu, MenuDetail, Restaurant, OrderTrans, OrderDetail, LocationUser
 from line.models import CustomUser
@@ -196,9 +199,25 @@ class OrderAPI(View):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         line_id = body['line_id']
+        branch_id = body['branch_id']
         user = CustomUser.objects.filter(line_id=line_id).first()
         try:
-            OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).update(status=OrderTrans.PROCESSING)
+            #ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).update(status=OrderTrans.PROCESSING)
+            ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).first()
+            line = Line()
+            branch_name = LineOfficial.objects.filter(id=branch_id).first()
+            lineMessage = LineMessage.objects.filter(id=branch_id).first()
+            channel_access_token = lineMessage.channel_access_token
+            message = line_message()
+            import pdb;pdb.set_trace()
+            meta_dat = {'line_id':line_id,'branch_name':branch_name}
+            message_data_push_noti = message.order_message(meta_dat=meta_dat,tran=ordertrans)
+            res = line.push_message(
+                    meta_dat, channel_access_token,message_data_push_noti)
+            if res['ok']:
+                ordertrans.status = OrderTrans.PROCESSING
+                ordertrans.save(update_fields=['status'])
+            #     line.notify(message_data_notify, settings.ACCESS_TOKEN)
             return JsonResponse({'ok': True})
         except Exception as error:
             return JsonResponse({'ok': False, 'message': error})
