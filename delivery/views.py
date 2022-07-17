@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 from django.shortcuts import render
@@ -201,6 +202,8 @@ class OrderAPI(View):
         body = json.loads(body_unicode)
         line_id = body['line_id']
         branch_id = body['branch_id']
+        location_id = body['location_id']
+        payment_method_id = body['payment_method_id']
         user = CustomUser.objects.filter(line_id=line_id).first()
         try:
             #ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).update(status=OrderTrans.PROCESSING)
@@ -215,9 +218,14 @@ class OrderAPI(View):
             res = line.push_message(
                     meta_dat, channel_access_token,message_data_push_noti)
             if res['ok']:
+                location_user = LocationUser.objects.filter(id=location_id).first()
                 ordertrans.status = OrderTrans.PROCESSING
-                ordertrans.save(update_fields=['status'])
-            #     line.notify(message_data_notify, settings.ACCESS_TOKEN)
+                ordertrans.location_user = location_user
+                ordertrans.payment_method = payment_method_id
+                ordertrans.updated_at = datetime.now()
+                ordertrans.branch_id = branch_id
+                ordertrans.save()
+            #   line.notify(message_data_notify, settings.ACCESS_TOKEN)
             return JsonResponse({'ok': True})
         except Exception as error:
             return JsonResponse({'ok': False, 'message': error})

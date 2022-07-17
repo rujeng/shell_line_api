@@ -21,8 +21,8 @@
     <div class="card">
         <div class="card-body">
             <div>
-                <div>ร้าน Ramen</div>
-                <div>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin lit</div>
+                <div>{{restaurant.name}}</div>
+                <div>{{restaurant.detail}}</div>
             </div>
 
             {% for menu in menus %}
@@ -36,7 +36,7 @@
                     </div>
                     <div class="col">
                         <h5 class="card-title">{{menu.name}}</h5>
-                        <div>dddddddddddd</div>
+                        <div>{{menu.detail}}</div>
                         <div class="border border-warning round text-center">{{menu.price}} บาท</div>
                     </div>
                 </div>

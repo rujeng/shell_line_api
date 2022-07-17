@@ -97,11 +97,11 @@
         {% csrf_token %}
         <div class="row mt-3">
             <div class="col-6">
-                <label for="exampleFormControlInput1">ระยะทาง</label>
+                <label for="exampleFormControlInput1">ระยะทาง (กิโลเมตร)</label>
                 <input type="number" step="any" class="form-control" value={{ordertrans.location_user.distance}} id="distance" name="distance" placeholder="ระยะทาง">
             </div>
             <div class="col-6">
-                <label for="exampleFormControlInput1">ค่าส่ง</label>
+                <label for="exampleFormControlInput1">ค่าส่ง (บาท)</label>
                 <input type="number" step="any" class="form-control" value={{ordertrans.location_user.distance_price}} id="distance_price" name="distance_price" placeholder="ค่าส่ง">
             </div>
         </div>

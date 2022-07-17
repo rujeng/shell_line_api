@@ -46,7 +46,7 @@ class Menu(models.Model):
     avatar = models.ImageField(upload_to='menu_images')
     restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    # detail = models.TextField(null=True, blank=True)
+    detail = models.TextField(null=True, blank=True)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     status = models.BooleanField(default=True)
     show_id = models.IntegerField()
@@ -71,6 +71,7 @@ class Menu(models.Model):
                 'price': item.price,
                 'id': item.id,
                 'res_id': item.restaurant.id,
+                'detail': item.detail,
                 'details': detail_result,
                 'avatar': item.avatar
             })

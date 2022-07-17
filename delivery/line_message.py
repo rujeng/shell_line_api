@@ -83,7 +83,7 @@ class line_message():
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{datetime.strftime(tran.created_at, '%m/%d/%Y, %H:%M')}",
+                                    "text": f"{datetime.strftime(datetime.now(), '%m/%d/%Y, %H:%M')}",
                                     "size": "sm",
                                     "color": "#A0ABB1",
                                     "align": "end",
@@ -190,7 +190,7 @@ class line_message():
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{datetime.strftime(tran.created_at, '%m/%d/%Y, %H:%M')}",
+                                    "text": f"{datetime.strftime(tran.updated_at, '%m/%d/%Y, %H:%M')}",
                                     "size": "sm",
                                     "color": "#A0ABB1",
                                     "align": "end",
@@ -415,7 +415,7 @@ class line_message():
                                 },
                                 {
                                     "type": "text",
-                                    "text": f"{datetime.strftime(tran.created_at, '%m/%d/%Y, %H:%M')}",
+                                    "text": f"{datetime.strftime(tran.updated_at, '%m/%d/%Y, %H:%M')}",
                                     "size": "sm",
                                     "color": "#A0ABB1",
                                     "align": "end",

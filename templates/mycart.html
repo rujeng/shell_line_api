@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">ที่อยู่จัดส่ง</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="form-control" id="location_user">
                     {% for location in locations_user %}
                         <option value="{{location.id}}">{{location.name}}</option>
                     {% endfor %}
@@ -17,9 +17,9 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">รูปแบบการชำระเงิน</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                    <option value="1">เงินสด</option>
-                    <option value="2">โอนเงิน(ระบบจะส่งบัญชีให้หลังยืนยันออเดอร์)</option>
+                <select class="form-control" id="payment_method">
+                    <option value=1>เงินสด</option>
+                    <option value=2>โอนเงิน(ระบบจะส่งบัญชีให้หลังยืนยันออเดอร์)</option>
                 </select>
             </div>
         </div>
@@ -121,9 +121,13 @@
     function confirmOrder() {
         const lineId = getQueryParam('user_id');
         const branch_id= getQueryParam('branch_id');
+        const location_id = $('#location_user').val()
+        const payment_method_id = $('#payment_method').val()
         let data = {
             line_id: lineId,
-            branch_id:branch_id
+            branch_id:branch_id,
+            location_id: location_id,
+            payment_method_id: payment_method_id
         };
         Swal.fire({
             title: 'ยืนยันรายการสั่งซื้อใช่ไหม?',
@@ -154,7 +158,7 @@
                         }
                         Swal.fire(message)
                         setTimeout(() => {
-                            window.location.href = `/delivery/location_detail/?user_id=${lineId}&&branch_id=${branch_id}`
+                            window.location.href = `/delivery/?user_id=${lineId}&&branch_id=${branch_id}`
                         }, 4000)
                     })
             }
