@@ -71,9 +71,50 @@ class MyCart(View):
             tmp.append({'name': key, 'detail_list': val})
         locations_user = LocationUser.objects.filter(user=user)
         context = {'result': tmp, 'total': total, 'ordertrans_id': ordertrans.id, 'locations_user': locations_user}
+        # print(context)
         return render(request, 'mycart.html', context)
 
 
+
+class NewMyCart(View):
+
+    def get(self, request):
+        line_id = request.GET.get('user_id')
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
+        if not ordertrans:
+            return render(request, 'mycart.html')
+        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans)
+        result_dict = {}
+        all_price = 0
+        for order_detail in order_detail_list:
+            menu_detail_id_list = order_detail.menu_detail_id
+            details = []
+            total_on_top_price = 0
+            total_price = 0
+            if menu_detail_id_list:
+                menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
+                for item in menu_detail_obj:
+                    details.append({
+                        'name': item.detail,
+                        'on_top_price': item.on_top_price,
+                    })
+                    total_on_top_price += item.on_top_price
+            price = order_detail.menu.price * order_detail.quantity
+            total_price += price + total_on_top_price
+            all_price += total_price
+            temp = {'name': order_detail.menu.name, 'quantity': order_detail.quantity, 'price': price, 'details': details, 
+                    'total_price_by_menu': total_price}
+            restaurant_name = order_detail.menu.restaurant.name
+            if restaurant_name in result_dict:
+                result_dict[restaurant_name].append(temp)
+            else:
+                result_dict[restaurant_name] = [temp]
+        tmp = []
+        for key, val in result_dict.items():
+            tmp.append({'name': key, 'detail_list': val})
+        context = {'result': tmp, 'total': all_price, 'ordertrans_id': ordertrans.id, 'locations_user': ''}
+        return render(request, 'cart1.html', context=context)
 class MenutDetail(View):
 
     def get(self, request, res_pk, pk):
@@ -220,6 +261,7 @@ class OrderAPI(View):
             #     line.notify(message_data_notify, settings.ACCESS_TOKEN)
             return JsonResponse({'ok': True})
         except Exception as error:
+            print(error)
             return JsonResponse({'ok': False, 'message': error})
 
     def delete(self, request):
