@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from math import fabs
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -12,7 +13,7 @@ from line.line_service import Line
 from line.models import LineMessage , LineOfficial
 from delivery.line_message import line_message
 
-from delivery.models import Menu, MenuDetail, Restaurant, OrderTrans, OrderDetail, LocationUser
+from delivery.models import Menu, MenuDetail, Restaurant, OrderTrans, OrderDetail, LocationUser, ConfigDetail
 from line.models import CustomUser
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -186,6 +187,42 @@ class LocationSave(View):
                                          longtitude=float(longitude), detail_1st=detail_1st, detail_2nd=detail_2nd)
             return redirect(f'/delivery/location_detail?user_id={line_id}&branch_id={branch_id}')
 
+class History(View):
+     def get(self,request,pk):
+        line_id = request.GET.get('user_id', None)
+        user = CustomUser.objects.filter(line_id=line_id).first()
+        ordertrans = OrderTrans.objects.filter(user=user,id=pk)
+        if not ordertrans:
+            return render(request, 'failed.html')
+        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans[0])
+        result_dict = dict()
+        total = 0
+        for order in order_detail_list:
+            restaurant_name = order.menu.restaurant.name
+            menu_detail_id_list = order.menu_detail_id
+            details = []
+            if menu_detail_id_list:
+                menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
+                for item in menu_detail_obj:
+                    details.append({
+                        'name': item.detail,
+                        'on_top_price': item.on_top_price,
+                    })
+                    total += item.on_top_price
+                details = MenuDetail.map_to_list(menu_detail_obj)
+            detail_dict = {'menu': order.menu.name, 'price': order.menu.price, 'quantity': order.quantity, 'details': details, 'description': order.description}
+            total += order.quantity * order.menu.price
+            if restaurant_name in result_dict:
+                result_dict[restaurant_name].append(detail_dict)
+            else:
+                result_dict[restaurant_name] = [detail_dict]
+        tmp = []
+        for key, val in result_dict.items():
+            tmp.append({'name': key, 'detail_list': val})
+        context = {'result': tmp, 'total': total,'ordertrans':ordertrans[0],'payment_method':self.mapping_payment_method(ordertrans[0].payment_method)}
+        return render(request, 'order_history.html',context=context)
+        
+
 class TestMap(View):
         def get(self, request):
             return render(request, 'testmap.html')
@@ -271,6 +308,18 @@ class OrderAPI(View):
         except Exception as error:
             print(error)
             return JsonResponse({'ok': False, 'message': error})
+        
+    def checkOpeningTime():
+        is_open = False
+        now = datetime.now()
+        open_time_str = ConfigDetail.objects.filter(name='Open_Time').first()
+        close_time_str = ConfigDetail.objects.filter(name='Close_Time').first()
+        open_time = datetime.strptime(open_time_str, '%H:%M:%S')
+        close_time = datetime.strptime(close_time_str, '%H:%M:%S')
+        current_time = now.strftime("%H:%M:%S")
+        if current_time >= open_time and current_time <= close_time:
+            is_open = True
+        return is_open
 
     def delete(self, request):
         body_unicode = request.body.decode('utf-8')

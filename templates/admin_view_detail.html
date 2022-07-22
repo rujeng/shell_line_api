@@ -138,10 +138,10 @@ label{
         <div class="form-group">
                 <label class="mb-2"  for="exampleFormControlSelect1">สถานะ</label>
                 <select class="form-control" id="status" name="status">
-                {% if ordertrans.status == 2 %}
+                {% if ordertrans.status == '2' %}
                     <option value="3">Confirm</option>
                     <option value="5">Reject</option>
-                {% elseif ordertrans.status == 3 or ordertrans.status == 6 %}
+                {% elif ordertrans.status == '3' or ordertrans.status == '6' %}
                     <option value="4">Done</option>
                     <option value="7">Failed</option>
                 {% endif %}

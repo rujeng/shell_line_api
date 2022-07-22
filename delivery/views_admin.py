@@ -5,16 +5,16 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import redirect
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from delivery.models import Menu, MenuDetail, Restaurant, OrderTrans, OrderDetail, LocationUser
 from line.models import CustomUser,LineMessage , LineOfficial
 from line.line_service import Line
 from delivery.line_message import line_message
 
 
-
+@method_decorator(login_required, name='dispatch')
 class AdminView(View):
-
     def get(self, request):
         #init_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.INITIAL).order_by('-pk')
         pro_orders_trans_list = OrderTrans.objects.filter(status=OrderTrans.PROCESSING).order_by('-pk')
@@ -30,7 +30,7 @@ class AdminView(View):
                     }
         return render(request, 'admin_view.html', context=context)
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class AdminViewDetail(View):
 
     def get(self,request,pk):
@@ -130,4 +130,3 @@ class AdminViewDetail(View):
         elif payment_method == '2':
             str_payment_method = "โอนเงิน"
         return str_payment_method
-    

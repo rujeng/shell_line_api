@@ -9,6 +9,7 @@ INSTALLED_APPS += [
     'inventory',
 ]
 
+LOGIN_URL = '../../user/login'
 
 try:
     from configs import *  # pylint: disable=W0401

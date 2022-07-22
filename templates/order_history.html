@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block style%}
+<style>
+body {
+    background-color: rgb(238 238 238 / 60%);
+}
+.wrapper {
+    box-shadow: 0px 0px 10px #afc0d9;
+    background-color: #fff;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 1rem;
+}
+label{
+    font-family: "Mitr", serif;
+}
+.fontm{
+    font-family: "Mitr", serif;
+
+}
+</style>    
+{% endblock %}
+{% block content %}
+<div class="card wrapper">
+<div class="card-body">
+    <div class="card-header fontm">
+        ข้อมูลลูกค้า
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label>วันที่</label>
+            <div>{{ordertrans.updated_at|date:"DATETIME_FORMAT"}}</div>
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">ชื่อลูกค้า</label>
+            <div>{{ordertrans.user.full_name}}</div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">รูปแบบการชำระเงิน</label>
+            {{x}}
+            <div>{{payment_method}}</div>
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">เบอร์โทรศัพท์</label>
+            <div>{{ordertrans.user.mobile_no}}</div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="card wrapper">
+    <div class="card-body">
+<div class="card-header fontm">
+            สถานที่จัดส่ง
+</div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="exampleFormControlInput1" class="form-label">ชื่อสถานที่</label>
+        </div>
+        <div class="col-12 p-2">
+            {{ordertrans.location_user.name}}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="exampleFormControlInput1" class="form-label">รายละเอียด</label>
+        </div>
+        <div class="col-12 p-2">
+            {{ordertrans.location_user.detail_1st}}
+        </div>       
+         <div class="col-12 p-2">
+            {{ordertrans.location_user.detail_2nd}}
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label class="mb-2" for="exampleFormControlInput1">ระยะทาง (กิโลเมตร)</label>
+            <label class="mb-2" for="exampleFormControlInput1">{{ordertrans.location_user.distance}}</label>
+        </div>
+    </div>
+    </a>
+</div>
+</div>
+<div class="card wrapper">
+    <div class="card-body">
+<div class="card-header fontm mb-2">
+    รายการอาหาร
+</div>
+<div>
+            {% for item in result %}
+            <div class="fontm mb-1">ร้าน {{item.name}}</div>
+            <div>
+                <div class="p-2">
+                    {% for detail in item.detail_list %}
+                    <div class="row">
+                        <div class="col">{{detail.menu}}</div>
+                        <div class="col">{{detail.quantity}} ชิ้น</div>
+                        <div class="col">{{detail.price}} บาท</div>
+                    </div>
+                    <!-- <div class="container"> -->
+                    {% for menu_detail in detail.details %}
+                    <div class="row">
+                        <div class="col ms-3">{{menu_detail.name}}</div>
+                        <div class="col"></div>
+                        <div class="col">{{menu_detail.on_top_price}} บาท</div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <div class="text-end fontm">รวมเป็นเงินทั้งหมด {{total}} บาท</div>
+            <div class="col-6">
+                <label for="exampleFormControlInput1">ค่าส่ง (บาท)</label>
+                <label for="exampleFormControlInput1">{{ordertrans.location_user.distance_price}}</label>
+            </div>
+            <div class="form-group">
+                <label class="mb-2"  for="exampleFormControlSelect1">รวมเป็นเงินทั้งหมด(ค่าอาหาร + ค่าส่ง)</label>
+                <label class="mb-2"  for="exampleFormControlSelect1">{{ordertrans.total_price</label>
+            </div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}
