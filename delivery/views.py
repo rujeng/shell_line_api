@@ -85,8 +85,8 @@ class NewMyCart(View):
         user = CustomUser.objects.filter(line_id=line_id).first()
         ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
         if not ordertrans:
-            return render(request, 'mycart.html')
-        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans)
+            return render(request, 'cart1.html')
+        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans).order_by('menu__restaurant_id')
         result_dict = {}
         all_price = 0
         for order_detail in order_detail_list:
@@ -106,7 +106,7 @@ class NewMyCart(View):
             total_price += price + total_on_top_price
             all_price += total_price
             temp = {'name': order_detail.menu.name, 'quantity': order_detail.quantity, 'price': price, 'details': details, 
-                    'total_price_by_menu': total_price}
+                    'total_price_by_menu': total_price, 'description': order_detail.description}
             restaurant_name = order_detail.menu.restaurant.name
             if restaurant_name in result_dict:
                 result_dict[restaurant_name].append(temp)
@@ -115,8 +115,15 @@ class NewMyCart(View):
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
+        for i in tmp:
+            total_price_by_restaurant = 0
+            for menu in i['detail_list']:
+                total_price_by_restaurant += menu['total_price_by_menu']
+            i['total_price_by_restaurant'] = total_price_by_restaurant
         context = {'result': tmp, 'total': all_price, 'ordertrans_id': ordertrans.id, 'locations_user': ''}
         return render(request, 'cart1.html', context=context)
+
+
 class MenutDetail(View):
 
     def get(self, request, res_pk, pk):
@@ -256,6 +263,8 @@ class OrderAPI(View):
         menu_id = body['menu_id']
         action = body['action']
         line_id = body['user_id']
+        quantity = body['quantity']
+        description = body['description']
         restaurant_id = body['restaurant_id']
         with transaction.atomic():
             user = CustomUser.objects.filter(line_id=line_id).first()
@@ -264,15 +273,16 @@ class OrderAPI(View):
             if not ordertrans:  # make new order if lastest order status is not initial
                 ordertrans = OrderTrans.objects.create(user=user)
             menu = Menu.objects.filter(id=menu_id).first()
-            detail, created_detail = OrderDetail.objects.get_or_create(menu=menu, ordertrans=ordertrans)
             if action == 'add':
-                detail.quantity += 1
-            elif action == 'del':
-                if detail.quantity > 0:
-                    detail.quantity -= 1
-                else:
-                    detail.delete()
-            detail.save(update_fields=['quantity'])
+                detail = OrderDetail.objects.create(menu=menu, ordertrans=ordertrans, quantity=quantity, description=description)
+            # if action == 'add':
+            #     detail.quantity += 1
+            # elif action == 'del':
+            #     if detail.quantity > 0:
+            #         detail.quantity -= 1
+            #     else:
+            #         detail.delete()
+            # detail.save(update_fields=['quantity'])
         return JsonResponse({})
     
     def post(self, request):

@@ -1,13 +1,17 @@
-function handleOrderDetail(event, restaurantId, action){
+function handleOrderDetail(event, restaurantId, action, ){
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
     const menuId = event.id;
+    const quantity = $('#quantity').text()
+    const description = $('#floatingTextarea').val()
     const url = '/delivery/api/order/';
     const data = {
         'menu_id': parseInt(menuId),
         'action': action,
         'restaurant_id': parseInt(restaurantId),
-        'user_id': userId
+        'user_id': userId,
+        'quantity': parseInt(quantity),
+        'description': description
     }
     const body = {
         method: 'PATCH',

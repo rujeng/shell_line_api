@@ -27,23 +27,28 @@
     <div class="card" style="height: 80vh; overflow-y: scroll;">
         <div class="card-body">
             {% for item in result %}
-            <div class="card-title">ร้าน {{item.name}}</div>
-            <div class="mb-3 p-3">
-            {% for detail in item.detail_list %}
-                <span>{{detail.name}}</span>
-                <span>{{detail.quantity}}</span>
-                <span>{{detail.price}}บาท</span>
-                <ul>
-                    {% for subdetail in detail.details %}
-                    <li>
-                        <span>{{subdetail.name}}</span>
-                        <span>{{subdetail.on_top_price}}บาท</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <!-- <div>{{detail.total_price_by_menu}}</div> -->
-            {% endfor %}
-            </div>
+                <div class="card-title">ร้าน {{item.name}}</div>
+                <div class="mb-3 p-3">
+                {% for detail in item.detail_list %}
+                    <div>
+                        <span>{{detail.name}}</span>
+                        <span>{{detail.quantity}}</span>
+                        <span>{{detail.price}}บาท</span>
+                        <ul>
+                            {% for subdetail in detail.details %}
+                            <li>
+                                <span>{{subdetail.name}}</span>
+                                <span>{{subdetail.on_top_price}}บาท</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% if detail.description %}
+                            <textarea>{{detail.description}}</textarea>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                    <div>ราคาต่อร้าน: {{item.total_price_by_restaurant}}</div>
+                </div>
             {% endfor %}
             <div class="card card-box justify-content-center align-items-center">
                 <div class="text-end">รวมเป็นเงินทั้งหมด {{total}} บาท</div>

@@ -59,7 +59,7 @@ class Menu(models.Model):
     def map_object_to_list(object_list):
         result = []
         for item in object_list:
-            details = MenuDetail.objects.filter(menu=item)
+            details = MenuDetail.objects.filter(menu=item, status=True)
             detail_result = []
             for detail in details:
                 detail_result.append({

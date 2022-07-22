@@ -38,7 +38,7 @@ class AdminViewDetail(View):
         order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans[0])
         result_dict = dict()
         total = 0
-        url_map = 'https://www.google.com/maps/?q='+str(ordertrans[0].location_user.latitude)+','+str(ordertrans[0].location_user.longtitude)
+        url_map = 'https://www.google.com/maps/place/'+str(ordertrans[0].location_user.latitude)+','+str(ordertrans[0].location_user.longtitude)
         for order in order_detail_list:
             restaurant_name = order.menu.restaurant.name
             menu_detail_id_list = order.menu_detail_id

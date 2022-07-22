@@ -10,6 +10,11 @@
   <div>
     <div class="row">
       <img src="{{menu.avatar.url}}" class="menu-detail-img"/>
+      <div class="d-flex justify-content-end" >
+        <button type="button" class="btn btn-primary" onclick="decrease()">ลด</button>
+        <div id="quantity">1</div>
+        <button type="button" class="btn btn-primary" onclick="increase()">เพิ่ม</button>
+      </div>
       <div>
         <h2>{{menu.name}}</h2>
         <p>{{menu.detail}}</p>
@@ -92,7 +97,20 @@
     <script>
         $(document).ready(function(){
            get_notify()
+          
         }())
-        
+            function increase(){
+              var quantity = $('#quantity')
+              let value = parseInt(quantity.text()) + 1
+              quantity.html(value)
+           }
+
+           function decrease(){
+              var quantity = $('#quantity')
+              let value = parseInt(quantity.text())
+              if(value > 1){
+                quantity.html(value-1)
+              }
+           }
     </script>
 {% endblock %}
