@@ -38,6 +38,7 @@ class AdminViewDetail(View):
         order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans[0])
         result_dict = dict()
         total = 0
+        url_map = 'https://www.google.com/maps/?q='+str(ordertrans[0].location_user.latitude)+','+str(ordertrans[0].location_user.longtitude)
         for order in order_detail_list:
             restaurant_name = order.menu.restaurant.name
             menu_detail_id_list = order.menu_detail_id
@@ -60,7 +61,7 @@ class AdminViewDetail(View):
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
-        context = {'result': tmp, 'total': total,'ordertrans':ordertrans[0],'payment_method':self.mapping_payment_method(ordertrans[0].payment_method)}
+        context = {'result': tmp, 'total': total,'ordertrans':ordertrans[0],'payment_method':self.mapping_payment_method(ordertrans[0].payment_method),'url_map':url_map}
         return render(request, 'admin_view_detail.html',context=context)
     
     def post(self,request,pk):

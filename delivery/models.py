@@ -81,7 +81,7 @@ class MenuDetail(models.Model):
     menu = models.ForeignKey('Menu', related_name='menu_detail', on_delete=models.CASCADE)
     detail = models.CharField(max_length=50)
     on_top_price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
-
+    status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -93,7 +93,6 @@ class MenuDetail(models.Model):
                 'on_top_price': item.on_top_price,
             })
         return tmp
-
 
 class OrderTrans(models.Model):
     INITIAL = '1'
@@ -165,3 +164,11 @@ class OrderDetail(models.Model):
             })
         return result
 
+class ConfigDetail(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    detail = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
