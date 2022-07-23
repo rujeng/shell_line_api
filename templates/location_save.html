@@ -31,11 +31,11 @@
       </body>
     <form method="post" class="form-format box-shadow" id='formSubmit'>
         <div class="mb-3 form-box">
-            <div>Name Place</div>
+            <div>ข้อมูลที่อยู่</div>
             {% csrf_token %}
-            <input name = "locationName" id = "location_name" class="form-control shadow-sm p-3 mb-2 bg-white rounded type="text" placeholder="Location Name" aria-label="default input example">
-            <input name = "detail1st" id = "detail_1st" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="Detail" aria-label="default input example">
-            <input name = "detail2nd" id = "detail_2nd" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="Detail" aria-label="default input example">
+            <input name = "locationName" id = "location_name" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="ชื่อสถานที่" aria-label="default input example">
+            <input name = "detail1st" id = "detail_1st" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="ที่อยู่" aria-label="default input example">
+            <input name = "detail2nd" id = "detail_2nd" class="form-control shadow-sm p-3 mb-2 bg-white rounded" type="text" placeholder="รายละเอียดเพิ่มเติม" aria-label="default input example">
             <input name = "latitude" type='text' class='invisible'/>
             <input name = "longitude" type='text' class='invisible'/>
         </div>

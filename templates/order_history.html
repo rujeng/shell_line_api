@@ -18,18 +18,41 @@ label{
     font-family: "Mitr", serif;
 
 }
-</style>    
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% endblock %}
 {% block content %}
 <div class="card wrapper">
 <div class="card-body">
-    <div class="card-header fontm">
-        ข้อมูลลูกค้า
+    <div class="card-header fontm" style="font-size: larger;">
+        Order Information
     </div>
     <div class="row mt-3">
         <div class="col-6">
             <label>วันที่</label>
-            <div>{{ordertrans.updated_at|date:"DATETIME_FORMAT"}}</div>
+            <div>{{ordertrans.updated_at|date:'m/d/Y H:i:s'}}</div>
+        </div>
+        <div class="col-6">
+            <label for="exampleFormControlInput1" class="form-label">หมายเลขออเดอร์</label>
+            <div>{{ordertrans.id}}</div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label>สถานะ</label>
+             <div>
+            {% if ordertrans.status == '2' %}
+            <span class="badge badge-warning">รอยืนยันออเดอร์</span>
+            {% elif ordertrans.status == '3' %}
+            <span class="badge badge-success">อยู่ในระหว่างจัดส่ง</span>
+            {% elif ordertrans.status == '4' %}
+            <span class="badge badge-dark">ออเดอร์เสร็จสิ้น</span>
+            {% elif ordertrans.status == '6' %}
+            <span class="badge badge-danger">ออเดอร์ล้มเหลว</span>
+            {% elif ordertrans.status == '7' %}
+            <span class="badge badge-danger">ออเดอร์ถูกปฏิเสธ สาเหตุ : {{ordertrans.description}}</span>
+            {% endif %}
+            </div>
         </div>
         <div class="col-6">
             <label for="exampleFormControlInput1" class="form-label">ชื่อลูกค้า</label>
@@ -39,7 +62,6 @@ label{
     <div class="row mt-3">
         <div class="col-6">
             <label for="exampleFormControlInput1" class="form-label">รูปแบบการชำระเงิน</label>
-            {{x}}
             <div>{{payment_method}}</div>
         </div>
         <div class="col-6">
@@ -47,78 +69,70 @@ label{
             <div>{{ordertrans.user.mobile_no}}</div>
         </div>
     </div>
-</div>
-</div>
-<div class="card wrapper">
-    <div class="card-body">
-<div class="card-header fontm">
-            สถานที่จัดส่ง
-</div>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label for="exampleFormControlInput1" class="form-label">ชื่อสถานที่</label>
-        </div>
-        <div class="col-12 p-2">
-            {{ordertrans.location_user.name}}
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label for="exampleFormControlInput1" class="form-label">รายละเอียด</label>
-        </div>
-        <div class="col-12 p-2">
-            {{ordertrans.location_user.detail_1st}}
-        </div>       
-         <div class="col-12 p-2">
-            {{ordertrans.location_user.detail_2nd}}
-        </div>
-    </div>
     <div class="row mt-3">
-        <div class="col-6">
-            <label class="mb-2" for="exampleFormControlInput1">ระยะทาง (กิโลเมตร)</label>
-            <label class="mb-2" for="exampleFormControlInput1">{{ordertrans.location_user.distance}}</label>
+        <div class="col-12">
+            <label for="exampleFormControlInput1" class="form-label">สถานที่จัดส่ง</label>
+                <div class="p-1">ชื่อสถานที่ : {{ordertrans.location_user.name}}</div>
+                <div class="p-1">ที่อยู่ : {{ordertrans.location_user.detail_1st}}</div>
+                <div class="p-1">รายละเอียดเพิ่มเติม : {{ordertrans.location_user.detail_2nd}}</div>
         </div>
     </div>
-    </a>
 </div>
 </div>
 <div class="card wrapper">
     <div class="card-body">
-<div class="card-header fontm mb-2">
-    รายการอาหาร
+<div class="card-header fontm mb-2" style="font-size: larger;">
+    รายการจัดสั่ง
 </div>
 <div>
             {% for item in result %}
-            <div class="fontm mb-1">ร้าน {{item.name}}</div>
-            <div>
-                <div class="p-2">
-                    {% for detail in item.detail_list %}
-                    <div class="row">
-                        <div class="col">{{detail.menu}}</div>
-                        <div class="col">{{detail.quantity}} ชิ้น</div>
-                        <div class="col">{{detail.price}} บาท</div>
-                    </div>
-                    <!-- <div class="container"> -->
-                    {% for menu_detail in detail.details %}
-                    <div class="row">
-                        <div class="col ms-3">{{menu_detail.name}}</div>
-                        <div class="col"></div>
-                        <div class="col">{{menu_detail.on_top_price}} บาท</div>
-                    </div>
-                    {% endfor %}
-                    {% endfor %}
+            <div class="fontm" style="font-size: large;">ร้าน {{item.name}}</div>
+            <div class="mb-1 p-3">
+            {% for detail in item.detail_list %}
+                <div>
+                    <label>- {{detail.name}}</label>
+                    <label>จำนวน {{detail.quantity}}</label>
+                    <label>ราคาทั้งหมด {{detail.price}} บาท</label>
+                    <ul>
+                        {% for subdetail in detail.details %}
+                        <li> 
+                            <label>{{subdetail.name}}</label>
+                            <label>{{subdetail.on_top_price}} บาท</label>
+                        </li>
+                        {% endfor %}
+                        {% if detail.description %}
+                        <label>เพิ่มเติม : {{detail.description}}</label>
+                        {% else %}
+                        <label>เพิ่มเติม : -</label>
+                        {% endif %}
+                    </ul>
                 </div>
+            {% endfor %}
+                <div class="fontm">ราคารวมของร้าน: {{item.total_price_by_restaurant}} บาท</div>
             </div>
             <hr>
-            {% endfor %}
-            <div class="text-end fontm">รวมเป็นเงินทั้งหมด {{total}} บาท</div>
-            <div class="col-6">
-                <label for="exampleFormControlInput1">ค่าส่ง (บาท)</label>
-                <label for="exampleFormControlInput1">{{ordertrans.location_user.distance_price}}</label>
+        {% endfor %}
+            <div class="row fontm">
+                <div class="col">รวมค่าอาหารทั้งหมด :</div>
+                <div class="col text-end">{{total}} บาท</div>
             </div>
-            <div class="form-group">
-                <label class="mb-2"  for="exampleFormControlSelect1">รวมเป็นเงินทั้งหมด(ค่าอาหาร + ค่าส่ง)</label>
-                <label class="mb-2"  for="exampleFormControlSelect1">{{ordertrans.total_price</label>
+            <div class="row fontm mt-1">
+                <div class="col">ค่าส่ง :</div>
+                {% if ordertrans.status == '3' or ordertrans.status == '4'%}
+                <div class="col text-end">{{ordertrans.location_user.distance_price}} บาท</div>
+                {% else %}
+                <div class="col text-end">อยู่ในระหว่างการคำนวณ</div>
+                {% endif %}
+            </div>
+            
+            <div class="row fontm mt-1">
+                <div class="col">รวมทั้งหมด :</div>
+                {% if ordertrans.status == '3' or ordertrans.status == '4'%}
+                <div class="col text-end">{{ordertrans.total_price}} บาท</div>
+                {% else %}
+                <div class="col text-end">อยู่ในระหว่างการคำนวณ</div>
+                {% endif %}
+
             </div>
 </div>
 </div>

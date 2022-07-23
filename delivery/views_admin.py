@@ -35,14 +35,15 @@ class AdminViewDetail(View):
 
     def get(self,request,pk):
         ordertrans = OrderTrans.objects.filter(id=pk)
-        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans[0])
-        result_dict = dict()
-        total = 0
         url_map = 'https://www.google.com/maps/place/'+str(ordertrans[0].location_user.latitude)+','+str(ordertrans[0].location_user.longtitude)
-        for order in order_detail_list:
-            restaurant_name = order.menu.restaurant.name
-            menu_detail_id_list = order.menu_detail_id
+        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans[0]).order_by('menu__restaurant_id')
+        result_dict = {}
+        all_price = 0
+        for order_detail in order_detail_list:
+            menu_detail_id_list = order_detail.menu_detail_id
             details = []
+            total_on_top_price = 0
+            total_price = 0
             if menu_detail_id_list:
                 menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
                 for item in menu_detail_obj:
@@ -50,18 +51,26 @@ class AdminViewDetail(View):
                         'name': item.detail,
                         'on_top_price': item.on_top_price,
                     })
-                    total += item.on_top_price
-                details = MenuDetail.map_to_list(menu_detail_obj)
-            detail_dict = {'menu': order.menu.name, 'price': order.menu.price, 'quantity': order.quantity, 'details': details, 'description': order.description}
-            total += order.quantity * order.menu.price
+                    total_on_top_price += item.on_top_price
+            price = order_detail.menu.price * order_detail.quantity
+            total_price += price + total_on_top_price
+            all_price += total_price
+            temp = {'name': order_detail.menu.name, 'quantity': order_detail.quantity, 'price': price, 'details': details, 
+                    'total_price_by_menu': total_price, 'description': order_detail.description}
+            restaurant_name = order_detail.menu.restaurant.name
             if restaurant_name in result_dict:
-                result_dict[restaurant_name].append(detail_dict)
+                result_dict[restaurant_name].append(temp)
             else:
-                result_dict[restaurant_name] = [detail_dict]
+                result_dict[restaurant_name] = [temp]
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
-        context = {'result': tmp, 'total': total,'ordertrans':ordertrans[0],'payment_method':self.mapping_payment_method(ordertrans[0].payment_method),'url_map':url_map}
+        for i in tmp:
+            total_price_by_restaurant = 0
+            for menu in i['detail_list']:
+                total_price_by_restaurant += menu['total_price_by_menu']
+            i['total_price_by_restaurant'] = total_price_by_restaurant
+        context = {'result': tmp, 'total': all_price,'ordertrans':ordertrans[0],'payment_method':self.mapping_payment_method(ordertrans[0].payment_method),'url_map':url_map}
         return render(request, 'admin_view_detail.html',context=context)
     
     def post(self,request,pk):
@@ -119,6 +128,7 @@ class AdminViewDetail(View):
             res = line.push_message(
                     meta_dat, channel_access_token,message_data_push_noti)
             if res['ok']:
+                ordertrans.description = comment
                 ordertrans.status = OrderTrans.REJECT
                 ordertrans.save()
         return redirect(f'/delivery/admin')
