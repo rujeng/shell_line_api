@@ -10,9 +10,7 @@
                         <option value="{{location.id}}">{{location.name}}</option>
                     {% endfor %}
                 </select>
-                <a href="{% url 'location_detail'">
-                    <button class="btn btn-primary">จัดการที่อยู่</button>
-                </a>
+                    <button class="btn btn-primary" onclick="handleManageLocation()">จัดการที่อยู่</button>
               </div>
         </div>
     </div>
@@ -78,9 +76,17 @@
 {% block script %}
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    function handleManageLocation(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        const branchId = urlParams.get('branch_id');
+        window.location.href = `/delivery/location_detail/?user_id=${userId}&branch_id=${branchId}`
+    }
     function cancleOrderTrans(orderTransId){
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('user_id');
+        const branchId = urlParams.get('branch_id');
         const url = '/delivery/api/order/';
         const data = {
             'ordertrans_id': parseInt(orderTransId),
@@ -115,7 +121,7 @@
                     'success'
                     )
                     setTimeout(function(){
-                        window.location.href = `/delivery/?user_id=${lineId}&&branch_id=${branch_id}`
+                        window.location.href = `/delivery/?user_id=${userId}&branch_id=${branchId}`
                     }, 1500)
                 })
             }
@@ -156,7 +162,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
-                })
+                    })
                     .then(res => res.json())
                     .then(data => {
                         let message = '';
@@ -167,7 +173,7 @@
                         }
                         Swal.fire(message)
                         setTimeout(() => {
-                            window.location.href = `/delivery/?user_id=${lineId}&&branch_id=${branch_id}`
+                            window.location.href = `/delivery/?user_id=${lineId}&branch_id=${branch_id}`
                         }, 2000)
                     })
             }
