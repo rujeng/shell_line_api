@@ -1,9 +1,11 @@
 function handleOrderDetail(event, restaurantId, action, ){
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
+    const branchId = urlParams.get('branch_id');
     const menuId = event.id;
     const quantity = $('#quantity').text()
     const description = $('#floatingTextarea').val()
+    const menuDetailId = Array.from(selectedMenuDetailId)
     const url = '/delivery/api/order/';
     const data = {
         'menu_id': parseInt(menuId),
@@ -11,7 +13,8 @@ function handleOrderDetail(event, restaurantId, action, ){
         'restaurant_id': parseInt(restaurantId),
         'user_id': userId,
         'quantity': parseInt(quantity),
-        'description': description
+        'description': description,
+        'menu_detail_id_list': menuDetailId
     }
     const body = {
         method: 'PATCH',
@@ -40,12 +43,15 @@ function handleOrderDetail(event, restaurantId, action, ){
                 Swal.fire(
                 'สินค้าถูกเพิ่มลงไปในตระกร้าแล้ว',
                 )
+                setTimeout(function(){
+                    window.location.href = `/delivery?user_id=${userId}&branch_id=${branchId}`
+                }, 2000)
             })
         }
         })
 }
 
-function get_notify(){
+function get_notify(e){
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
        fetch('/delivery/api/order/?user_id='+userId)
@@ -56,6 +62,9 @@ function get_notify(){
 }
 
 function myCart(){
+    const counItemInCart = parseInt
+    ($('#notify').text())
+    if(counItemInCart <= 0) return
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
     const branchId = urlParams.get('branch_id');
