@@ -10,6 +10,9 @@
                         <option value="{{location.id}}">{{location.name}}</option>
                     {% endfor %}
                 </select>
+                <a href="{% url 'location_detail'">
+                    <button class="btn btn-primary">จัดการที่อยู่</button>
+                </a>
               </div>
         </div>
     </div>

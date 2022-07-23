@@ -7,9 +7,9 @@ urlpatterns = [
     path('<int:pk>/', RestaurantDetail.as_view(), name='restaurant_detail'),
     path('<int:res_pk>/<int:pk>/', MenutDetail.as_view(), name='menu_detail'),
     path('order/', OrderView.as_view()),
-    path('mycart/', NewMyCart.as_view(), name='mycart'),
+    path('mycart/', MyCart.as_view(), name='mycart'),
     path('enroll/', Enroll.as_view()),
-    path('location_detail/', LocationDetail.as_view()),
+    path('location_detail/', LocationDetail.as_view(), name='location_detail'),
     path('location_save/', LocationSave.as_view()),
     path('history/<int:pk>/', History.as_view()),
     # api
