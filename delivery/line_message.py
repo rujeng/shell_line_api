@@ -326,8 +326,8 @@ class line_message():
                         "height": "sm",
                         "action": {
                         "type": "uri",
-                        "label": "View More Detail",
-                        "uri": "https://www.google.co.th"
+                        "label": "รายละเอียดเพิ่มเติม",
+                        "uri": f"http://www.localhost:8000/delivery/history/{tran.id}/?user_id={tran.user.line_id}&branch_id={tran.branch_id}"
                         }
                     }
                         ]
