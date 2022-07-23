@@ -9,6 +9,9 @@ INSTALLED_APPS += [
     'inventory',
 ]
 
+MIDDLEWARE += [
+    'delivery.middlewares.activatetime_middleware.ActivatetimeMiddleware'
+]
 LOGIN_URL = '../../user/login'
 
 try:
