@@ -1,30 +1,30 @@
-{% extends "base.html" %}
+{% extends "base_delivery.html" %}
 {% load static %}
 {% block content %}
-<div class="container">
-  <div class="text-end">
-    <div onclick="myCart()" >
-        <svg style="height: 40px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M112 112C112 50.14 162.1 0 224 0C285.9 0 336 50.14 336 112V160H400C426.5 160 448 181.5 448 208V416C448 469 405 512 352 512H96C42.98 512 0 469 0 416V208C0 181.5 21.49 160 48 160H112V112zM160 160H288V112C288 76.65 259.3 48 224 48C188.7 48 160 76.65 160 112V160zM136 256C149.3 256 160 245.3 160 232C160 218.7 149.3 208 136 208C122.7 208 112 218.7 112 232C112 245.3 122.7 256 136 256zM312 208C298.7 208 288 218.7 288 232C288 245.3 298.7 256 312 256C325.3 256 336 245.3 336 232C336 218.7 325.3 208 312 208z"/></svg>
-    </div>
-  </div>
-  <div>
     <div class="row">
       <img src="{{menu.avatar.url}}" class="menu-detail-img"/>
-      <div class="d-flex justify-content-end" >
-        <button type="button" class="btn btn-primary" onclick="decrease()">ลด</button>
-        <div id="quantity">1</div>
-        <button type="button" class="btn btn-primary" onclick="increase()">เพิ่ม</button>
+      <div class="d-flex justify-content-between">
+        <h2 class="">{{menu.price}} บาท</h2>
+        <div class="d-flex" style="background: lightpink">
+          <button type="button" class="btn btn-outline-danger mx-2" >
+            <img src="{% static 'icons/minus-solid.svg' %}" style="width: 15px" onclick="decrease()"/>
+          </button>
+          <div class="m-2" id="quantity">1</div>
+          <button type="button" class="btn btn-outline-danger mx-2" onclick="increase()">
+            <img src="{% static 'icons/plus-solid.svg' %}" style="width: 15px"/>
+          </button>
+        </div>
       </div>
       <div>
         <h2>{{menu.name}}</h2>
         <p>{{menu.detail}}</p>
-        <div class="border border-warning round text-center" style="width: 30%">{{menu.price}} บาท</div>
       </div>
       <div>
+        <input type="text" id="menudetail-id-list" class="d-none"/>
         {% for detail in menu.details %}
         <div class="d-flex justify-content-between">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" value="{{detail.id}}" id="flexCheckDefault" onchange="handleCheckBox(this)">
             <label class="form-check-label" for="flexCheckDefault">
               {{detail.name}}
             </label>
@@ -33,62 +33,15 @@
         </div>
         {% endfor %}
       </div>
-      <div>
-        <div class="form">
-          <label for="floatingTextarea">ข้อมูลเพิ่มเติม</label>
-          <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-        </div>
+      <div class="form mt-3">
+        <label for="floatingTextarea">ข้อมูลเพิ่มเติม</label>
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
       </div>
-      <div>
+      <div class="mt-3 text-center">
         <button class="btn btn-danger" id="{{menu.id}}" onclick="handleOrderDetail(this, {{restaurant.id}}, 'add')">เพิ่มลงตระกร้า</button>
       </div>
-        <!-- {% for detail in menu.details %}
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
-            {{detail.name}}
-          </label>
-        </div>
-        {% endfor %} -->
-      <!-- <div class="d-flex">
-        <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
-        <div>{{detail.quantity|default:0}}</div>
-        <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
-      </div> -->
     </div>
-
   </div>
-
-</div>
-<!-- <div class="row">
-  <div class="col">
-    <div>
-      <img src="{% static 'food.jpg' %}" style="width: 50%"/>
-    </div>
-  <div>
-      <div>{{menu.name}}</div>
-      {% for detail in menu.details %}
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
-              {{detail.name}}
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-          <label class="form-check-label" for="flexCheckChecked">
-            Checked checkbox
-          </label>
-        </div>
-      {% endfor %}
-  </div>
-  <div class="d-flex">
-      <img src="{% static 'icons/x-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'del')">
-      <div>{{detail.quantity}}</div>
-      <img src="{% static 'icons/add-circle.svg' %}" id="{{menu.id}}" onclick="handleOrderDetail(this, '{{menu.res_id}}', 'add')">
-  </div>
-  </div>
-</div> -->
     
 {% endblock %}
 {% block script %}
@@ -99,6 +52,17 @@
            get_notify()
           
         }())
+          const selectedMenuDetailId = new Set();
+
+          function handleCheckBox(e){
+            const newVal = e.value
+            const hasVal = selectedMenuDetailId.has(newVal)
+            if(hasVal){
+              selectedMenuDetailId.delete(newVal)
+            }else{
+              selectedMenuDetailId.add(newVal)
+            }
+          }
             function increase(){
               var quantity = $('#quantity')
               let value = parseInt(quantity.text()) + 1

@@ -7,6 +7,27 @@
     border-color: #DC3545;
     color: #DC3545;
 }
+.notify{
+    position: absolute;
+    top: 5px;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+}
+.card-item{
+    height: 130px;
+    margin: 0 8px;
+    /* margin-left: 20px;
+    margin-right: 20px; */
+}
+.card-radius {
+    border-radius: 20px!important;
+}
+
 
 .round-button{
     border-radius: 20px;

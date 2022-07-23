@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">ที่อยู่จัดส่ง</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="form-control" id="addressId">
                     {% for location in locations_user %}
                         <option value="{{location.id}}">{{location.name}}</option>
                     {% endfor %}
@@ -17,7 +17,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">รูปแบบการชำระเงิน</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="form-control" id="paymentMethodId">
                     <option value="1">เงินสด</option>
                     <option value="2">โอนเงิน(ระบบจะส่งบัญชีให้หลังยืนยันออเดอร์)</option>
                 </select>
@@ -31,24 +31,29 @@
                 <div class="mb-3 p-3">
                 {% for detail in item.detail_list %}
                     <div>
-                        <span>{{detail.name}}</span>
-                        <span>{{detail.quantity}}</span>
-                        <span>{{detail.price}}บาท</span>
+                        <div class="d-flex justify-content-between">
+                            <div>{{detail.menu}}</div>
+                            <div>x{{detail.quantity}}</div>
+                            <div>{{detail.price}}บาท</div>
+                        </div>
                         <ul>
                             {% for subdetail in detail.details %}
                             <li>
-                                <span>{{subdetail.name}}</span>
-                                <span>{{subdetail.on_top_price}}บาท</span>
+                                <div class="d-flex justify-content-between">
+                                    <div>{{subdetail.name}}</div>
+                                    <div>{{subdetail.on_top_price}}บาท</div>
+                                </div>
                             </li>
                             {% endfor %}
                         </ul>
                         {% if detail.description %}
-                            <textarea>{{detail.description}}</textarea>
+                            <label for="">รายละเอียดเพิ่มเติม</label>
+                            <div class="border">{{detail.description}}</div>
                         {% endif %}
                     </div>
                 {% endfor %}
-                    <div>ราคาต่อร้าน: {{item.total_price_by_restaurant}}</div>
                 </div>
+                <hr>
             {% endfor %}
             <div class="card card-box justify-content-center align-items-center">
                 <div class="text-end">รวมเป็นเงินทั้งหมด {{total}} บาท</div>
@@ -106,6 +111,9 @@
                     'Your file has been deleted.',
                     'success'
                     )
+                    setTimeout(function(){
+                        window.location.href = `/delivery/?user_id=${lineId}&&branch_id=${branch_id}`
+                    }, 1500)
                 })
             }
             })
@@ -119,9 +127,13 @@
     function confirmOrder() {
         const lineId = getQueryParam('user_id');
         const branch_id= getQueryParam('branch_id');
+        const payment_method_id = $('#paymentMethodId').val();
+        const location_id = $('#addressId').val();
         let data = {
             line_id: lineId,
-            branch_id:branch_id
+            branch_id:branch_id,
+            payment_method_id: payment_method_id,
+            location_id: location_id
         };
         Swal.fire({
             title: 'ยืนยันรายการสั่งซื้อใช่ไหม?',
@@ -152,8 +164,8 @@
                         }
                         Swal.fire(message)
                         setTimeout(() => {
-                            window.location.href = `/delivery/location_detail/?user_id=${lineId}&&branch_id=${branch_id}`
-                        }, 4000)
+                            window.location.href = `/delivery/?user_id=${lineId}&&branch_id=${branch_id}`
+                        }, 2000)
                     })
             }
         })
