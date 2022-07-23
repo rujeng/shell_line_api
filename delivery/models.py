@@ -63,6 +63,7 @@ class Menu(models.Model):
             detail_result = []
             for detail in details:
                 detail_result.append({
+                    'id': detail.id,
                     'name': detail.detail,
                     'price': detail.on_top_price
                 })

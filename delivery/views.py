@@ -44,8 +44,6 @@ class MyCart(View):
         line_id = request.GET.get('user_id')
         user = CustomUser.objects.filter(line_id=line_id).first()
         ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
-        if not ordertrans:
-            return render(request, 'mycart.html')
         order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans)
         result_dict = dict()
         total = 0
@@ -53,6 +51,7 @@ class MyCart(View):
             restaurant_name = order.menu.restaurant.name
             menu_detail_id_list = order.menu_detail_id
             details = []
+            # get list of menu detail in each order
             if menu_detail_id_list:
                 menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
                 for item in menu_detail_obj:
@@ -60,69 +59,23 @@ class MyCart(View):
                         'name': item.detail,
                         'on_top_price': item.on_top_price,
                     })
-                    total += item.on_top_price
+                    total += item.on_top_price * order.quantity
                 details = MenuDetail.map_to_list(menu_detail_obj)
-            detail_dict = {'menu': order.menu.name, 'price': order.menu.price, 'quantity': order.quantity, 'details': details, 'description': order.description}
+            
+            detail_dict = {'menu': order.menu.name, 'price': order.menu.price * order.quantity, 'quantity': order.quantity, 'details': details, 'description': order.description}
             total += order.quantity * order.menu.price
+            # create or update order detail in dict
             if restaurant_name in result_dict:
                 result_dict[restaurant_name].append(detail_dict)
             else:
                 result_dict[restaurant_name] = [detail_dict]
+        # convert dict to key object list
         tmp = []
         for key, val in result_dict.items():
             tmp.append({'name': key, 'detail_list': val})
         locations_user = LocationUser.objects.filter(user=user)
         context = {'result': tmp, 'total': total, 'ordertrans_id': ordertrans.id, 'locations_user': locations_user}
-        # print(context)
-        return render(request, 'mycart.html', context)
-
-
-
-class NewMyCart(View):
-
-    def get(self, request):
-        line_id = request.GET.get('user_id')
-        user = CustomUser.objects.filter(line_id=line_id).first()
-        ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
-        if not ordertrans:
-            return render(request, 'cart1.html')
-        order_detail_list = OrderDetail.objects.filter(ordertrans=ordertrans).order_by('menu__restaurant_id')
-        result_dict = {}
-        all_price = 0
-        for order_detail in order_detail_list:
-            menu_detail_id_list = order_detail.menu_detail_id
-            details = []
-            total_on_top_price = 0
-            total_price = 0
-            if menu_detail_id_list:
-                menu_detail_obj = MenuDetail.objects.filter(id__in=menu_detail_id_list.split(','))
-                for item in menu_detail_obj:
-                    details.append({
-                        'name': item.detail,
-                        'on_top_price': item.on_top_price,
-                    })
-                    total_on_top_price += item.on_top_price
-            price = order_detail.menu.price * order_detail.quantity
-            total_price += price + total_on_top_price
-            all_price += total_price
-            temp = {'name': order_detail.menu.name, 'quantity': order_detail.quantity, 'price': price, 'details': details, 
-                    'total_price_by_menu': total_price, 'description': order_detail.description}
-            restaurant_name = order_detail.menu.restaurant.name
-            if restaurant_name in result_dict:
-                result_dict[restaurant_name].append(temp)
-            else:
-                result_dict[restaurant_name] = [temp]
-        tmp = []
-        for key, val in result_dict.items():
-            tmp.append({'name': key, 'detail_list': val})
-        for i in tmp:
-            total_price_by_restaurant = 0
-            for menu in i['detail_list']:
-                total_price_by_restaurant += menu['total_price_by_menu']
-            i['total_price_by_restaurant'] = total_price_by_restaurant
-        context = {'result': tmp, 'total': all_price, 'ordertrans_id': ordertrans.id, 'locations_user': ''}
-        return render(request, 'cart1.html', context=context)
-
+        return render(request, 'cart1.html', context)
 
 class MenutDetail(View):
 
@@ -134,7 +87,7 @@ class MenutDetail(View):
         menu = Menu.objects.filter(id=pk)
         menu = Menu.map_object_to_list(menu)
         restaurant = Restaurant.objects.filter(id=res_pk).first()
-        context = {'menu': menu[0], 'detail': detail, 'restaurant': restaurant}
+        context = {'menu': menu[0], 'restaurant': restaurant}
         return render(request, 'menu_detail.html', context)
 
 class RestaurantView(View):
@@ -234,6 +187,8 @@ class TestMap(View):
         def get(self, request):
             return render(request, 'testmap.html')
 
+
+from django.db.models import Count
 @method_decorator(csrf_exempt, name='dispatch')
 class OrderAPI(View):
 
@@ -242,13 +197,9 @@ class OrderAPI(View):
         # ถ้าไม่มี user ในระบบทำยังไง
         line_id = request.GET.get('user_id', None)
         user = CustomUser.objects.filter(line_id=line_id).first()
-        orders = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL)
+        orders = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
         # get number of items in order's user
-        count = 0
-        for order in orders:
-            details = OrderDetail.objects.filter(ordertrans=order)
-            for detail in details:
-                count += detail.quantity
+        count = OrderDetail.objects.filter(ordertrans=orders).count()
         return JsonResponse({'count': count})
 
     def get_order_detail_quantity(self, details):
@@ -266,23 +217,16 @@ class OrderAPI(View):
         quantity = body['quantity']
         description = body['description']
         restaurant_id = body['restaurant_id']
+        menu_detail_id = ','.join(body['menu_detail_id_list'])
         with transaction.atomic():
             user = CustomUser.objects.filter(line_id=line_id).first()
-            # restaurant = Restaurant.objects.filter(id=restaurant_id).first()
             ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).order_by('-pk').first()
             if not ordertrans:  # make new order if lastest order status is not initial
                 ordertrans = OrderTrans.objects.create(user=user)
             menu = Menu.objects.filter(id=menu_id).first()
             if action == 'add':
-                detail = OrderDetail.objects.create(menu=menu, ordertrans=ordertrans, quantity=quantity, description=description)
-            # if action == 'add':
-            #     detail.quantity += 1
-            # elif action == 'del':
-            #     if detail.quantity > 0:
-            #         detail.quantity -= 1
-            #     else:
-            #         detail.delete()
-            # detail.save(update_fields=['quantity'])
+                OrderDetail.objects.create(menu=menu, ordertrans=ordertrans, quantity=quantity, description=description,
+                menu_detail_id=menu_detail_id)
         return JsonResponse({})
     
     def post(self, request):
@@ -294,27 +238,28 @@ class OrderAPI(View):
         payment_method_id = body['payment_method_id']
         user = CustomUser.objects.filter(line_id=line_id).first()
         try:
+            with transaction.atomic():
             #ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).update(status=OrderTrans.PROCESSING)
-            ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).first()
-            line = Line()
-            branch_name = LineOfficial.objects.filter(id=branch_id).first()
-            lineMessage = LineMessage.objects.filter(id=branch_id).first()
-            channel_access_token = lineMessage.channel_access_token
-            message = line_message()
-            meta_dat = {'line_id':line_id,'branch_name':branch_name}
-            message_data_push_noti = message.order_message(meta_dat=meta_dat,tran=ordertrans)
-            res = line.push_message(
-                    meta_dat, channel_access_token,message_data_push_noti)
-            if res['ok']:
-                location_user = LocationUser.objects.filter(id=location_id).first()
-                ordertrans.status = OrderTrans.PROCESSING
-                ordertrans.location_user = location_user
-                ordertrans.payment_method = payment_method_id
-                ordertrans.updated_at = datetime.now()
-                ordertrans.branch_id = branch_id
-                ordertrans.save()
-            #   line.notify(message_data_notify, settings.ACCESS_TOKEN)
-            return JsonResponse({'ok': True})
+                ordertrans = OrderTrans.objects.filter(user=user, status=OrderTrans.INITIAL).first()
+                line = Line()
+                branch_name = LineOfficial.objects.filter(id=branch_id).first()
+                lineMessage = LineMessage.objects.filter(id=branch_id).first()
+                channel_access_token = lineMessage.channel_access_token
+                message = line_message()
+                meta_dat = {'line_id':line_id,'branch_name':branch_name}
+                message_data_push_noti = message.order_message(meta_dat=meta_dat,tran=ordertrans)
+                res = line.push_message(
+                        meta_dat, channel_access_token,message_data_push_noti)
+                if res['ok']:
+                    location_user = LocationUser.objects.filter(id=location_id).first()
+                    ordertrans.status = OrderTrans.PROCESSING
+                    ordertrans.location_user = location_user
+                    ordertrans.payment_method = payment_method_id
+                    ordertrans.updated_at = datetime.now()
+                    ordertrans.branch_id = branch_id
+                    ordertrans.save()
+                #   line.notify(message_data_notify, settings.ACCESS_TOKEN)
+                return JsonResponse({'ok': True})
         except Exception as error:
             print(error)
             return JsonResponse({'ok': False, 'message': error})

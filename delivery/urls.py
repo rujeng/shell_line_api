@@ -1,5 +1,5 @@
 from django.urls import path
-from delivery.views import MyCart, NewMyCart, WebhookAPI, OrderView, OrderAPI, RestaurantView, RestaurantAllView, RestaurantDetail, MenutDetail,TestMap
+from delivery.views import MyCart, WebhookAPI, OrderView, OrderAPI, RestaurantView, RestaurantAllView, RestaurantDetail, MenutDetail,TestMap
 from delivery.views import Enroll,LocationDetail,LocationSave,History
 urlpatterns = [
     # mvc
